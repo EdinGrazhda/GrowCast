@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plant;
+use App\Models\Weather;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class WeatherController extends Controller
 {
@@ -11,7 +14,11 @@ class WeatherController extends Controller
      */
     public function index()
     {
-        //
+        $weathers = Weather::with(['plant'])->latest()->get();
+        
+        return Inertia::render('weather/index', [
+            'weathers' => $weathers
+        ]);
     }
 
     /**
@@ -19,7 +26,11 @@ class WeatherController extends Controller
      */
     public function create()
     {
-        //
+        $plants = Plant::all();
+        
+        return Inertia::render('weather/create', [
+            'plants' => $plants
+        ]);
     }
 
     /**
@@ -27,7 +38,19 @@ class WeatherController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'temperature' => 'required|numeric',
+            'humidity' => 'required|numeric|min:0|max:100',
+            'air_pressure' => 'required|numeric',
+            'wind_speed' => 'required|numeric|min:0',
+            'plant_id' => 'required|exists:plant,id',
+            'status' => 'required|string|max:255',
+        ]);
+
+        Weather::create($validated);
+
+        return redirect()->route('weather.index')
+            ->with('success', 'Weather data created successfully.');
     }
 
     /**
@@ -35,7 +58,11 @@ class WeatherController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $weather = Weather::with(['plant'])->findOrFail($id);
+        
+        return Inertia::render('weather/show', [
+            'weather' => $weather
+        ]);
     }
 
     /**
@@ -43,7 +70,13 @@ class WeatherController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $weather = Weather::findOrFail($id);
+        $plants = Plant::all();
+        
+        return Inertia::render('weather/edit', [
+            'weather' => $weather,
+            'plants' => $plants
+        ]);
     }
 
     /**
@@ -51,7 +84,21 @@ class WeatherController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $weather = Weather::findOrFail($id);
+        
+        $validated = $request->validate([
+            'temperature' => 'required|numeric',
+            'humidity' => 'required|numeric|min:0|max:100',
+            'air_pressure' => 'required|numeric',
+            'wind_speed' => 'required|numeric|min:0',
+            'plant_id' => 'required|exists:plant,id',
+            'status' => 'required|string|max:255',
+        ]);
+
+        $weather->update($validated);
+
+        return redirect()->route('weather.index')
+            ->with('success', 'Weather data updated successfully.');
     }
 
     /**
@@ -59,6 +106,10 @@ class WeatherController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $weather = Weather::findOrFail($id);
+        $weather->delete();
+
+        return redirect()->route('weather.index')
+            ->with('success', 'Weather data deleted successfully.');
     }
 }

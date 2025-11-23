@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Plant;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PlantController extends Controller
 {
@@ -11,7 +13,11 @@ class PlantController extends Controller
      */
     public function index()
     {
-        //
+        $plants = Plant::with(['farms', 'weathers'])->latest()->get();
+        
+        return Inertia::render('plants/index', [
+            'plants' => $plants
+        ]);
     }
 
     /**
@@ -19,7 +25,7 @@ class PlantController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('plants/create');
     }
 
     /**
@@ -27,7 +33,16 @@ class PlantController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'stock' => 'required|integer|min:0',
+            'info' => 'nullable|string',
+        ]);
+
+        Plant::create($validated);
+
+        return redirect()->route('plants.index')
+            ->with('success', 'Plant created successfully.');
     }
 
     /**
@@ -35,7 +50,11 @@ class PlantController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $plant = Plant::with(['farms', 'weathers'])->findOrFail($id);
+        
+        return Inertia::render('plants/show', [
+            'plant' => $plant
+        ]);
     }
 
     /**
@@ -43,7 +62,11 @@ class PlantController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $plant = Plant::findOrFail($id);
+        
+        return Inertia::render('plants/edit', [
+            'plant' => $plant
+        ]);
     }
 
     /**
@@ -51,7 +74,18 @@ class PlantController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $plant = Plant::findOrFail($id);
+        
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'stock' => 'required|integer|min:0',
+            'info' => 'nullable|string',
+        ]);
+
+        $plant->update($validated);
+
+        return redirect()->route('plants.index')
+            ->with('success', 'Plant updated successfully.');
     }
 
     /**
@@ -59,6 +93,10 @@ class PlantController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $plant = Plant::findOrFail($id);
+        $plant->delete();
+
+        return redirect()->route('plants.index')
+            ->with('success', 'Plant deleted successfully.');
     }
 }

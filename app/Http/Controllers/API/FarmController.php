@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Models\Farm;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class FarmController extends Controller
 {
@@ -12,15 +14,12 @@ class FarmController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $farms = Farm::with(['user', 'plant'])->get();
+        
+        return response()->json([
+            'success' => true,
+            'data' => $farms
+        ], 200);
     }
 
     /**
@@ -28,7 +27,29 @@ class FarmController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'longitute' => 'required|numeric',
+            'latitude' => 'required|numeric',
+            'user_id' => 'required|exists:users,id',
+            'plant_id' => 'required|exists:plant,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $farm = Farm::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Farm created successfully',
+            'data' => $farm->load(['user', 'plant'])
+        ], 201);
     }
 
     /**
@@ -36,15 +57,19 @@ class FarmController extends Controller
      */
     public function show(string $id)
     {
-        //
-    }
+        $farm = Farm::with(['user', 'plant'])->find($id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+        if (!$farm) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Farm not found'
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $farm
+        ], 200);
     }
 
     /**
@@ -52,7 +77,38 @@ class FarmController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $farm = Farm::find($id);
+
+        if (!$farm) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Farm not found'
+            ], 404);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'sometimes|required|string|max:255',
+            'description' => 'nullable|string',
+            'longitute' => 'sometimes|required|numeric',
+            'latitude' => 'sometimes|required|numeric',
+            'user_id' => 'sometimes|required|exists:users,id',
+            'plant_id' => 'sometimes|required|exists:plant,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $farm->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Farm updated successfully',
+            'data' => $farm->load(['user', 'plant'])
+        ], 200);
     }
 
     /**
@@ -60,6 +116,20 @@ class FarmController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $farm = Farm::find($id);
+
+        if (!$farm) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Farm not found'
+            ], 404);
+        }
+
+        $farm->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Farm deleted successfully'
+        ], 200);
     }
 }
