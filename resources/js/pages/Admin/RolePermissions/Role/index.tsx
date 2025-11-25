@@ -215,6 +215,7 @@ export default function Index({ roles }: Props) {
                                                                     '#2D6A4F',
                                                                 color: '#2D6A4F',
                                                             }}
+                                                            className="transition-all duration-200 hover:bg-[#2D6A4F] hover:text-white"
                                                         >
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
