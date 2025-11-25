@@ -17,7 +17,7 @@ class FarmController extends Controller
     {
         $farms = Farm::with(['user', 'plant'])->latest()->get();
         
-        return Inertia::render('farms/index', [
+        return Inertia::render('Admin/Farms/index', [
             'farms' => $farms
         ]);
     }
@@ -30,7 +30,7 @@ class FarmController extends Controller
         $users = User::all();
         $plants = Plant::all();
         
-        return Inertia::render('farms/create', [
+        return Inertia::render('Admin/Farms/create', [
             'users' => $users,
             'plants' => $plants
         ]);
@@ -52,8 +52,7 @@ class FarmController extends Controller
 
         Farm::create($validated);
 
-        return redirect()->route('farms.index')
-            ->with('success', 'Farm created successfully.');
+        return redirect('/farms');
     }
 
     /**
@@ -63,7 +62,7 @@ class FarmController extends Controller
     {
         $farm = Farm::with(['user', 'plant'])->findOrFail($id);
         
-        return Inertia::render('farms/show', [
+        return Inertia::render('Admin/Farms/show', [
             'farm' => $farm
         ]);
     }
@@ -77,7 +76,7 @@ class FarmController extends Controller
         $users = User::all();
         $plants = Plant::all();
         
-        return Inertia::render('farms/edit', [
+        return Inertia::render('Admin/Farms/edit', [
             'farm' => $farm,
             'users' => $users,
             'plants' => $plants
@@ -102,8 +101,7 @@ class FarmController extends Controller
 
         $farm->update($validated);
 
-        return redirect()->route('farms.index')
-            ->with('success', 'Farm updated successfully.');
+        return redirect('/farms');
     }
 
     /**
@@ -114,7 +112,6 @@ class FarmController extends Controller
         $farm = Farm::findOrFail($id);
         $farm->delete();
 
-        return redirect()->route('farms.index')
-            ->with('success', 'Farm deleted successfully.');
+        return redirect('/farms');
     }
 }
