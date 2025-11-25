@@ -3,21 +3,42 @@ import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, router } from '@inertiajs/react';
-import { Eye, Loader2, Pencil, Plus, Sprout, Trash2 } from 'lucide-react';
+import {
+    Loader2,
+    Pencil,
+    Plus,
+    Settings,
+    ShieldAlert,
+    Trash2,
+} from 'lucide-react';
 import { useState } from 'react';
 
-interface Plant {
+interface Permission {
     id: number;
     name: string;
-    stock: number;
-    info: string | null;
-    farms_count: number;
-    weathers_count: number;
+}
+
+interface Role {
+    id: number;
+    name: string;
+    permissions_count: number;
+    permissions: string[];
     created_at: string;
 }
 
 interface Props {
-    plants: Plant[];
+    roles: {
+        data: Role[];
+        current_page: number;
+        last_page: number;
+        per_page: number;
+        total: number;
+        links: Array<{
+            url: string | null;
+            label: string;
+            active: boolean;
+        }>;
+    };
 }
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -26,18 +47,18 @@ const breadcrumbs: BreadcrumbItem[] = [
         href: '/dashboard',
     },
     {
-        title: 'Plants',
-        href: '/plants',
+        title: 'Roles',
+        href: '/roles',
     },
 ];
 
-export default function Index({ plants }: Props) {
+export default function Index({ roles }: Props) {
     const [deletingId, setDeletingId] = useState<number | null>(null);
 
     const handleDelete = (id: number, name: string) => {
-        if (confirm(`Are you sure you want to delete the plant "${name}"?`)) {
+        if (confirm(`Are you sure you want to delete the role "${name}"?`)) {
             setDeletingId(id);
-            router.delete(`/plants/${id}`, {
+            router.delete(`/roles/${id}`, {
                 onFinish: () => setDeletingId(null),
             });
         }
@@ -45,7 +66,7 @@ export default function Index({ plants }: Props) {
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Plants Management" />
+            <Head title="Roles Management" />
 
             <div className="flex h-full flex-1 flex-col gap-4 p-4">
                 <div className="mx-auto w-full max-w-7xl">
@@ -57,13 +78,13 @@ export default function Index({ plants }: Props) {
                                     className="text-3xl font-bold"
                                     style={{ color: '#2D6A4F' }}
                                 >
-                                    Plants Management
+                                    Roles Management
                                 </h1>
                                 <p className="mt-2 text-gray-600 dark:text-gray-400">
-                                    Manage plants and their inventory
+                                    Manage system roles and their permissions
                                 </p>
                             </div>
-                            <Link href="/plants/create">
+                            <Link href="/roles/create">
                                 <Button
                                     className="shadow-lg transition-all duration-200 hover:shadow-xl"
                                     style={{
@@ -72,13 +93,13 @@ export default function Index({ plants }: Props) {
                                     }}
                                 >
                                     <Plus className="mr-2 h-4 w-4" />
-                                    Create Plant
+                                    Create Role
                                 </Button>
                             </Link>
                         </div>
                     </div>
 
-                    {/* Plants Table */}
+                    {/* Roles Table */}
                     <Card
                         className="mb-8 overflow-hidden border-2"
                         style={{ borderColor: '#74C69D40' }}
@@ -88,16 +109,13 @@ export default function Index({ plants }: Props) {
                                 <thead style={{ backgroundColor: '#2D6A4F' }}>
                                     <tr>
                                         <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                                            Plant Name
+                                            Role Name
                                         </th>
                                         <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                                            Stock
+                                            Permissions Count
                                         </th>
                                         <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                                            Farms
-                                        </th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">
-                                            Weather Records
+                                            Created Date
                                         </th>
                                         <th className="px-6 py-4 text-center text-sm font-semibold text-white">
                                             Actions
@@ -105,9 +123,9 @@ export default function Index({ plants }: Props) {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
-                                    {plants.map((plant, index) => (
+                                    {roles.data.map((role, index) => (
                                         <tr
-                                            key={plant.id}
+                                            key={role.id}
                                             className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
                                             style={{
                                                 backgroundColor:
@@ -125,7 +143,7 @@ export default function Index({ plants }: Props) {
                                                                 '#74C69D30',
                                                         }}
                                                     >
-                                                        <Sprout
+                                                        <ShieldAlert
                                                             className="h-5 w-5"
                                                             style={{
                                                                 color: '#2D6A4F',
@@ -139,19 +157,16 @@ export default function Index({ plants }: Props) {
                                                                 color: '#2D6A4F',
                                                             }}
                                                         >
-                                                            {plant.name}
+                                                            {role.name}
                                                         </div>
-                                                        {plant.info && (
-                                                            <div className="text-xs text-gray-500 dark:text-gray-400">
-                                                                {plant.info
-                                                                    .length > 50
-                                                                    ? plant.info.slice(
-                                                                          0,
-                                                                          50,
-                                                                      ) + '...'
-                                                                    : plant.info}
-                                                            </div>
-                                                        )}
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                            {role.permissions
+                                                                .slice(0, 2)
+                                                                .join(', ')}
+                                                            {role.permissions
+                                                                .length > 2 &&
+                                                                '...'}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>
@@ -160,28 +175,21 @@ export default function Index({ plants }: Props) {
                                                     className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
                                                     style={{
                                                         backgroundColor:
-                                                            plant.stock > 0
-                                                                ? '#74C69D30'
-                                                                : '#ef444420',
-                                                        color:
-                                                            plant.stock > 0
-                                                                ? '#2D6A4F'
-                                                                : '#ef4444',
+                                                            '#74C69D30',
+                                                        color: '#2D6A4F',
                                                     }}
                                                 >
-                                                    {plant.stock} units
+                                                    {role.permissions_count}{' '}
+                                                    permissions
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                                {plant.farms_count} farm(s)
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
-                                                {plant.weathers_count} record(s)
+                                                {role.created_at}
                                             </td>
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center justify-center gap-2">
                                                     <Link
-                                                        href={`/plants/${plant.id}`}
+                                                        href={`/roles/${role.id}/assignment`}
                                                     >
                                                         <Button
                                                             size="sm"
@@ -191,13 +199,13 @@ export default function Index({ plants }: Props) {
                                                                     '#74C69D',
                                                                 color: '#2D6A4F',
                                                             }}
-                                                            className="transition-all duration-200 hover:bg-[#74C69D] hover:text-white"
+                                                            className="hover:bg-green-50"
                                                         >
-                                                            <Eye className="h-4 w-4" />
+                                                            <Settings className="h-4 w-4" />
                                                         </Button>
                                                     </Link>
                                                     <Link
-                                                        href={`/plants/${plant.id}/edit`}
+                                                        href={`/roles/${role.id}/edit`}
                                                     >
                                                         <Button
                                                             size="sm"
@@ -217,18 +225,20 @@ export default function Index({ plants }: Props) {
                                                         variant="outline"
                                                         onClick={() =>
                                                             handleDelete(
-                                                                plant.id,
-                                                                plant.name,
+                                                                role.id,
+                                                                role.name,
                                                             )
                                                         }
                                                         disabled={
                                                             deletingId ===
-                                                            plant.id
+                                                                role.id ||
+                                                            role.name ===
+                                                                'admin'
                                                         }
-                                                        className="border-red-500 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white"
+                                                        className="border-red-500 text-red-500 hover:bg-red-50 dark:hover:bg-red-950"
                                                     >
                                                         {deletingId ===
-                                                        plant.id ? (
+                                                        role.id ? (
                                                             <Loader2 className="h-4 w-4 animate-spin" />
                                                         ) : (
                                                             <Trash2 className="h-4 w-4" />
@@ -244,10 +254,10 @@ export default function Index({ plants }: Props) {
                     </Card>
 
                     {/* Empty State */}
-                    {plants.length === 0 && (
+                    {roles.data.length === 0 && (
                         <Card className="py-12 text-center">
                             <CardContent>
-                                <Sprout
+                                <ShieldAlert
                                     className="mx-auto mb-4 h-16 w-16"
                                     style={{ color: '#74C69D' }}
                                 />
@@ -255,12 +265,12 @@ export default function Index({ plants }: Props) {
                                     className="mb-2 text-xl font-semibold"
                                     style={{ color: '#2D6A4F' }}
                                 >
-                                    No plants found
+                                    No roles found
                                 </h3>
                                 <p className="mb-6 text-gray-600 dark:text-gray-400">
-                                    Get started by creating your first plant
+                                    Get started by creating your first role
                                 </p>
-                                <Link href="/plants/create">
+                                <Link href="/roles/create">
                                     <Button
                                         style={{
                                             backgroundColor: '#2D6A4F',
@@ -268,11 +278,47 @@ export default function Index({ plants }: Props) {
                                         }}
                                     >
                                         <Plus className="mr-2 h-4 w-4" />
-                                        Create Plant
+                                        Create Role
                                     </Button>
                                 </Link>
                             </CardContent>
                         </Card>
+                    )}
+
+                    {/* Pagination */}
+                    {roles.last_page > 1 && (
+                        <div className="mt-8 flex items-center justify-center gap-2">
+                            {roles.links.map((link, index) => (
+                                <button
+                                    key={index}
+                                    onClick={() =>
+                                        link.url && router.visit(link.url)
+                                    }
+                                    disabled={!link.url}
+                                    className={`rounded-lg px-4 py-2 font-medium transition-all duration-200 ${
+                                        link.active
+                                            ? 'shadow-md'
+                                            : 'hover:shadow-md'
+                                    }`}
+                                    style={{
+                                        backgroundColor: link.active
+                                            ? '#2D6A4F'
+                                            : 'white',
+                                        color: link.active
+                                            ? 'white'
+                                            : '#2D6A4F',
+                                        border: `2px solid ${link.active ? '#2D6A4F' : '#74C69D'}`,
+                                        opacity: !link.url ? 0.5 : 1,
+                                        cursor: !link.url
+                                            ? 'not-allowed'
+                                            : 'pointer',
+                                    }}
+                                    dangerouslySetInnerHTML={{
+                                        __html: link.label,
+                                    }}
+                                />
+                            ))}
+                        </div>
                     )}
                 </div>
             </div>

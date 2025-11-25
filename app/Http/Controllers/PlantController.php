@@ -13,9 +13,9 @@ class PlantController extends Controller
      */
     public function index()
     {
-        $plants = Plant::with(['farms', 'weathers'])->latest()->get();
+        $plants = Plant::withCount(['farms', 'weathers'])->latest()->get();
         
-        return Inertia::render('plants/index', [
+        return Inertia::render('Admin/Plants/index', [
             'plants' => $plants
         ]);
     }
@@ -25,7 +25,7 @@ class PlantController extends Controller
      */
     public function create()
     {
-        return Inertia::render('plants/create');
+        return Inertia::render('Admin/Plants/create');
     }
 
     /**
@@ -41,8 +41,7 @@ class PlantController extends Controller
 
         Plant::create($validated);
 
-        return redirect()->route('plants.index')
-            ->with('success', 'Plant created successfully.');
+        return redirect('/plants');
     }
 
     /**
@@ -52,7 +51,7 @@ class PlantController extends Controller
     {
         $plant = Plant::with(['farms', 'weathers'])->findOrFail($id);
         
-        return Inertia::render('plants/show', [
+        return Inertia::render('Admin/Plants/show', [
             'plant' => $plant
         ]);
     }
@@ -64,7 +63,7 @@ class PlantController extends Controller
     {
         $plant = Plant::findOrFail($id);
         
-        return Inertia::render('plants/edit', [
+        return Inertia::render('Admin/Plants/edit', [
             'plant' => $plant
         ]);
     }
@@ -84,8 +83,7 @@ class PlantController extends Controller
 
         $plant->update($validated);
 
-        return redirect()->route('plants.index')
-            ->with('success', 'Plant updated successfully.');
+        return redirect('/plants');
     }
 
     /**
@@ -96,7 +94,6 @@ class PlantController extends Controller
         $plant = Plant::findOrFail($id);
         $plant->delete();
 
-        return redirect()->route('plants.index')
-            ->with('success', 'Plant deleted successfully.');
+        return redirect('/plants');
     }
 }
