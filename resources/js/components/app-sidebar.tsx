@@ -15,6 +15,7 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
     BookOpen,
+    CloudRain,
     Folder,
     LayoutGrid,
     MapPin,
@@ -38,6 +39,11 @@ const mainNavItems: NavItem[] = [
         title: 'Plants',
         href: '/plants',
         icon: Sprout,
+    },
+    {
+        title: 'Weather',
+        href: '/weather',
+        icon: CloudRain,
     },
     {
         title: 'Roles',

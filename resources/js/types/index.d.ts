@@ -41,3 +41,43 @@ export interface User {
     updated_at: string;
     [key: string]: unknown; // This allows for additional properties...
 }
+
+export interface Plant {
+    id: number;
+    name: string;
+    stock: number;
+    info?: string;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Farm {
+    id: number;
+    name: string;
+    description?: string;
+    latitude: string | number;
+    longitute: string | number;
+    user_id: number;
+    plant_id: number;
+    user?: User;
+    plant?: Plant;
+    created_at: string;
+    updated_at: string;
+}
+
+export interface Weather {
+    id: number;
+    temperature: number;
+    humidity: number;
+    air_pressure: number;
+    wind_speed: number;
+    plant_id: number;
+    farm_id?: number;
+    status: string;
+    recommendation?: string;
+    best_planting_day?: string;
+    plant?: Plant;
+    farm?: Farm;
+    created_at: string;
+    updated_at: string;
+}
