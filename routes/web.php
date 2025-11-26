@@ -24,7 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         $totalPlants = Plant::count();
         $totalWeatherForecasts = Weather::count();
         $optimalDays = Weather::where('status', 'optimal')->count();
-        
+
         // Recent forecasts with relationships
         $recentForecasts = Weather::with(['farm', 'plant'])
             ->latest()
@@ -40,12 +40,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
                     'created_at' => $weather->created_at,
                 ];
             });
-        
+
         // Plants by stock (top 5)
         $plantsByStock = Plant::orderBy('stock', 'desc')
             ->take(5)
             ->get(['name', 'stock']);
-        
+
         return Inertia::render('dashboard', [
             'stats' => [
                 'totalFarms' => $totalFarms,
@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'optimalDays' => $optimalDays,
                 'recentForecasts' => $recentForecasts,
                 'plantsByStock' => $plantsByStock,
-            ]
+            ],
         ]);
     })->name('dashboard');
 
