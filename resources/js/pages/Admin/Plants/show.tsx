@@ -266,13 +266,13 @@ export default function Show({ plant }: Props) {
                                                         </span>
                                                     </div>
                                                     <p className="mt-2 text-xs text-gray-500">
-                                                        {farm.latitude.toFixed(
-                                                            4,
-                                                        )}
+                                                        {Number(
+                                                            farm.latitude,
+                                                        ).toFixed(4)}
                                                         ,{' '}
-                                                        {farm.longitute.toFixed(
-                                                            4,
-                                                        )}
+                                                        {Number(
+                                                            farm.longitute,
+                                                        ).toFixed(4)}
                                                     </p>
                                                 </div>
                                             </Link>

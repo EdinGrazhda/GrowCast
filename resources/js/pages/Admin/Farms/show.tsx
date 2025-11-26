@@ -140,8 +140,10 @@ export default function Show({ farm }: Props) {
                                     <div className="mt-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
                                         <MapPin className="h-4 w-4" />
                                         <span>
-                                            Lat: {farm.latitude.toFixed(6)},
-                                            Lng: {farm.longitute.toFixed(6)}
+                                            Lat:{' '}
+                                            {Number(farm.latitude).toFixed(6)},
+                                            Lng:{' '}
+                                            {Number(farm.longitute).toFixed(6)}
                                         </span>
                                     </div>
                                 </div>

@@ -36,6 +36,19 @@ export default function Index({
         }
     };
 
+    const getStatusIcon = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'optimal':
+                return '/image/Smile.png';
+            case 'acceptable':
+                return '/image/normal.png';
+            case 'poor':
+                return '/image/crying.png';
+            default:
+                return '/image/normal.png';
+        }
+    };
+
     const handleDelete = (id: number) => {
         if (confirm('Are you sure you want to delete this weather record?')) {
             router.delete(`/weather/${id}`);
@@ -113,14 +126,23 @@ export default function Index({
                                                     {weather.plant.name}
                                                 </p>
                                             </div>
-                                            <span
-                                                className={`${getStatusColor(weather.status)} rounded-full px-3 py-1 text-xs font-medium text-white`}
-                                            >
-                                                {weather.status
-                                                    .charAt(0)
-                                                    .toUpperCase() +
-                                                    weather.status.slice(1)}
-                                            </span>
+                                            <div className="flex flex-col items-center gap-2">
+                                                <img
+                                                    src={getStatusIcon(
+                                                        weather.status,
+                                                    )}
+                                                    alt={weather.status}
+                                                    className="h-20 w-20 object-contain"
+                                                />
+                                                <span
+                                                    className={`${getStatusColor(weather.status)} rounded-full px-3 py-1 text-xs font-medium text-white`}
+                                                >
+                                                    {weather.status
+                                                        .charAt(0)
+                                                        .toUpperCase() +
+                                                        weather.status.slice(1)}
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
 
