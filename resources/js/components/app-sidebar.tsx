@@ -21,6 +21,7 @@ import {
     MapPin,
     ShieldCheck,
     Sprout,
+    Users,
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
@@ -44,6 +45,11 @@ const mainNavItems: NavItem[] = [
         title: 'Weather',
         href: '/weather',
         icon: CloudRain,
+    },
+    {
+        title: 'Users',
+        href: '/users',
+        icon: Users,
     },
     {
         title: 'Roles',
