@@ -108,6 +108,19 @@ export default function Create({ farms }: { farms: Farm[] }) {
         }
     };
 
+    const getStatusIcon = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'optimal':
+                return '/image/Smile.png';
+            case 'acceptable':
+                return '/image/staying normal.png';
+            case 'poor':
+                return '/image/sad.png';
+            default:
+                return '/image/staying normal.png';
+        }
+    };
+
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString('en-US', {
@@ -401,7 +414,7 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                 recommended days
                                             </span>
                                         </div>
-                                        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5">
+                                        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-5">
                                             {forecastData.best_days.map(
                                                 (day, index) => {
                                                     const colors =
@@ -411,7 +424,7 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                     return (
                                                         <div
                                                             key={index}
-                                                            className="relative rounded-lg border-2 p-4 shadow-sm transition-transform hover:scale-105"
+                                                            className="relative rounded-lg border-2 p-3 shadow-sm transition-transform hover:scale-105"
                                                             style={{
                                                                 backgroundColor:
                                                                     colors.light,
@@ -421,7 +434,7 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                         >
                                                             <div className="absolute top-2 right-2">
                                                                 <span
-                                                                    className="rounded-full px-2 py-1 text-xs font-semibold"
+                                                                    className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
                                                                     style={{
                                                                         backgroundColor:
                                                                             colors.bg,
@@ -431,13 +444,32 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                                     Best
                                                                 </span>
                                                             </div>
-                                                            <div className="mb-3">
-                                                                <p className="text-xs font-medium text-gray-600">
+                                                            <div className="mb-2 flex flex-col items-center">
+                                                                <img
+                                                                    src={getStatusIcon(
+                                                                        day.status,
+                                                                    )}
+                                                                    alt={
+                                                                        day.status
+                                                                    }
+                                                                    className="mb-1 h-16 w-16 object-contain"
+                                                                />
+                                                                <span
+                                                                    className="mb-1 rounded-full px-2 py-0.5 text-[10px] font-bold"
+                                                                    style={{
+                                                                        backgroundColor:
+                                                                            colors.bg,
+                                                                        color: 'white',
+                                                                    }}
+                                                                >
+                                                                    {day.status.toUpperCase()}
+                                                                </span>
+                                                                <p className="text-[10px] font-medium text-gray-600">
                                                                     Day{' '}
                                                                     {index + 1}
                                                                 </p>
                                                                 <p
-                                                                    className="text-sm font-bold"
+                                                                    className="text-xs font-bold"
                                                                     style={{
                                                                         color: colors.text,
                                                                     }}
@@ -501,7 +533,7 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                     >
                                         40-Day Weather Forecast
                                     </h3>
-                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-5">
+                                    <div className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-6">
                                         {forecastData.forecast.map(
                                             (day, index) => {
                                                 const colors = getStatusColor(
@@ -524,9 +556,21 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                                     : '1px',
                                                         }}
                                                     >
-                                                        <div className="mb-2 flex items-center justify-between">
+                                                        <div className="mb-2 flex flex-col items-center">
+                                                            {day.is_best && (
+                                                                <span className="mb-1 text-lg">
+                                                                    ⭐
+                                                                </span>
+                                                            )}
+                                                            <img
+                                                                src={getStatusIcon(
+                                                                    day.status,
+                                                                )}
+                                                                alt={day.status}
+                                                                className="mb-1 h-16 w-16 object-contain"
+                                                            />
                                                             <span
-                                                                className="rounded px-1.5 py-0.5 text-[10px] font-semibold"
+                                                                className="mb-1 rounded px-2 py-0.5 text-[9px] font-semibold"
                                                                 style={{
                                                                     backgroundColor:
                                                                         colors.bg,
@@ -535,14 +579,9 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                             >
                                                                 {day.status.toUpperCase()}
                                                             </span>
-                                                            {day.is_best && (
-                                                                <span className="text-lg">
-                                                                    ⭐
-                                                                </span>
-                                                            )}
                                                         </div>
                                                         <p
-                                                            className="mb-2 text-xs font-bold"
+                                                            className="mb-2 text-center text-[10px] font-bold"
                                                             style={{
                                                                 color: colors.text,
                                                             }}

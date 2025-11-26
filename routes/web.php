@@ -1,12 +1,11 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FarmController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeatherController;
-use App\Models\Farm;
-use App\Models\Plant;
-use App\Models\Weather;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -18,54 +17,23 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        // Gather statistics
-        $totalFarms = Farm::count();
-        $totalPlants = Plant::count();
-        $totalWeatherForecasts = Weather::count();
-        $optimalDays = Weather::where('status', 'optimal')->count();
-
-        // Recent forecasts with relationships
-        $recentForecasts = Weather::with(['farm', 'plant'])
-            ->latest()
-            ->take(5)
-            ->get()
-            ->map(function ($weather) {
-                return [
-                    'id' => $weather->id,
-                    'farm_name' => $weather->farm->name ?? 'Unknown',
-                    'plant_name' => $weather->plant->name ?? 'Unknown',
-                    'status' => $weather->status,
-                    'best_planting_day' => $weather->best_planting_day ?? 'N/A',
-                    'created_at' => $weather->created_at,
-                ];
-            });
-
-        // Plants by stock (top 5)
-        $plantsByStock = Plant::orderBy('stock', 'desc')
-            ->take(5)
-            ->get(['name', 'stock']);
-
-        return Inertia::render('dashboard', [
-            'stats' => [
-                'totalFarms' => $totalFarms,
-                'totalPlants' => $totalPlants,
-                'totalWeatherForecasts' => $totalWeatherForecasts,
-                'optimalDays' => $optimalDays,
-                'recentForecasts' => $recentForecasts,
-                'plantsByStock' => $plantsByStock,
-            ],
-        ]);
-    })->name('dashboard');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Resource routes
     Route::resource('farms', FarmController::class);
     Route::resource('plants', PlantController::class);
     Route::resource('weather', WeatherController::class);
     Route::resource('roles', RoleController::class);
+    Route::resource('users', UserController::class);
 
     // Weather forecast route
     Route::post('weather/forecast', [WeatherController::class, 'getForecast'])->name('weather.forecast');
+
+    // User role management routes
+    Route::get('users/{user}/assign-role', [UserController::class, 'assignRolePage'])->name('users.assign-role');
+    Route::post('users/{user}/assign-role', [UserController::class, 'assignRole'])->name('users.assign-role.post');
+    Route::post('users/{user}/remove-role', [UserController::class, 'removeRole'])->name('users.remove-role');
+    Route::post('users/{user}/sync-roles', [UserController::class, 'syncRoles'])->name('users.sync-roles');
 
     // Role assignment page
     Route::get('roles/{id}/assignment', [RoleController::class, 'assignment'])->name('roles.assignment');
