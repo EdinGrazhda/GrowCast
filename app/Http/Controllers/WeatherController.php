@@ -6,11 +6,14 @@ use App\Models\Farm;
 use App\Models\Weather;
 use App\Services\OpenAIService;
 use App\Services\OpenWeatherService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class WeatherController extends Controller
 {
+    use AuthorizesRequests;
     protected $weatherService;
 
     protected $aiService;
@@ -26,7 +29,18 @@ class WeatherController extends Controller
      */
     public function index()
     {
-        $weathers = Weather::with(['plant', 'farm'])->latest()->get();
+        $this->authorize('viewAny', Weather::class);
+        
+        $user = Auth::user();
+        
+        // Admins see all weather records, others see only their own (through farms)
+        $weathers = $user->hasRole('admin')
+            ? Weather::with(['plant', 'farm'])->latest()->get()
+            : Weather::with(['plant', 'farm'])
+                ->whereHas('farm', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })
+                ->latest()->get();
 
         return Inertia::render('Admin/Weather/index', [
             'weathers' => $weathers,
@@ -38,7 +52,14 @@ class WeatherController extends Controller
      */
     public function create()
     {
-        $farms = Farm::with(['plant', 'user'])->get();
+        $this->authorize('create', Weather::class);
+        
+        $user = Auth::user();
+        
+        // Admins see all farms, others see only their own
+        $farms = $user->hasRole('admin')
+            ? Farm::with(['plant', 'user'])->get()
+            : Farm::with(['plant', 'user'])->where('user_id', $user->id)->get();
 
         return Inertia::render('Admin/Weather/create', [
             'farms' => $farms,
@@ -105,6 +126,8 @@ class WeatherController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Weather::class);
+        
         $validated = $request->validate([
             'farm_id' => 'required|exists:farm,id',
             'recommendation' => 'required|string',
@@ -131,6 +154,7 @@ class WeatherController extends Controller
     public function show(string $id)
     {
         $weather = Weather::with(['plant', 'farm'])->findOrFail($id);
+        $this->authorize('view', $weather);
 
         return Inertia::render('Admin/Weather/show', [
             'weather' => $weather,
@@ -143,6 +167,8 @@ class WeatherController extends Controller
     public function destroy(string $id)
     {
         $weather = Weather::findOrFail($id);
+        $this->authorize('delete', $weather);
+        
         $weather->delete();
 
         return redirect('/weather');

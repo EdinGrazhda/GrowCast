@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -12,11 +14,25 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    use AuthorizesRequests;
+
+    /**
+     * Check if user is admin.
+     */
+    private function checkGate()
+    {
+        if (!Gate::allows('isAdmin')) {
+            abort(403);
+        }
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $this->checkGate();
+        
         $users = User::with('roles')->latest()->get();
         
         return Inertia::render('Admin/Users/index', [
@@ -29,6 +45,8 @@ class UserController extends Controller
      */
     public function create()
     {
+        $this->checkGate();
+        
         $roles = Role::all();
         
         return Inertia::render('Admin/Users/create', [
@@ -41,6 +59,8 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $this->checkGate();
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -67,6 +87,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
+        $this->checkGate();
+        
         $user->load('roles.permissions');
         
         return Inertia::render('Admin/Users/show', [
@@ -79,6 +101,8 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $this->checkGate();
+        
         $user->load('roles');
         $roles = Role::all();
         
@@ -93,6 +117,8 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
+        $this->checkGate();
+        
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
@@ -119,6 +145,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
+        $this->checkGate();
+        
         if ($user->id === Auth::id()) {
             return back()->with('error', 'You cannot delete your own account.');
         }
@@ -134,6 +162,8 @@ class UserController extends Controller
      */
     public function assignRolePage(User $user)
     {
+        $this->checkGate();
+        
         $user->load('roles');
         $roles = Role::all();
         
@@ -148,6 +178,8 @@ class UserController extends Controller
      */
     public function assignRole(Request $request, User $user)
     {
+        $this->checkGate();
+        
         $validated = $request->validate([
             'role' => 'required|exists:roles,name',
         ]);

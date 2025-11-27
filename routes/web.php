@@ -17,14 +17,15 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    // Dashboard - accessible by all authenticated users
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Resource routes
+    // Resource routes - authorization handled by policies
     Route::resource('farms', FarmController::class);
     Route::resource('plants', PlantController::class);
     Route::resource('weather', WeatherController::class);
-    Route::resource('roles', RoleController::class);
     Route::resource('users', UserController::class);
+    Route::resource('roles', RoleController::class);
 
     // Weather forecast route
     Route::post('weather/forecast', [WeatherController::class, 'getForecast'])->name('weather.forecast');
