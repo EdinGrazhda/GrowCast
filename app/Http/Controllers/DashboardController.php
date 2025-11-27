@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Farm;
 use App\Models\Plant;
 use App\Models\Weather;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -14,17 +15,42 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        // Gather statistics
-        $totalFarms = Farm::count();
-        $totalPlants = Plant::count();
-        $totalWeatherForecasts = Weather::count();
-        $optimalDays = Weather::where('status', 'optimal')->count();
+        // Check if user has permission to view dashboard
+        if (! Auth::user()->can('dashboard_View')) {
+            abort(403, 'Unauthorized access to dashboard.');
+        }
+
+        $user = Auth::user();
+        $isAdmin = $user->hasRole('admin');
+
+        // Gather statistics - scope to user unless admin
+        $totalFarms = $isAdmin 
+            ? Farm::count() 
+            : Farm::where('user_id', $user->id)->count();
+            
+        $totalWeatherForecasts = $isAdmin 
+            ? Weather::count() 
+            : Weather::whereHas('farm', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->count();
+            
+        $optimalDays = $isAdmin 
+            ? Weather::where('status', 'optimal')->count() 
+            : Weather::where('status', 'optimal')
+                ->whereHas('farm', function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                })->count();
+
+        // Recent forecasts with relationships - scope to user unless admin
+        $recentForecastsQuery = Weather::with(['farm', 'plant'])->latest()->take(5);
         
-        // Recent forecasts with relationships
-        $recentForecasts = Weather::with(['farm', 'plant'])
-            ->latest()
-            ->take(5)
-            ->get()
+        if (!$isAdmin) {
+            $recentForecastsQuery->whereHas('farm', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            });
+        }
+        
+        $recentForecasts = $recentForecastsQuery->get()
             ->map(function ($weather) {
                 return [
                     'id' => $weather->id,
@@ -35,12 +61,16 @@ class DashboardController extends Controller
                     'created_at' => $weather->created_at,
                 ];
             });
-        
-        // Plants by stock (top 5)
-        $plantsByStock = Plant::orderBy('stock', 'desc')
-            ->take(5)
-            ->get(['name', 'stock']);
-        
+
+        // Show plants data
+        $totalPlants = $isAdmin 
+            ? Plant::count() 
+            : Plant::where('user_id', $user->id)->count();
+            
+        $plantsByStock = $isAdmin
+            ? Plant::orderBy('stock', 'desc')->take(5)->get(['name', 'stock'])
+            : Plant::where('user_id', $user->id)->orderBy('stock', 'desc')->take(5)->get(['name', 'stock']);
+
         return Inertia::render('dashboard', [
             'stats' => [
                 'totalFarms' => $totalFarms,
@@ -49,7 +79,7 @@ class DashboardController extends Controller
                 'optimalDays' => $optimalDays,
                 'recentForecasts' => $recentForecasts,
                 'plantsByStock' => $plantsByStock,
-            ]
+            ],
         ]);
     }
 }

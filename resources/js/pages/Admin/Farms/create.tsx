@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useAuth } from '@/hooks/use-auth';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
 import { Head, Link, useForm } from '@inertiajs/react';
@@ -42,7 +43,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Create({ users, plants }: Props) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { isAdmin } = useAuth();
+    const { data, setData, post, processing, errors, clearErrors } = useForm({
         name: '',
         description: '',
         longitute: '',
@@ -53,7 +55,16 @@ export default function Create({ users, plants }: Props) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/farms');
+        console.log('Form data being submitted:', data);
+        post('/farms', {
+            preserveScroll: true,
+            onError: (errors) => {
+                console.log('Validation errors:', errors);
+            },
+            onSuccess: () => {
+                console.log('Farm created successfully!');
+            },
+        });
     };
 
     return (
@@ -149,44 +160,49 @@ export default function Create({ users, plants }: Props) {
                                 </div>
 
                                 {/* User and Plant in a row */}
-                                <div className="grid gap-6 md:grid-cols-2">
-                                    {/* User */}
-                                    <div className="space-y-2">
-                                        <Label
-                                            htmlFor="user_id"
-                                            style={{ color: '#2D6A4F' }}
-                                        >
-                                            Owner *
-                                        </Label>
-                                        <select
-                                            id="user_id"
-                                            value={data.user_id}
-                                            onChange={(e) =>
-                                                setData(
-                                                    'user_id',
-                                                    e.target.value,
-                                                )
-                                            }
-                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:border-[#2D6A4F] focus:ring-[#2D6A4F] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
-                                        >
-                                            <option value="">
-                                                Select owner
-                                            </option>
-                                            {users.map((user) => (
-                                                <option
-                                                    key={user.id}
-                                                    value={user.id}
-                                                >
-                                                    {user.name} ({user.email})
+                                <div
+                                    className={`grid gap-6 ${isAdmin() ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}
+                                >
+                                    {/* User - Only show for admins */}
+                                    {isAdmin() && (
+                                        <div className="space-y-2">
+                                            <Label
+                                                htmlFor="user_id"
+                                                style={{ color: '#2D6A4F' }}
+                                            >
+                                                Owner *
+                                            </Label>
+                                            <select
+                                                id="user_id"
+                                                value={data.user_id}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'user_id',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:border-[#2D6A4F] focus:ring-[#2D6A4F] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                                            >
+                                                <option value="">
+                                                    Select owner
                                                 </option>
-                                            ))}
-                                        </select>
-                                        {errors.user_id && (
-                                            <p className="text-sm text-red-500">
-                                                {errors.user_id}
-                                            </p>
-                                        )}
-                                    </div>
+                                                {users.map((user) => (
+                                                    <option
+                                                        key={user.id}
+                                                        value={user.id}
+                                                    >
+                                                        {user.name} (
+                                                        {user.email})
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            {errors.user_id && (
+                                                <p className="text-sm text-red-500">
+                                                    {errors.user_id}
+                                                </p>
+                                            )}
+                                        </div>
+                                    )}
 
                                     {/* Plant */}
                                     <div className="space-y-2">
@@ -241,11 +257,12 @@ export default function Create({ users, plants }: Props) {
                                             parseFloat(data.longitute) || 0
                                         }
                                         onLocationSelect={(lat, lng) => {
-                                            setData({
-                                                ...data,
-                                                latitude: lat.toFixed(6),
-                                                longitute: lng.toFixed(6),
-                                            });
+                                            // set individual fields to avoid replacing the whole form state
+                                            setData('latitude', lat.toFixed(6));
+                                            setData(
+                                                'longitute',
+                                                lng.toFixed(6),
+                                            );
                                         }}
                                     />
                                 </div>

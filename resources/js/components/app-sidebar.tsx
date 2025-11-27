@@ -10,6 +10,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { useAuth } from '@/hooks/use-auth';
 import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
@@ -25,36 +26,42 @@ import {
 } from 'lucide-react';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
+const allNavItems: NavItem[] = [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
+        permissions: ['dashboard_View'], // accessible by anyone with dashboard_View permission
     },
     {
         title: 'Farms',
         href: '/farms',
         icon: MapPin,
+        permissions: ['farm_View'], // accessible by anyone with farm_View permission
     },
     {
         title: 'Plants',
         href: '/plants',
         icon: Sprout,
+        permissions: ['plant_View'], // accessible by anyone with plant_View permission
     },
     {
         title: 'Weather',
         href: '/weather',
         icon: CloudRain,
+        permissions: ['weather_View'], // accessible by anyone with weather_View permission
     },
     {
         title: 'Users',
         href: '/users',
         icon: Users,
+        permissions: ['user_View'], // accessible by anyone with user_View permission
     },
     {
         title: 'Roles',
         href: '/roles',
         icon: ShieldCheck,
+        permissions: ['role_View'], // accessible by anyone with role_View permission
     },
 ];
 
@@ -72,6 +79,24 @@ const footerNavItems: NavItem[] = [
 ];
 
 export function AppSidebar() {
+    const { hasPermission, isAdmin } = useAuth();
+
+    // Filter nav items based on user permissions
+    const mainNavItems = allNavItems.filter((item) => {
+        // Admins see everything
+        if (isAdmin()) {
+            return true;
+        }
+
+        // If item has no permissions specified, show it to everyone
+        if (!item.permissions || item.permissions.length === 0) {
+            return true;
+        }
+
+        // Check if user has any of the required permissions
+        return item.permissions.some((permission) => hasPermission(permission));
+    });
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>

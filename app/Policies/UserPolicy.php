@@ -3,16 +3,18 @@
 namespace App\Policies;
 
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
+use Illuminate\Auth\Access\HandlesAuthorization;
 
 class UserPolicy
 {
+    use HandlesAuthorization;
+
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->hasRole('admin') || $this->hasPermission($user, 'user_View');
     }
 
     /**
@@ -20,7 +22,7 @@ class UserPolicy
      */
     public function view(User $user, User $model): bool
     {
-        return false;
+        return $user->hasRole('admin') || $this->hasPermission($user, 'user_View');
     }
 
     /**
@@ -28,7 +30,7 @@ class UserPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->hasRole('admin') || $this->hasPermission($user, 'user_Create');
     }
 
     /**
@@ -36,7 +38,7 @@ class UserPolicy
      */
     public function update(User $user, User $model): bool
     {
-        return false;
+        return $user->hasRole('admin') || $this->hasPermission($user, 'user_Edit');
     }
 
     /**
@@ -44,6 +46,19 @@ class UserPolicy
      */
     public function delete(User $user, User $model): bool
     {
+        return $user->hasRole('admin') || $this->hasPermission($user, 'user_Delete');
+    }
+
+    /**
+     * Check if the user has the given permission through their roles.
+     */
+    private function hasPermission(User $user, string $permission): bool
+    {
+        foreach ($user->roles as $role) {
+            if ($role->hasPermissionTo($permission)) {
+                return true;
+            }
+        }
         return false;
     }
 

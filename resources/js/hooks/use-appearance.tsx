@@ -51,7 +51,13 @@ export function initializeTheme() {
 }
 
 export function useAppearance() {
-    const [appearance, setAppearance] = useState<Appearance>('system');
+    const [appearance, setAppearance] = useState<Appearance>(() => {
+        // Initialize from localStorage
+        const savedAppearance = localStorage.getItem(
+            'appearance',
+        ) as Appearance | null;
+        return savedAppearance || 'system';
+    });
 
     const updateAppearance = useCallback((mode: Appearance) => {
         setAppearance(mode);
@@ -66,19 +72,23 @@ export function useAppearance() {
     }, []);
 
     useEffect(() => {
-        const savedAppearance = localStorage.getItem(
-            'appearance',
-        ) as Appearance | null;
+        // Apply the theme on mount
+        applyTheme(appearance);
 
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        updateAppearance(savedAppearance || 'system');
+        // Listen for system theme changes
+        const handleChange = () => {
+            if (appearance === 'system') {
+                applyTheme('system');
+            }
+        };
 
-        return () =>
-            mediaQuery()?.removeEventListener(
-                'change',
-                handleSystemThemeChange,
-            );
-    }, [updateAppearance]);
+        const mq = mediaQuery();
+        mq?.addEventListener('change', handleChange);
+
+        return () => {
+            mq?.removeEventListener('change', handleChange);
+        };
+    }, [appearance]);
 
     return { appearance, updateAppearance } as const;
 }

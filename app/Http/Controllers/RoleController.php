@@ -275,29 +275,13 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'permissions' => 'array',
             'permissions.*' => 'exists:permissions,name',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Invalid permissions',
-                'errors' => $validator->errors(),
-            ], 422);
-        }
-
         $role->syncPermissions($request->permissions ?? []);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Permissions synced successfully',
-            'role' => [
-                'id' => $role->id,
-                'name' => $role->name,
-                'permissions' => $role->permissions->pluck('name'),
-            ],
-        ]);
+        return redirect()->back()->with('success', 'Permissions synced successfully');
     }
 }

@@ -2,18 +2,17 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
     /**
      * Run the migrations.
      */
-   public function up(): void
+    public function up(): void
     {
         // Devices permissions
         $permissions = [
+            'dashboard_View',
             'plant_View',
             'plant_Create',
             'plant_Edit',
@@ -51,6 +50,7 @@ return new class extends Migration
     public function down(): void
     {
         $permissions = [
+            'dashboard_View',
             'plant_View',
             'plant_Create',
             'plant_Edit',

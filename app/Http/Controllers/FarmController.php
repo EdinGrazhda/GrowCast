@@ -5,20 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\Farm;
 use App\Models\Plant;
 use App\Models\User;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class FarmController extends Controller
 {
+    use AuthorizesRequests;
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $farms = Farm::with(['user', 'plant'])->latest()->get();
-        
+        $this->authorize('viewAny', Farm::class);
+
+        $user = Auth::user();
+
+        // Admins see all farms, others see only their own
+        $farms = $user->hasRole('admin')
+            ? Farm::with(['user', 'plant'])->latest()->get()
+            : Farm::with(['user', 'plant'])->where('user_id', $user->id)->latest()->get();
+
         return Inertia::render('Admin/Farms/index', [
-            'farms' => $farms
+            'farms' => $farms,
         ]);
     }
 
@@ -27,12 +39,19 @@ class FarmController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        $plants = Plant::all();
-        
+        $this->authorize('create', Farm::class);
+
+        $user = Auth::user();
+
+        // Admins see all users and plants, others see only their own plants
+        $users = $user->hasRole('admin') ? User::all() : collect([$user]);
+        $plants = $user->hasRole('admin')
+            ? Plant::all()
+            : Plant::where('user_id', $user->id)->get();
+
         return Inertia::render('Admin/Farms/create', [
             'users' => $users,
-            'plants' => $plants
+            'plants' => $plants,
         ]);
     }
 
@@ -41,14 +60,41 @@ class FarmController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $this->authorize('create', Farm::class);
+
+        $user = Auth::user();
+
+        // Clean up empty string values only for optional user_id field
+        if ($request->has('user_id') && $request->input('user_id') === '') {
+            $request->merge(['user_id' => null]);
+        }
+
+        $validationRules = [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'longitute' => 'required|numeric',
             'latitude' => 'required|numeric',
-            'user_id' => 'required|exists:users,id',
             'plant_id' => 'required|exists:plant,id',
-        ]);
+        ];
+
+        // Only validate user_id if admin
+        if ($user->hasRole('admin')) {
+            $validationRules['user_id'] = 'nullable|exists:users,id';
+        }
+
+        \Log::info('Farm Store - Request Data:', $request->all());
+        \Log::info('Farm Store - Validation Rules:', $validationRules);
+
+        $validated = $request->validate($validationRules);
+
+        \Log::info('Farm Store - Validated Data:', $validated);
+
+        // Set user_id to current user if not admin or not provided
+        if (! $user->hasRole('admin') || ! isset($validated['user_id'])) {
+            $validated['user_id'] = $user->id;
+        }
+
+        \Log::info('Farm Store - Final Data Before Create:', $validated);
 
         Farm::create($validated);
 
@@ -61,9 +107,10 @@ class FarmController extends Controller
     public function show(string $id)
     {
         $farm = Farm::with(['user', 'plant'])->findOrFail($id);
-        
+        $this->authorize('view', $farm);
+
         return Inertia::render('Admin/Farms/show', [
-            'farm' => $farm
+            'farm' => $farm,
         ]);
     }
 
@@ -73,13 +120,20 @@ class FarmController extends Controller
     public function edit(string $id)
     {
         $farm = Farm::findOrFail($id);
-        $users = User::all();
-        $plants = Plant::all();
-        
+        $this->authorize('update', $farm);
+
+        $user = Auth::user();
+
+        // Admins see all users and plants, others see only their own plants
+        $users = $user->hasRole('admin') ? User::all() : collect([$user]);
+        $plants = $user->hasRole('admin')
+            ? Plant::all()
+            : Plant::where('user_id', $user->id)->get();
+
         return Inertia::render('Admin/Farms/edit', [
             'farm' => $farm,
             'users' => $users,
-            'plants' => $plants
+            'plants' => $plants,
         ]);
     }
 
@@ -89,15 +143,27 @@ class FarmController extends Controller
     public function update(Request $request, string $id)
     {
         $farm = Farm::findOrFail($id);
-        
-        $validated = $request->validate([
+        $this->authorize('update', $farm);
+
+        $user = Auth::user();
+
+        $validationRules = [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'longitute' => 'required|numeric',
             'latitude' => 'required|numeric',
-            'user_id' => 'required|exists:users,id',
             'plant_id' => 'required|exists:plant,id',
-        ]);
+        ];
+
+        if ($user->hasRole('admin')) {
+            $validationRules['user_id'] = 'nullable|exists:users,id';
+        }
+
+        $validated = $request->validate($validationRules);
+
+        if (! $user->hasRole('admin') || ! isset($validated['user_id'])) {
+            $validated['user_id'] = $farm->user_id;
+        }
 
         $farm->update($validated);
 
@@ -110,6 +176,8 @@ class FarmController extends Controller
     public function destroy(string $id)
     {
         $farm = Farm::findOrFail($id);
+        $this->authorize('delete', $farm);
+
         $farm->delete();
 
         return redirect('/farms');

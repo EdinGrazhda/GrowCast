@@ -16,33 +16,19 @@ class RolesAndPermissionsSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions
-        $permissions = [
-            'manage users',
-            'manage roles',
-            'manage farms',
-            'manage plants',
-            'manage weather',
-            'view dashboard',
-        ];
+        // Delete old unwanted permissions if they exist
+        $oldPermissions = ['manage users', 'manage roles', 'manage farms', 'manage plants', 'manage weather', 'view dashboard'];
+        Permission::whereIn('name', $oldPermissions)->delete();
 
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
-        }
-
-        // Create Admin role and assign all permissions
+        // Permissions are already created by migration (plant_View, plant_Create, etc.)
+        // Just create roles without assigning any permissions by default
+        
+        // Create Admin role (permissions will be assigned manually via UI)
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $adminRole->givePermissionTo(Permission::all());
 
-        // Create Farmer role and assign specific permissions
+        // Create Farmer role (permissions will be assigned manually via UI)
         $farmerRole = Role::firstOrCreate(['name' => 'farmer']);
-        $farmerRole->givePermissionTo([
-            'manage farms',
-            'manage plants',
-            'manage weather',
-            'view dashboard',
-        ]);
 
-        $this->command->info('Roles and permissions created successfully!');
+        $this->command->info('Roles created successfully! Assign permissions via the UI.');
     }
 }

@@ -12,7 +12,14 @@ class Plant extends Model
         'name',
         'stock',
         'info',
+        'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function farms()
     {
         return $this->hasMany(Farm::class);
