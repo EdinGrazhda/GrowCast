@@ -37,7 +37,7 @@ class CreateNewUser implements CreatesNewUsers
         ]);
 
         // Assign farmer role to newly registered users
-        $user->assignRole('admin');
+        $user->assignRole('farmer');
 
         return $user;
     }
