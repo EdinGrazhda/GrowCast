@@ -1,11 +1,13 @@
 import { Head } from "@inertiajs/react";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import HowItWorks from "@/components/HowItWorks";
-import Testimonials from "@/components/Testimonials";
-import CTA from "@/components/CTA";
+import PlantSearchSection from "../components/PlantSearchSection";
+import AdminShowcase from "../components/AdminShowcase";
+import FarmShowcase from "../components/FarmShowcase";
+import FarmerStories from "../components/FarmerStories";
+
 import Footer from "@/components/Footer";
+
 
 export default function Welcome() {
   return (
@@ -18,10 +20,10 @@ export default function Welcome() {
         {/* Main content */}
         <main className="flex-1">
           <Hero />
-          <Features />
-          <HowItWorks />
-          <Testimonials />
-          <CTA />
+           <PlantSearchSection />
+           <FarmShowcase />
+          <AdminShowcase />
+          <FarmerStories />
         </main>
 
         <Footer />
