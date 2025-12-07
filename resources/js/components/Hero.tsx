@@ -1,74 +1,86 @@
-// resources/js/components/Hero.tsx
+import { useEffect } from "react";
 
-const leaves = [
-  { left: "3%", top: "8%", size: "w-12" },
-  { left: "15%", top: "65%", size: "w-10" },
-  { left: "58%", top: "18%", size: "w-14" },
-  { left: "82%", top: "60%", size: "w-12" },
-  { left: "92%", top: "12%", size: "w-10" },
-  { left: "32%", top: "4%", size: "w-12" },
-  { left: "45%", top: "48%", size: "w-10" },
-  { left: "70%", top: "32%", size: "w-14" },
+const decorations = [
+  { left: "5%", top: "10%", size: "w-12" },
+  { left: "12%", top: "40%", size: "w-10" },
+  { left: "8%", top: "75%", size: "w-14" },
+  { left: "45%", top: "5%", size: "w-12" },
+  { left: "50%", top: "50%", size: "w-10" },
+  { left: "48%", top: "80%", size: "w-14" },
+  { left: "75%", top: "12%", size: "w-16" },
+  { left: "88%", top: "30%", size: "w-12" },
+  { left: "82%", top: "70%", size: "w-14" },
 ];
 
 export default function Hero() {
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const parallaxEls = document.querySelectorAll(".parallax");
+
+      parallaxEls.forEach((el) => {
+        const speed = parseFloat(el.getAttribute("data-speed") || "0.02");
+        const x = (window.innerWidth - e.clientX * speed) / 70;
+        const y = (window.innerHeight - e.clientY * speed) / 70;
+        (el as HTMLElement).style.transform = `translate(${x}px, ${y}px)`;
+      });
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   return (
-    <section className="relative max-w-7xl mx-auto px-4 lg:px-6 py-16 md:py-24 overflow-hidden">
-      {/* Floating leaves background */}
-      <div className="pointer-events-none absolute inset-0">
-        {leaves.map((leaf, i) => (
+    <section id="hero" className="relative w-full bg-white overflow-hidden py-36">
+
+      <div className="pointer-events-none absolute inset-0 opacity-[0.40]">
+        {decorations.map((item, i) => (
           <img
             key={i}
             src="/leaf.svg"
-            alt="leaf"
-            className={`${leaf.size} opacity-70 animate-float-leaf absolute`}
+            alt=""
+            className={`${item.size} absolute animate-wind parallax`}
+            data-speed={0.01 * (i + 1)}
             style={{
-              left: leaf.left,
-              top: leaf.top,
-              animationDelay: `${i * 1.2}s`,
+              left: item.left,
+              top: item.top,
             }}
           />
         ))}
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
-        {/* LEFT */}
-        <div>
-          <p className="text-sm font-medium text-[#40916C] mb-3">
-            Weather · AI · Simple decisions
+      {/* CONTENT */}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
+
+        <div className="animate-fade-up">
+          <p className="text-sm font-medium text-[#40916c] mb-3">
+            Weather · AI · Smart Farming
           </p>
 
-          <h1 className="text-4xl md:text-5xl font-bold text-[#1B4332] leading-tight mb-4">
-            Plan your planting
-            <br />
-            with confidence.
+          <h1 className="text-4xl md:text-6xl font-bold text-[#1b4332] leading-tight mb-6">
+            Plan your planting <br /> with confidence.
           </h1>
 
-          <p className="text-base md:text-lg text-[#1B4332]/80 mb-4 max-w-2xl">
-            GrowCast helps you pick the right day to sow based on local weather
-            and smart AI suggestions — so every season feels a little easier.
+          <p className="text-[#1b4332]/80 text-lg mb-6 max-w-lg">
+            GrowCast helps you choose the perfect day to plant based on weather
+            insights and AI-powered crop recommendations.
           </p>
 
-          <p className="text-sm md:text-base text-[#1B4332]/75 mb-8 max-w-2xl">
-            No dashboards. No complex charts. Just clear, friendly guidance for
-            your fields.
-          </p>
-
-          <button className="px-7 py-3.5 rounded-lg bg-[#2D6A4F] text-white text-sm font-medium hover:bg-[#1B4332] transition">
+          <button className="px-8 py-3.5 rounded-lg bg-[#2d6a4f] text-white font-semibold hover:bg-[#1b4332] transition shadow-md">
             Get Started
           </button>
         </div>
 
-        {/* RIGHT – Illustration */}
-        <div className="flex justify-center md:justify-end">
-         <img
-  src="/12345.png"
-  alt="Growing plants illustration"
-  className="w-full max-w-md object-contain drop-shadow-lg"
-/>
+        <div className="relative animate-fade-up delay-300 flex justify-center md:justify-end">
+          <div className="absolute w-[420px] h-[420px] bg-[#d8f3dc] rounded-full blur-[140px] glow-pulse"></div>
 
+          <img
+            src="/Smile.png"
+            alt="Plant illustration"
+            className="relative z-10 max-w-sm w-full object-contain drop-shadow-2xl"
+          />
         </div>
+
       </div>
     </section>
   );

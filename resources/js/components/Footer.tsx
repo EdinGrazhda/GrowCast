@@ -1,50 +1,87 @@
-// resources/js/components/Footer.tsx
-
 export default function Footer() {
   return (
-    <footer className="relative w-full bg-[#1B4332] text-white py-12 md:py-16 overflow-hidden">
-      
-      {/* Soft background glow */}
-      <div className="absolute -bottom-24 -right-24 w-80 h-80 bg-[#52B788]/30 blur-3xl rounded-full animate-float opacity-70"></div>
+    <footer
+      id="contact"
+      className="bg-[#1B4332] text-white pt-16 pb-10"
+    >
+      <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-4 gap-14">
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 lg:px-6 flex flex-col md:flex-row justify-between items-start gap-10">
-        
-        {/* Logo / Name */}
+        {/* COLUMN 1 — BRAND */}
         <div>
-          <h3 className="text-2xl font-semibold mb-2 tracking-tight">
-            GrowCast
-          </h3>
-          <p className="text-sm text-white/70 max-w-xs">
-            Smarter planting, powered by weather & AI.
+          <h3 className="text-2xl font-bold mb-3">GrowCast</h3>
+
+          <p className="text-white/80 text-sm leading-relaxed max-w-xs">
+            Smart farming powered by weather intelligence and AI-driven crop insights.
           </p>
+
+          {/* Social Icons */}
+          <div className="flex gap-4 mt-5">
+            <a href="#" className="hover:text-[#95d5b2] transition text-xl">
+              <i className="ri-facebook-fill"></i>
+            </a>
+            <a href="#" className="hover:text-[#95d5b2] transition text-xl">
+              <i className="ri-instagram-line"></i>
+            </a>
+            <a href="#" className="hover:text-[#95d5b2] transition text-xl">
+              <i className="ri-twitter-x-line"></i>
+            </a>
+            <a href="#" className="hover:text-[#95d5b2] transition text-xl">
+              <i className="ri-linkedin-fill"></i>
+            </a>
+          </div>
         </div>
 
-        {/* Quick links */}
-        <div className="flex flex-col gap-2 text-sm">
-          <a href="#" className="text-white/70 hover:text-white transition">
-            Home
-          </a>
-          <a href="#" className="text-white/70 hover:text-white transition">
-            Features
-          </a>
-          <a href="#" className="text-white/70 hover:text-white transition">
-            How it works
-          </a>
-          <a href="#" className="text-white/70 hover:text-white transition">
-            Contact
-          </a>
-        </div>
-
-        {/* Contact */}
+        {/* COLUMN 2 — PRODUCT */}
         <div>
-          <p className="text-sm font-medium mb-2">Contact</p>
-          <p className="text-sm text-white/70">support@growcast.ai</p>
+          <h4 className="text-lg font-semibold mb-4">Product</h4>
+          <ul className="space-y-3 text-white/70">
+            <li className="hover:text-white transition cursor-pointer">Features</li>
+            <li className="hover:text-white transition cursor-pointer">AI Insights</li>
+            <li className="hover:text-white transition cursor-pointer">Pricing</li>
+            <li className="hover:text-white transition cursor-pointer">Farm Dashboard</li>
+          </ul>
+        </div>
+
+        {/* COLUMN 3 — COMPANY */}
+        <div>
+          <h4 className="text-lg font-semibold mb-4">Company</h4>
+          <ul className="space-y-3 text-white/70">
+            <li className="hover:text-white transition cursor-pointer">About Us</li>
+            <li className="hover:text-white transition cursor-pointer">Our Mission</li>
+            <li className="hover:text-white transition cursor-pointer">Team</li>
+            <li className="hover:text-white transition cursor-pointer">Careers</li>
+          </ul>
+        </div>
+
+        {/* COLUMN 4 — SUPPORT */}
+        <div>
+          <h4 className="text-lg font-semibold mb-4">Support</h4>
+          <ul className="space-y-3 text-white/70">
+            <li className="hover:text-white transition cursor-pointer">Help Center</li>
+
+            {/* CLICK → Scroll te Footer */}
+            <li
+              onClick={() =>
+                document
+                  .getElementById("contact")
+                  ?.scrollIntoView({ behavior: "smooth" })
+              }
+              className="hover:text-white transition cursor-pointer"
+            >
+              Contact Us
+            </li>
+
+            <li className="hover:text-white transition cursor-pointer">Privacy Policy</li>
+            <li className="hover:text-white transition cursor-pointer">Terms & Conditions</li>
+          </ul>
         </div>
       </div>
 
-      {/* Bottom line */}
-      <div className="mt-12 border-t border-white/10 pt-6 text-center text-xs text-white/60">
-        © {new Date().getFullYear()} GrowCast. All rights reserved.
+      {/* COPYRIGHT */}
+      <div className="border-t border-white/10 mt-14 pt-6">
+        <p className="text-center text-sm text-white/60">
+          © {new Date().getFullYear()} GrowCast. All rights reserved.
+        </p>
       </div>
     </footer>
   );
