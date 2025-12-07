@@ -17,21 +17,11 @@ class UserController extends Controller
     use AuthorizesRequests;
 
     /**
-     * Check if user is admin.
-     */
-    private function checkGate()
-    {
-        if (!Gate::allows('isAdmin')) {
-            abort(403);
-        }
-    }
-
-    /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $this->checkGate();
+        $this->authorize('viewAny', User::class);
         
         $users = User::with('roles')->latest()->get();
         
@@ -45,7 +35,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $this->checkGate();
+        $this->authorize('create', User::class);
         
         $roles = Role::all();
         
@@ -59,7 +49,7 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $this->checkGate();
+        $this->authorize('create', User::class);
         
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -87,7 +77,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        $this->checkGate();
+        $this->authorize('view', $user);
         
         $user->load('roles.permissions');
         
@@ -101,7 +91,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $this->checkGate();
+        $this->authorize('update', $user);
         
         $user->load('roles');
         $roles = Role::all();
@@ -117,7 +107,7 @@ class UserController extends Controller
      */
     public function update(Request $request, User $user)
     {
-        $this->checkGate();
+        $this->authorize('update', $user);
         
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -145,7 +135,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $this->checkGate();
+        $this->authorize('delete', $user);
         
         if ($user->id === Auth::id()) {
             return back()->with('error', 'You cannot delete your own account.');
@@ -162,7 +152,7 @@ class UserController extends Controller
      */
     public function assignRolePage(User $user)
     {
-        $this->checkGate();
+        $this->authorize('update', $user);
         
         $user->load('roles');
         $roles = Role::all();
@@ -178,7 +168,7 @@ class UserController extends Controller
      */
     public function assignRole(Request $request, User $user)
     {
-        $this->checkGate();
+        $this->authorize('update', $user);
         
         $validated = $request->validate([
             'role' => 'required|exists:roles,name',

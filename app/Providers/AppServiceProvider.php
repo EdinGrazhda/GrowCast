@@ -48,33 +48,12 @@ class AppServiceProvider extends ServiceProvider
             Gate::policy($model, $policy);
         }
 
-        // Define gate for admin check
+        // Define gate for admin check (used in some places)
         Gate::define('isAdmin', function (User $user) {
             return $user->hasRole('admin');
         });
 
-        // Define gates for resource access
-        Gate::define('access-plants', function (User $user) {
-            return $user->hasRole('admin');
-        });
-
-        Gate::define('access-users', function (User $user) {
-            return $user->hasRole('admin');
-        });
-
-        Gate::define('access-roles', function (User $user) {
-            return $user->hasRole('admin');
-        });
-
-        Gate::define('access-farms', function (User $user) {
-            return $user->hasRole(['admin', 'farmer']);
-        });
-
-        Gate::define('access-weather', function (User $user) {
-            return $user->hasRole(['admin', 'farmer']);
-        });
-
-        // Super admin gate - bypass all checks for admin users
+        // Super admin gate - bypass all policy checks for admin users
         Gate::before(function (User $user, string $ability) {
             if ($user->hasRole('admin')) {
                 return true;
