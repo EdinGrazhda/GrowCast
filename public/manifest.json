@@ -1,0 +1,16 @@
+{
+    "name": "GrowCast",
+    "short_name": "GrowCast",
+    "description": "Smart farming powered by weather intelligence and AI-driven crop insights",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#D8F3DC",
+    "theme_color": "#1B4332",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "64x64",
+            "type": "image/x-icon"
+        }
+    ]
+}
