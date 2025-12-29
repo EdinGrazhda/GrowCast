@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\FarmController;
 use App\Http\Controllers\API\PlantController;
+use App\Http\Controllers\API\PlantDiseaseController;
 use App\Http\Controllers\API\WeatherController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,3 +19,6 @@ Route::apiResource('plants', PlantController::class);
 
 // Weather API Routes
 Route::apiResource('weather', WeatherController::class);
+
+// Plant Disease Detection API Routes
+Route::post('plant-disease/detect', [PlantDiseaseController::class, 'detect'])->name('api.plant-disease.detect');
