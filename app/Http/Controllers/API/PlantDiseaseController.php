@@ -62,4 +62,3 @@ class PlantDiseaseController extends Controller
         }
     }
 }
-
