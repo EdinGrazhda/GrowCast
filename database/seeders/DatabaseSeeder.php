@@ -48,5 +48,18 @@ class DatabaseSeeder extends Seeder
         if (!$farmer->hasRole('farmer')) {
             $farmer->assignRole($farmerRole);
         }
+
+        // Create test user with admin role
+        $testUser = User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Sync admin role for test user
+        $testUser->syncRoles('admin');
     }
 }

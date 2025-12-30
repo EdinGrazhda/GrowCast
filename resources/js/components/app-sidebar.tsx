@@ -15,6 +15,7 @@ import { dashboard } from '@/routes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
+    Activity,
     BookOpen,
     CloudRain,
     Folder,
@@ -56,6 +57,12 @@ const allNavItems: NavItem[] = [
         href: '/weather',
         icon: CloudRain,
         permissions: ['weather_View'], // accessible by anyone with weather_View permission
+    },
+    {
+        title: 'Disease Detection',
+        href: '/plant-disease',
+        icon: Activity,
+        permissions: ['plant_View'], // accessible by anyone with plant_View permission
     },
     {
         title: 'Users',

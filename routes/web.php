@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FarmController;
 use App\Http\Controllers\PlantController;
+use App\Http\Controllers\PlantDiseaseController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SprayController;
 use App\Http\Controllers\UserController;
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     // Weather forecast route
     Route::post('weather/forecast', [WeatherController::class, 'getForecast'])->name('weather.forecast');
+
+    // Plant disease detection routes
+    Route::get('plant-disease', [PlantDiseaseController::class, 'index'])->name('plant-disease.index');
+    Route::post('plant-disease/detect', [PlantDiseaseController::class, 'detect'])->name('plant-disease.detect');
 
     // User role management routes
     Route::get('users/{user}/assign-role', [UserController::class, 'assignRolePage'])->name('users.assign-role');
