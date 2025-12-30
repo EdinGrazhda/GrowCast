@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FarmController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SprayController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
@@ -23,6 +24,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Resource routes - authorization handled by policies
     Route::resource('farms', FarmController::class);
     Route::resource('plants', PlantController::class);
+    Route::resource('sprays', SprayController::class);
     Route::resource('weather', WeatherController::class);
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);

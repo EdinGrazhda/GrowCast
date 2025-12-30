@@ -4,11 +4,13 @@ namespace App\Providers;
 
 use App\Models\Farm;
 use App\Models\Plant;
+use App\Models\Spray;
 use App\Models\User;
 use App\Models\Weather;
 use App\Policies\FarmPolicy;
 use App\Policies\PlantPolicy;
 use App\Policies\RolePolicy;
+use App\Policies\SprayPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\WeatherPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -25,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
     protected $policies = [
         Farm::class => FarmPolicy::class,
         Plant::class => PlantPolicy::class,
+        Spray::class => SprayPolicy::class,
         Weather::class => WeatherPolicy::class,
         User::class => UserPolicy::class,
         Role::class => RolePolicy::class,

@@ -29,4 +29,9 @@ class Plant extends Model
     {
         return $this->hasMany(Weather::class);
     }
+
+    public function sprays()
+    {
+        return $this->hasManyThrough(Spray::class, Farm::class);
+    }
 }

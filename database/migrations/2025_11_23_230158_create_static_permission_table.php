@@ -25,6 +25,10 @@ return new class extends Migration
             'weather_Create',
             'weather_Edit',
             'weather_Delete',
+            'spray_View',
+            'spray_Create',
+            'spray_Edit',
+            'spray_Delete',
             'user_View',
             'user_Create',
             'user_Edit',
@@ -75,6 +79,14 @@ return new class extends Migration
             'permission_Create',
             'permission_Edit',
             'permission_Delete',
+            'spray_View',
+            'spray_Create',
+            'spray_Edit',
+            'spray_Delete',
+            'diagnose_View',
+            'diagnose_Create',
+            'diagnose_Edit',
+            'diagnose_Delete',
         ];
 
         foreach ($permissions as $permission) {

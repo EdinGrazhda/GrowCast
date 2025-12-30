@@ -26,4 +26,8 @@ class Farm extends Model
     {
         return $this->belongsTo(Plant::class);
     }
+    public function sprays()
+    {
+        return $this->hasMany(Spray::class);
+    }
 }

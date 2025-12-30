@@ -46,6 +46,12 @@ const allNavItems: NavItem[] = [
         permissions: ['plant_View'], // accessible by anyone with plant_View permission
     },
     {
+        title: 'Sprays',
+        href: '/sprays',
+        icon: Sprout,
+        permissions: ['spray_View'], // accessible by anyone with spray_View permission
+    },
+    {
         title: 'Weather',
         href: '/weather',
         icon: CloudRain,
@@ -63,6 +69,7 @@ const allNavItems: NavItem[] = [
         icon: ShieldCheck,
         permissions: ['role_View'], // accessible by anyone with role_View permission
     },
+    
 ];
 
 const footerNavItems: NavItem[] = [
@@ -76,6 +83,7 @@ const footerNavItems: NavItem[] = [
         href: 'https://laravel.com/docs/starter-kits#react',
         icon: BookOpen,
     },
+ 
 ];
 
 export function AppSidebar() {
