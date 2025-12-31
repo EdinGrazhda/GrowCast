@@ -341,6 +341,10 @@ class SprayController extends Controller
      */
     public function getSpraysByPlant(Request $request)
     {
+        Log::info('getSpraysByPlant called', [
+            'request_data' => $request->all(),
+        ]);
+
         $validated = $request->validate([
             'plant_id' => 'required|exists:plant,id',
         ]);
@@ -369,6 +373,7 @@ class SprayController extends Controller
             'user_id' => $user->id,
             'is_admin' => $user->hasRole('admin'),
             'sprays_count' => $sprays->count(),
+            'sprays_data' => $sprays->toArray(),
         ]);
 
         return response()->json([

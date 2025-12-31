@@ -111,6 +111,7 @@ export default function SprayRecommendation({
     const [selectedSpray, setSelectedSpray] = useState<Spray | null>(null);
 
     const [loading, setLoading] = useState(false);
+    const [loadingSprays, setLoadingSprays] = useState(false);
     const [recommendation, setRecommendation] =
         useState<SprayRecommendation | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -122,8 +123,12 @@ export default function SprayRecommendation({
         setSelectedSpray(null);
         setAvailableSprays([]);
         setRecommendation(null);
+        setLoadingSprays(true);
 
-        if (!plantId) return;
+        if (!plantId) {
+            setLoadingSprays(false);
+            return;
+        }
 
         try {
             console.log('Fetching sprays for plant_id:', plantId);
@@ -143,12 +148,20 @@ export default function SprayRecommendation({
             console.log('Response status:', response.status);
             const data = await response.json();
             console.log('Response data:', data);
+            console.log('Sprays count:', data.sprays?.length);
 
             if (response.ok && data.success) {
-                setAvailableSprays(data.sprays);
+                console.log('Setting available sprays:', data.sprays);
+                setAvailableSprays(data.sprays || []);
+            } else {
+                console.error('Response not OK or no success flag', data);
+                setAvailableSprays([]);
             }
         } catch (err) {
             console.error('Error fetching sprays:', err);
+            setAvailableSprays([]);
+        } finally {
+            setLoadingSprays(false);
         }
     };
 
@@ -427,7 +440,17 @@ export default function SprayRecommendation({
                                 </>
                             )}
 
+                            {loadingSprays && (
+                                <Alert>
+                                    <Info className="h-4 w-4" />
+                                    <AlertDescription>
+                                        Loading sprays...
+                                    </AlertDescription>
+                                </Alert>
+                            )}
+
                             {selectedPlantId &&
+                                !loadingSprays &&
                                 availableSprays.length === 0 && (
                                     <Alert>
                                         <Info className="h-4 w-4" />
