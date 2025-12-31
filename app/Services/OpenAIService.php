@@ -365,6 +365,15 @@ class OpenAIService
             // Build system prompt with spray database knowledge
             $systemPrompt = $this->buildSpraySystemPrompt();
 
+            // Generate a consistent seed based on input data for reproducibility
+            $seedData = json_encode([
+                'plant' => $plantData['name'] ?? '',
+                'farm' => $farmData['name'] ?? '',
+                'spray' => $currentSpray['spray_name'] ?? '',
+                'date' => now()->format('Y-m-d'), // Same seed for same day
+            ]);
+            $seed = crc32($seedData);
+
             $response = Http::withHeaders([
                 'Authorization' => 'Bearer '.$this->apiKey,
                 'Content-Type' => 'application/json',
@@ -380,8 +389,10 @@ class OpenAIService
                         'content' => $prompt,
                     ],
                 ],
-                'temperature' => 0.4, // Lower temperature for more consistent, reliable recommendations
+                'temperature' => 0.1, // Very low temperature for consistent, deterministic recommendations
                 'max_tokens' => 1500,
+                'seed' => $seed, // Use seed for reproducible outputs
+                'top_p' => 0.95, // Slightly restrict token sampling for consistency
             ]);
 
             if ($response->successful()) {
@@ -438,17 +449,27 @@ class OpenAIService
      */
     protected function buildSpraySystemPrompt(): string
     {
-        $basePrompt = 'You are an expert agricultural consultant specializing in integrated pest management (IPM), '.
-                     'crop protection, and precision agriculture. You have deep knowledge of:'."\n".
-                     '- Plant-specific pest and disease patterns'."\n".
-                     '- Chemical application timing and efficacy'."\n".
-                     '- Weather impacts on spray effectiveness (rain, wind, temperature, humidity)'."\n".
-                     '- Spray intervals and resistance management'."\n".
-                     '- Pre-harvest intervals (PHI) and safety periods'."\n".
-                     '- Seasonal pest and disease pressures'."\n".
-                     '- Preventive vs. curative treatment strategies'."\n".
-                     '- Environmental factors affecting spray absorption and efficacy'."\n\n".
-                     'Your recommendations are data-driven, practical, and focused on maximizing efficacy while minimizing environmental impact.'."\n\n";
+        $basePrompt = 'You are a PRECISE and SCIENTIFIC agricultural consultant specializing in integrated pest management (IPM), '.
+                     'crop protection, and precision agriculture. '."\n\n".
+                     'CRITICAL INSTRUCTION: You must provide CONSISTENT, EVIDENCE-BASED recommendations. '."\n".
+                     'Do NOT vary your answers - given the same inputs, always provide the same recommendation. '."\n".
+                     'Base ALL decisions on established agricultural science and the specific data provided.'."\n\n".
+                     'Your expertise includes:'."\n".
+                     '- Plant-specific pest and disease patterns (use scientific thresholds)'."\n".
+                     '- Chemical application timing based on documented efficacy windows'."\n".
+                     '- Weather impacts: Rain within 6 hours = avoid, Wind >15 km/h = avoid, Temp 15-25°C = optimal'."\n".
+                     '- Standard spray intervals: Fungicides 7-14 days, Insecticides 10-21 days, Herbicides as needed'."\n".
+                     '- Pre-harvest intervals (PHI): Always respect labeled PHI periods'."\n".
+                     '- Seasonal pressures: Spring = fungal diseases, Summer = insects, Fall = late blight'."\n".
+                     '- Application timing: Early morning (6-9 AM) or late evening (6-8 PM) when wind is calm'."\n\n".
+                     'DECISION RULES (apply consistently):'."\n".
+                     '- If rain expected within 24 hours: DO NOT recommend spraying'."\n".
+                     '- If wind speed > 15 km/h: DO NOT recommend spraying'."\n".
+                     '- If temperature > 30°C: Recommend early morning only'."\n".
+                     '- If temperature < 10°C: Consider delayed application'."\n".
+                     '- If humidity > 90%: Risk of poor drying, caution advised'."\n".
+                     '- If last spray < 7 days ago with same chemical: DO NOT recommend (resistance risk)'."\n\n".
+                     'Your recommendations must be DETERMINISTIC - same conditions = same advice.'."\n\n";
 
         // Fetch all sprays from database to enrich AI knowledge
         try {
@@ -697,14 +718,17 @@ class OpenAIService
         $prompt .= "  \"alternativeActions\": \"Alternative approaches if conditions are not suitable\"\n";
         $prompt .= "}\n\n";
 
-        $prompt .= "CRITICAL REQUIREMENTS:\n";
-        $prompt .= "- Base recommendations on scientific principles of spray application\n";
-        $prompt .= "- Consider the specific plant type and its sensitivities\n";
-        $prompt .= "- Account for chemical properties and environmental conditions\n";
-        $prompt .= "- Provide specific dates from the forecast data\n";
-        $prompt .= "- Be practical and realistic with timing recommendations\n";
-        $prompt .= "- Prioritize effectiveness while considering environmental impact\n";
-        $prompt .= "- Return ONLY valid JSON, no additional text or markdown\n";
+        $prompt .= "CRITICAL REQUIREMENTS FOR CONSISTENT RECOMMENDATIONS:\n";
+        $prompt .= "1. Apply the DECISION RULES strictly - no exceptions\n";
+        $prompt .= "2. Use EXACT thresholds: Wind >15 km/h = avoid, Rain within 24h = avoid, Temp 15-25°C = optimal\n";
+        $prompt .= "3. Recommend the EARLIEST suitable date from the forecast that meets all criteria\n";
+        $prompt .= "4. If multiple dates are equally suitable, prefer the closest date\n";
+        $prompt .= "5. Time of day: Default to Early morning (6-8 AM) unless temperature >28°C, then Late evening\n";
+        $prompt .= "6. Be DETERMINISTIC - given identical inputs, always provide identical outputs\n";
+        $prompt .= "7. Base urgency ONLY on: pest presence = HIGH, preventive schedule = MEDIUM, optional = LOW\n";
+        $prompt .= "8. Return ONLY valid JSON, no additional text, explanations, or markdown\n";
+        $prompt .= "9. Use ONLY dates from the provided weather forecast data\n";
+        $prompt .= "10. If NO suitable date exists in forecast, clearly state this in recommendation\n";
 
         return $prompt;
     }
