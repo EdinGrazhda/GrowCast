@@ -55,9 +55,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         </Link>
                         <div className="flex items-start justify-between">
                             <div>
-                                <h2
-                                    className="text-3xl font-bold text-primary"
-                                >
+                                <h2 className="text-3xl font-bold text-primary">
                                     {weather.farm.name}
                                 </h2>
                                 <p className="mt-1 text-muted-foreground">
@@ -80,9 +78,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             {/* Farm Details */}
                             <div className="rounded-lg bg-card p-6 shadow-md">
-                                <h3
-                                    className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
-                                >
+                                <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary">
                                     <MapPin className="h-5 w-5" />
                                     Farm Information
                                 </h3>
@@ -145,9 +141,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
 
                             {/* Plant Details */}
                             <div className="rounded-lg bg-card p-6 shadow-md">
-                                <h3
-                                    className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
-                                >
+                                <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary">
                                     <Sprout className="h-5 w-5" />
                                     Plant Information
                                 </h3>
@@ -185,9 +179,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         {/* Best Planting Day */}
                         {weather.best_planting_day && (
                             <div className="rounded-lg bg-card p-6 shadow-md">
-                                <h3
-                                    className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
-                                >
+                                <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary">
                                     <Calendar className="h-5 w-5" />
                                     Recommended Planting Date
                                 </h3>
@@ -212,9 +204,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
 
                         {/* Weather Metrics */}
                         <div className="rounded-lg bg-card p-6 shadow-md">
-                            <h3
-                                className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
-                            >
+                            <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary">
                                 <CloudRain className="h-5 w-5" />
                                 Weather Conditions
                             </h3>
@@ -269,9 +259,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         {/* AI Recommendation */}
                         {weather.recommendation && (
                             <div className="rounded-lg bg-card p-6 shadow-md">
-                                <h3
-                                    className="mb-4 text-lg font-semibold text-primary"
-                                >
+                                <h3 className="mb-4 text-lg font-semibold text-primary">
                                     AI Recommendation
                                 </h3>
                                 <div
@@ -289,14 +277,14 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
 
                         {/* Metadata */}
                         <div className="rounded-lg bg-card p-6 shadow-md">
-                            <h3
-                                className="mb-4 text-lg font-semibold text-primary"
-                            >
+                            <h3 className="mb-4 text-lg font-semibold text-primary">
                                 Record Information
                             </h3>
                             <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                                 <div>
-                                    <p className="text-muted-foreground">Created At</p>
+                                    <p className="text-muted-foreground">
+                                        Created At
+                                    </p>
                                     <p className="font-medium">
                                         {new Date(
                                             weather.created_at,
