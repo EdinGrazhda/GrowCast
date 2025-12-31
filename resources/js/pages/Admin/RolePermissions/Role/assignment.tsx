@@ -125,8 +125,7 @@ export default function Assignment({ role, permissions }: Props) {
                         <Link href="/roles">
                             <Button
                                 variant="ghost"
-                                className="mb-4"
-                                style={{ color: '#2D6A4F' }}
+                                className="mb-4 text-primary"
                             >
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Roles
@@ -134,18 +133,12 @@ export default function Assignment({ role, permissions }: Props) {
                         </Link>
                         <div className="flex items-center justify-between">
                             <div>
-                                <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
-                                >
+                                <h1 className="text-3xl font-bold text-primary">
                                     Assign Permissions
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Manage permissions for{' '}
-                                    <span
-                                        className="font-semibold"
-                                        style={{ color: '#2D6A4F' }}
-                                    >
+                                    <span className="font-semibold text-primary">
                                         {role.name}
                                     </span>{' '}
                                     role
@@ -153,22 +146,19 @@ export default function Assignment({ role, permissions }: Props) {
                             </div>
                             <div className="flex items-center gap-3">
                                 <div className="text-right">
-                                    <div className="text-sm text-gray-500">
+                                    <div className="text-sm text-muted-foreground">
                                         Selected
                                     </div>
-                                    <div
-                                        className="text-2xl font-bold"
-                                        style={{ color: '#2D6A4F' }}
-                                    >
+                                    <div className="text-2xl font-bold text-primary">
                                         {selectedPermissions.length}
                                     </div>
                                 </div>
-                                <div className="h-12 w-px bg-gray-300"></div>
+                                <div className="h-12 w-px bg-border"></div>
                                 <div className="text-right">
-                                    <div className="text-sm text-gray-500">
+                                    <div className="text-sm text-muted-foreground">
                                         Total
                                     </div>
-                                    <div className="text-2xl font-bold text-gray-700">
+                                    <div className="text-2xl font-bold text-foreground">
                                         {permissions.length}
                                     </div>
                                 </div>
@@ -179,7 +169,7 @@ export default function Assignment({ role, permissions }: Props) {
                     {/* Permissions Table */}
                     <Card className="mb-6">
                         <CardHeader>
-                            <CardTitle style={{ color: '#2D6A4F' }}>
+                            <CardTitle className="text-primary">
                                 Permission Assignment
                             </CardTitle>
                             <CardDescription>
@@ -205,20 +195,11 @@ export default function Assignment({ role, permissions }: Props) {
                                         return (
                                             <div
                                                 key={category}
-                                                className="overflow-hidden rounded-lg border-2"
-                                                style={{
-                                                    borderColor: '#74C69D40',
-                                                }}
+                                                className="overflow-hidden rounded-lg border-2 border-primary/20"
                                             >
                                                 {/* Category Header */}
                                                 <div
-                                                    className="flex items-center justify-between px-4 py-3"
-                                                    style={{
-                                                        backgroundColor:
-                                                            allSelected
-                                                                ? '#2D6A4F'
-                                                                : '#74C69D20',
-                                                    }}
+                                                    className={`flex items-center justify-between px-4 py-3 ${allSelected ? 'bg-primary' : 'bg-primary/10'}`}
                                                 >
                                                     <div className="flex items-center gap-3">
                                                         <input
@@ -231,19 +212,10 @@ export default function Assignment({ role, permissions }: Props) {
                                                                     category,
                                                                 )
                                                             }
-                                                            className="h-5 w-5 cursor-pointer rounded"
-                                                            style={{
-                                                                accentColor:
-                                                                    '#2D6A4F',
-                                                            }}
+                                                            className="h-5 w-5 cursor-pointer rounded accent-primary"
                                                         />
                                                         <span
-                                                            className="text-lg font-bold capitalize"
-                                                            style={{
-                                                                color: allSelected
-                                                                    ? 'white'
-                                                                    : '#2D6A4F',
-                                                            }}
+                                                            className={`text-lg font-bold capitalize ${allSelected ? 'text-primary-foreground' : 'text-primary'}`}
                                                         >
                                                             {category}
                                                         </span>
@@ -255,12 +227,7 @@ export default function Assignment({ role, permissions }: Props) {
                                                             )}
                                                     </div>
                                                     <span
-                                                        className="text-sm font-medium"
-                                                        style={{
-                                                            color: allSelected
-                                                                ? 'white'
-                                                                : '#2D6A4F',
-                                                        }}
+                                                        className={`text-sm font-medium ${allSelected ? 'text-primary-foreground' : 'text-primary'}`}
                                                     >
                                                         {
                                                             perms.filter((p) =>
@@ -285,17 +252,11 @@ export default function Assignment({ role, permissions }: Props) {
                                                                 key={
                                                                     permission.id
                                                                 }
-                                                                className="flex cursor-pointer items-center gap-2 rounded-md border-2 p-3 transition-all hover:shadow-md"
-                                                                style={{
-                                                                    borderColor:
-                                                                        isSelected
-                                                                            ? '#2D6A4F'
-                                                                            : '#74C69D40',
-                                                                    backgroundColor:
-                                                                        isSelected
-                                                                            ? '#74C69D20'
-                                                                            : 'transparent',
-                                                                }}
+                                                                className={`flex cursor-pointer items-center gap-2 rounded-md border-2 p-3 transition-all hover:shadow-md ${
+                                                                    isSelected
+                                                                        ? 'border-primary bg-primary/10'
+                                                                        : 'border-primary/20 bg-transparent'
+                                                                }`}
                                                             >
                                                                 <input
                                                                     type="checkbox"
@@ -307,11 +268,7 @@ export default function Assignment({ role, permissions }: Props) {
                                                                             permission.name,
                                                                         )
                                                                     }
-                                                                    className="h-4 w-4 cursor-pointer rounded"
-                                                                    style={{
-                                                                        accentColor:
-                                                                            '#2D6A4F',
-                                                                    }}
+                                                                    className="h-4 w-4 cursor-pointer rounded accent-primary"
                                                                 />
                                                                 <span className="flex-1 text-sm font-medium">
                                                                     {
@@ -321,12 +278,7 @@ export default function Assignment({ role, permissions }: Props) {
                                                                     }
                                                                 </span>
                                                                 {isSelected && (
-                                                                    <Check
-                                                                        className="h-4 w-4"
-                                                                        style={{
-                                                                            color: '#2D6A4F',
-                                                                        }}
-                                                                    />
+                                                                    <Check className="h-4 w-4 text-primary" />
                                                                 )}
                                                             </label>
                                                         );
@@ -346,10 +298,7 @@ export default function Assignment({ role, permissions }: Props) {
                             <Button
                                 type="button"
                                 variant="outline"
-                                style={{
-                                    borderColor: '#2D6A4F',
-                                    color: '#2D6A4F',
-                                }}
+                                className="border-primary text-primary"
                             >
                                 <X className="mr-2 h-4 w-4" />
                                 Cancel
@@ -358,12 +307,7 @@ export default function Assignment({ role, permissions }: Props) {
                         <Button
                             onClick={handleSave}
                             disabled={saving}
-                            className="shadow-lg transition-all duration-200 hover:shadow-xl"
-                            style={{
-                                backgroundColor: '#2D6A4F',
-                                color: 'white',
-                                opacity: saving ? 0.7 : 1,
-                            }}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg transition-all duration-200 hover:shadow-xl disabled:opacity-70"
                         >
                             <Save className="mr-2 h-4 w-4" />
                             {saving ? 'Saving...' : 'Save Permissions'}

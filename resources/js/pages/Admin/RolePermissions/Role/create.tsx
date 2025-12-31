@@ -48,20 +48,16 @@ export default function Create() {
                         <Link href="/roles">
                             <Button
                                 variant="ghost"
-                                className="mb-4"
-                                style={{ color: '#2D6A4F' }}
+                                className="mb-4 text-primary"
                             >
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Roles
                             </Button>
                         </Link>
-                        <h1
-                            className="text-3xl font-bold"
-                            style={{ color: '#2D6A4F' }}
-                        >
+                        <h1 className="text-3xl font-bold text-primary">
                             Create New Role
                         </h1>
-                        <p className="mt-2 text-gray-600 dark:text-gray-400">
+                        <p className="mt-2 text-muted-foreground">
                             Define a new role and assign permissions
                         </p>
                     </div>
@@ -70,7 +66,7 @@ export default function Create() {
                         {/* Role Name */}
                         <Card className="mb-6">
                             <CardHeader>
-                                <CardTitle style={{ color: '#2D6A4F' }}>
+                                <CardTitle className="text-primary">
                                     Role Information
                                 </CardTitle>
                                 <CardDescription>
@@ -79,10 +75,7 @@ export default function Create() {
                             </CardHeader>
                             <CardContent>
                                 <div>
-                                    <label
-                                        className="mb-2 block text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
-                                    >
+                                    <label className="mb-2 block text-sm font-medium text-primary">
                                         Role Name *
                                     </label>
                                     <input
@@ -91,17 +84,14 @@ export default function Create() {
                                         onChange={(e) =>
                                             setData('name', e.target.value)
                                         }
-                                        className="w-full rounded-lg border-2 px-4 py-2 transition-all focus:ring-2 focus:ring-[#2D6A4F] focus:outline-none"
-                                        style={{
-                                            borderColor: errors.name
-                                                ? '#ef4444'
-                                                : '#74C69D',
-                                        }}
+                                        className={`w-full rounded-lg border-2 px-4 py-2 transition-all focus:ring-2 focus:ring-primary focus:outline-none ${
+                                            errors.name ? 'border-destructive' : 'border-primary/60'
+                                        }`}
                                         placeholder="Enter role name"
                                         required
                                     />
                                     {errors.name && (
-                                        <p className="mt-2 text-sm text-red-600">
+                                        <p className="mt-2 text-sm text-destructive">
                                             {errors.name}
                                         </p>
                                     )}
@@ -115,10 +105,7 @@ export default function Create() {
                                 <Button
                                     type="button"
                                     variant="outline"
-                                    style={{
-                                        borderColor: '#2D6A4F',
-                                        color: '#2D6A4F',
-                                    }}
+                                    className="border-primary text-primary"
                                 >
                                     Cancel
                                 </Button>
@@ -126,12 +113,7 @@ export default function Create() {
                             <Button
                                 type="submit"
                                 disabled={processing}
-                                className="shadow-lg transition-all duration-200 hover:shadow-xl"
-                                style={{
-                                    backgroundColor: '#2D6A4F',
-                                    color: 'white',
-                                    opacity: processing ? 0.7 : 1,
-                                }}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg transition-all duration-200 hover:shadow-xl disabled:opacity-70"
                             >
                                 <Save className="mr-2 h-4 w-4" />
                                 {processing ? 'Creating...' : 'Create Role'}

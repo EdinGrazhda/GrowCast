@@ -248,7 +248,7 @@ export default function SprayRecommendation({
             <div className="space-y-6 p-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">
+                        <h1 className="text-3xl font-bold tracking-tight text-primary">
                             AI Spray Timing Recommendation
                         </h1>
                         <p className="mt-1 text-muted-foreground">
@@ -487,11 +487,11 @@ export default function SprayRecommendation({
                         {recommendation && (
                             <>
                                 {/* Main Recommendation */}
-                                <Card className="border-2">
+                                <Card className="border border-border">
                                     <CardHeader>
                                         <div className="flex items-start justify-between">
                                             <CardTitle className="flex items-center gap-2">
-                                                <CheckCircle2 className="h-6 w-6 text-green-600" />
+                                                <CheckCircle2 className="h-6 w-6 text-primary" />
                                                 AI Recommendation
                                             </CardTitle>
                                             <Badge
@@ -520,7 +520,7 @@ export default function SprayRecommendation({
                                     recommendation.optimalDates.length > 0 && (
                                         <Card>
                                             <CardHeader>
-                                                <CardTitle className="flex items-center gap-2 text-green-700">
+                                                <CardTitle className="flex items-center gap-2 text-primary">
                                                     <Calendar className="h-5 w-5" />
                                                     Best Days to Spray
                                                 </CardTitle>
@@ -530,10 +530,10 @@ export default function SprayRecommendation({
                                                     (date, index) => (
                                                         <div
                                                             key={index}
-                                                            className="space-y-2 rounded-lg border-2 border-green-200 bg-green-50/50 p-4"
+                                                            className="space-y-2 rounded-lg border border-border bg-muted/30 p-4"
                                                         >
                                                             <div className="flex items-center justify-between">
-                                                                <div className="text-lg font-bold text-green-900">
+                                                                <div className="text-lg font-bold text-foreground">
                                                                     {new Date(
                                                                         date.date,
                                                                     ).toLocaleDateString(
@@ -548,17 +548,17 @@ export default function SprayRecommendation({
                                                                 </div>
                                                                 <Badge
                                                                     variant="outline"
-                                                                    className="border-green-600 text-green-700"
+                                                                    className="border-primary text-primary"
                                                                 >
                                                                     {
                                                                         date.timeOfDay
                                                                     }
                                                                 </Badge>
                                                             </div>
-                                                            <p className="text-sm text-green-800">
+                                                            <p className="text-sm text-muted-foreground">
                                                                 {date.reason}
                                                             </p>
-                                                            <div className="flex items-center gap-2 text-xs text-green-700">
+                                                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
                                                                 <CloudRain className="h-3 w-3" />
                                                                 {
                                                                     date.weatherSummary
@@ -576,7 +576,7 @@ export default function SprayRecommendation({
                                     recommendation.avoidDates.length > 0 && (
                                         <Card>
                                             <CardHeader>
-                                                <CardTitle className="flex items-center gap-2 text-red-700">
+                                                <CardTitle className="flex items-center gap-2 text-destructive">
                                                     <AlertTriangle className="h-5 w-5" />
                                                     Days to Avoid
                                                 </CardTitle>
@@ -586,11 +586,11 @@ export default function SprayRecommendation({
                                                     (date, index) => (
                                                         <div
                                                             key={index}
-                                                            className="flex items-start gap-3 rounded-lg border-2 border-red-200 bg-red-50 p-3"
+                                                            className="flex items-start gap-3 rounded-lg border border-border bg-muted/30 p-3"
                                                         >
-                                                            <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
+                                                            <AlertTriangle className="mt-0.5 h-5 w-5 flex-shrink-0 text-destructive" />
                                                             <div className="flex-1">
-                                                                <div className="font-semibold text-red-900">
+                                                                <div className="font-semibold text-destructive">
                                                                     {new Date(
                                                                         date.date,
                                                                     ).toLocaleDateString(
@@ -601,7 +601,7 @@ export default function SprayRecommendation({
                                                                         },
                                                                     )}
                                                                 </div>
-                                                                <p className="text-sm text-red-800">
+                                                                <p className="text-sm text-destructive/80">
                                                                     {
                                                                         date.reason
                                                                     }

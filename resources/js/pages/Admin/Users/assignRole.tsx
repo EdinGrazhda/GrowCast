@@ -59,34 +59,28 @@ export default function AssignRole({
             <div className="py-12">
                 <div className="mx-auto max-w-3xl sm:px-6 lg:px-8">
                     <div className="mb-6">
-                        <h2
-                            className="text-3xl font-bold"
-                            style={{ color: '#2D6A4F' }}
-                        >
+                        <h2 className="text-3xl font-bold text-primary">
                             Manage User Roles
                         </h2>
-                        <p className="mt-1 text-gray-600">
+                        <p className="mt-1 text-muted-foreground">
                             Assign or remove roles for {user.name}
                         </p>
                     </div>
 
                     <div className="space-y-6">
                         {/* User Info Card */}
-                        <div className="rounded-lg bg-white p-6 shadow-md">
+                        <div className="rounded-lg bg-card p-6 shadow-md">
                             <div className="flex items-center gap-4">
-                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-                                    <span
-                                        className="text-2xl font-bold"
-                                        style={{ color: '#2D6A4F' }}
-                                    >
+                                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/20">
+                                    <span className="text-2xl font-bold text-primary">
                                         {user.name.charAt(0).toUpperCase()}
                                     </span>
                                 </div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-gray-900">
+                                    <h3 className="text-xl font-bold text-foreground">
                                         {user.name}
                                     </h3>
-                                    <p className="text-sm text-gray-500">
+                                    <p className="text-sm text-muted-foreground">
                                         {user.email}
                                     </p>
                                     <div className="mt-2 flex flex-wrap gap-1">
@@ -101,7 +95,7 @@ export default function AssignRole({
                                                 </span>
                                             ))
                                         ) : (
-                                            <span className="text-xs text-gray-400">
+                                            <span className="text-xs text-muted-foreground">
                                                 No roles assigned
                                             </span>
                                         )}
@@ -111,22 +105,16 @@ export default function AssignRole({
                         </div>
 
                         {/* Role Selection Card */}
-                        <div className="rounded-lg bg-white p-6 shadow-md">
+                        <div className="rounded-lg bg-card p-6 shadow-md">
                             <div className="mb-4 flex items-center gap-2">
-                                <UserCog
-                                    className="h-5 w-5"
-                                    style={{ color: '#2D6A4F' }}
-                                />
-                                <h3
-                                    className="text-lg font-semibold"
-                                    style={{ color: '#2D6A4F' }}
-                                >
+                                <UserCog className="h-5 w-5 text-primary" />
+                                <h3 className="text-lg font-semibold text-primary">
                                     Available Roles
                                 </h3>
                             </div>
 
                             {roles.length === 0 ? (
-                                <p className="text-sm text-gray-500">
+                                <p className="text-sm text-muted-foreground">
                                     No roles available. Please create roles
                                     first.
                                 </p>
@@ -135,7 +123,7 @@ export default function AssignRole({
                                     {roles.map((role) => (
                                         <div
                                             key={role.id}
-                                            className="flex items-center gap-3 rounded-md border p-4 transition-colors hover:bg-gray-50"
+                                            className="flex items-center gap-3 rounded-md border border-border p-4 transition-colors hover:bg-muted/50"
                                         >
                                             <Checkbox
                                                 id={`role-${role.id}`}
@@ -162,17 +150,11 @@ export default function AssignRole({
                                 </div>
                             )}
 
-                            <div
-                                className="mt-6 rounded-md p-4"
-                                style={{ backgroundColor: '#74C69D20' }}
-                            >
-                                <p
-                                    className="text-sm font-medium"
-                                    style={{ color: '#2D6A4F' }}
-                                >
+                            <div className="mt-6 rounded-md bg-primary/20 p-4">
+                                <p className="text-sm font-medium text-primary">
                                     💡 Role Information
                                 </p>
-                                <ul className="mt-2 space-y-1 text-xs text-gray-600">
+                                <ul className="mt-2 space-y-1 text-xs text-muted-foreground">
                                     <li>
                                         • <strong>Admin:</strong> Full system
                                         access and management
@@ -197,7 +179,7 @@ export default function AssignRole({
                             <Button
                                 type="button"
                                 onClick={handleSyncRoles}
-                                style={{ backgroundColor: '#2D6A4F' }}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90"
                             >
                                 Save Roles
                             </Button>

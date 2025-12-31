@@ -67,21 +67,17 @@ export default function Show({ spray }: Props) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="text-3xl font-bold text-primary"
                                 >
                                     {spray.spray_name}
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Spray application details and information
                                 </p>
                             </div>
                             <Link href={`/sprays/${spray.id}/edit`}>
                                 <Button
-                                    style={{
-                                        backgroundColor: '#2D6A4F',
-                                        color: 'white',
-                                    }}
+                                    className="bg-primary text-primary-foreground hover:bg-primary/90"
                                 >
                                     Edit Spray Record
                                 </Button>
@@ -92,15 +88,13 @@ export default function Show({ spray }: Props) {
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Spray Information */}
                         <Card
-                            className="border-2"
-                            style={{ borderColor: '#74C69D40' }}
+                            className="border-2 border-primary/20"
                         >
                             <CardHeader
-                                style={{ backgroundColor: '#74C69D10' }}
+                                className="bg-primary/10"
                             >
                                 <CardTitle
-                                    className="flex items-center gap-2"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-2 text-primary"
                                 >
                                     <Sprout className="h-5 w-5" />
                                     Spray Information
@@ -109,42 +103,35 @@ export default function Show({ spray }: Props) {
                             <CardContent className="space-y-4 pt-6">
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Spray Name
                                     </label>
-                                    <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                    <p className="mt-1 text-foreground">
                                         {spray.spray_name}
                                     </p>
                                 </div>
 
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Chemical Name
                                     </label>
-                                    <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                    <p className="mt-1 text-foreground">
                                         {spray.chemical_name}
                                     </p>
                                 </div>
 
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Purpose
                                     </label>
                                     <p className="mt-1">
                                         <span
-                                            className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
-                                            style={{
-                                                backgroundColor: '#74C69D30',
-                                                color: '#2D6A4F',
-                                            }}
+                                            className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-primary/20 text-primary"
                                         >
                                             {spray.purpose}
                                         </span>
@@ -154,20 +141,19 @@ export default function Show({ spray }: Props) {
                                 {spray.plant_pest && (
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Target Pest
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {spray.plant_pest}
                                         </p>
                                     </div>
                                 )}
 
                                 <div className="flex items-center gap-2 pt-2">
-                                    <Calendar className="h-4 w-4 text-gray-500" />
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                                    <span className="text-sm text-muted-foreground">
                                         Created: {spray.created_at}
                                     </span>
                                 </div>
@@ -176,15 +162,13 @@ export default function Show({ spray }: Props) {
 
                         {/* Application Details */}
                         <Card
-                            className="border-2"
-                            style={{ borderColor: '#74C69D40' }}
+                            className="border-2 border-primary/20"
                         >
                             <CardHeader
-                                style={{ backgroundColor: '#74C69D10' }}
+                                className="bg-primary/10"
                             >
                                 <CardTitle
-                                    className="flex items-center gap-2"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-2 text-primary"
                                 >
                                     Application Details
                                 </CardTitle>
@@ -192,12 +176,11 @@ export default function Show({ spray }: Props) {
                             <CardContent className="space-y-4 pt-6">
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Dosage
                                     </label>
-                                    <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                    <p className="mt-1 text-foreground">
                                         {spray.dosage}
                                     </p>
                                 </div>
@@ -205,12 +188,11 @@ export default function Show({ spray }: Props) {
                                 {spray.application_rate && (
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Application Rate
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {spray.application_rate}
                                         </p>
                                     </div>
@@ -219,12 +201,11 @@ export default function Show({ spray }: Props) {
                                 {spray.frequency && (
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Frequency
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {spray.frequency}
                                         </p>
                                     </div>
@@ -232,12 +213,11 @@ export default function Show({ spray }: Props) {
 
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Application Date
                                     </label>
-                                    <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                    <p className="mt-1 text-foreground">
                                         {new Date(
                                             spray.application_date,
                                         ).toLocaleDateString('en-US', {
@@ -251,12 +231,11 @@ export default function Show({ spray }: Props) {
                                 {spray.season && (
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Season
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {spray.season}
                                         </p>
                                     </div>
@@ -265,12 +244,11 @@ export default function Show({ spray }: Props) {
                                 {spray.month && (
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Month
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {spray.month}
                                         </p>
                                     </div>
@@ -280,15 +258,13 @@ export default function Show({ spray }: Props) {
 
                         {/* Farm & Plant Information */}
                         <Card
-                            className="border-2 md:col-span-2"
-                            style={{ borderColor: '#74C69D40' }}
+                            className="border-2 md:col-span-2 border-primary/20"
                         >
                             <CardHeader
-                                style={{ backgroundColor: '#74C69D10' }}
+                                className="bg-primary/10"
                             >
                                 <CardTitle
-                                    className="flex items-center gap-2"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-2 text-primary"
                                 >
                                     <MapPin className="h-5 w-5" />
                                     Farm & Plant Information
@@ -298,8 +274,7 @@ export default function Show({ spray }: Props) {
                                 <div className="grid gap-6 md:grid-cols-2">
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Farm
                                         </label>
@@ -308,18 +283,14 @@ export default function Show({ spray }: Props) {
                                             className="mt-1 block"
                                         >
                                             <div
-                                                className="rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md"
-                                                style={{
-                                                    borderColor: '#74C69D40',
-                                                }}
+                                                className="rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md border-primary/20"
                                             >
                                                 <div
-                                                    className="font-semibold"
-                                                    style={{ color: '#2D6A4F' }}
+                                                    className="font-semibold text-primary"
                                                 >
                                                     {spray.farm.name}
                                                 </div>
-                                                <div className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                                                <div className="mt-1 text-sm text-muted-foreground">
                                                     Lat: {spray.farm.latitude},
                                                     Lng: {spray.farm.longitute}
                                                 </div>
@@ -329,8 +300,7 @@ export default function Show({ spray }: Props) {
 
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Plant
                                         </label>
@@ -339,14 +309,10 @@ export default function Show({ spray }: Props) {
                                             className="mt-1 block"
                                         >
                                             <div
-                                                className="rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md"
-                                                style={{
-                                                    borderColor: '#74C69D40',
-                                                }}
+                                                className="rounded-lg border-2 p-4 transition-all duration-200 hover:shadow-md border-primary/20"
                                             >
                                                 <div
-                                                    className="flex items-center gap-2 font-semibold"
-                                                    style={{ color: '#2D6A4F' }}
+                                                    className="flex items-center gap-2 font-semibold text-primary"
                                                 >
                                                     <Sprout className="h-4 w-4" />
                                                     {spray.plant.name}
@@ -361,21 +327,19 @@ export default function Show({ spray }: Props) {
                         {/* Notes */}
                         {spray.notes && (
                             <Card
-                                className="border-2 md:col-span-2"
-                                style={{ borderColor: '#74C69D40' }}
+                                className="border-2 md:col-span-2 border-primary/20"
                             >
                                 <CardHeader
-                                    style={{ backgroundColor: '#74C69D10' }}
+                                    className="bg-primary/10"
                                 >
                                     <CardTitle
-                                        className="flex items-center gap-2"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="flex items-center gap-2 text-primary"
                                     >
                                         Notes
                                     </CardTitle>
                                 </CardHeader>
                                 <CardContent className="pt-6">
-                                    <p className="text-gray-700 dark:text-gray-300">
+                                    <p className="text-foreground">
                                         {spray.notes}
                                     </p>
                                 </CardContent>

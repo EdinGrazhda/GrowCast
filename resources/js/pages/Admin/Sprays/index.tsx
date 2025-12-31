@@ -71,25 +71,16 @@ export default function Index({ sprays }: Props) {
                     <div className="mb-8">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                                <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
-                                >
+                                <h1 className="text-3xl font-bold text-primary">
                                     Sprays Management
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Manage spray applications and pest control
                                     records
                                 </p>
                             </div>
                             <Link href="/sprays/create">
-                                <Button
-                                    className="shadow-lg transition-all duration-200 hover:shadow-xl"
-                                    style={{
-                                        backgroundColor: '#2D6A4F',
-                                        color: 'white',
-                                    }}
-                                >
+                                <Button className="bg-primary text-primary-foreground shadow-lg transition-all duration-200 hover:bg-primary/90 hover:shadow-xl">
                                     <Plus className="mr-2 h-4 w-4" />
                                     Create Spray Record
                                 </Button>
@@ -98,72 +89,47 @@ export default function Index({ sprays }: Props) {
                     </div>
 
                     {/* Sprays Table */}
-                    <Card
-                        className="mb-8 overflow-hidden border-2"
-                        style={{ borderColor: '#74C69D40' }}
-                    >
+                    <Card className="mb-8 overflow-hidden border-2 border-primary/20">
                         <div className="overflow-x-auto">
                             <table className="w-full">
-                                <thead style={{ backgroundColor: '#2D6A4F' }}>
+                                <thead className="bg-primary">
                                     <tr>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                                        <th className="px-6 py-4 text-left text-sm font-semibold text-primary-foreground">
                                             Spray Name
                                         </th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                                        <th className="px-6 py-4 text-left text-sm font-semibold text-primary-foreground">
                                             Plant
                                         </th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                                        <th className="px-6 py-4 text-left text-sm font-semibold text-primary-foreground">
                                             Farm
                                         </th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                                        <th className="px-6 py-4 text-left text-sm font-semibold text-primary-foreground">
                                             Purpose
                                         </th>
-                                        <th className="px-6 py-4 text-left text-sm font-semibold text-white">
+                                        <th className="px-6 py-4 text-left text-sm font-semibold text-primary-foreground">
                                             Application Date
                                         </th>
-                                        <th className="px-6 py-4 text-center text-sm font-semibold text-white">
+                                        <th className="px-6 py-4 text-center text-sm font-semibold text-primary-foreground">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                <tbody className="divide-y divide-border">
                                     {sprays.map((spray, index) => (
                                         <tr
                                             key={spray.id}
-                                            className="transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
-                                            style={{
-                                                backgroundColor:
-                                                    index % 2 === 0
-                                                        ? 'transparent'
-                                                        : '#74C69D08',
-                                            }}
+                                            className={`transition-colors hover:bg-muted/50 ${index % 2 !== 0 ? 'bg-primary/5' : ''}`}
                                         >
                                             <td className="px-6 py-4">
                                                 <div className="flex items-center gap-3">
-                                                    <div
-                                                        className="flex h-10 w-10 items-center justify-center rounded-full"
-                                                        style={{
-                                                            backgroundColor:
-                                                                '#74C69D30',
-                                                        }}
-                                                    >
-                                                        <Sprout
-                                                            className="h-5 w-5"
-                                                            style={{
-                                                                color: '#2D6A4F',
-                                                            }}
-                                                        />
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+                                                        <Sprout className="h-5 w-5 text-primary" />
                                                     </div>
                                                     <div>
-                                                        <div
-                                                            className="font-semibold"
-                                                            style={{
-                                                                color: '#2D6A4F',
-                                                            }}
-                                                        >
+                                                        <div className="font-semibold text-primary">
                                                             {spray.spray_name}
                                                         </div>
-                                                        <div className="text-xs text-gray-500 dark:text-gray-400">
+                                                        <div className="text-xs text-muted-foreground">
                                                             {
                                                                 spray.chemical_name
                                                             }
@@ -171,25 +137,18 @@ export default function Index({ sprays }: Props) {
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                            <td className="px-6 py-4 text-sm text-muted-foreground">
                                                 {spray.plant.name}
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                            <td className="px-6 py-4 text-sm text-muted-foreground">
                                                 {spray.farm.name}
                                             </td>
                                             <td className="px-6 py-4">
-                                                <span
-                                                    className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
-                                                    style={{
-                                                        backgroundColor:
-                                                            '#74C69D30',
-                                                        color: '#2D6A4F',
-                                                    }}
-                                                >
+                                                <span className="inline-flex items-center rounded-full bg-primary/20 px-3 py-1 text-sm font-medium text-primary">
                                                     {spray.purpose}
                                                 </span>
                                             </td>
-                                            <td className="px-6 py-4 text-sm text-gray-600 dark:text-gray-400">
+                                            <td className="px-6 py-4 text-sm text-muted-foreground">
                                                 {new Date(
                                                     spray.application_date,
                                                 ).toLocaleDateString()}
@@ -202,12 +161,7 @@ export default function Index({ sprays }: Props) {
                                                         <Button
                                                             size="sm"
                                                             variant="outline"
-                                                            style={{
-                                                                borderColor:
-                                                                    '#74C69D',
-                                                                color: '#2D6A4F',
-                                                            }}
-                                                            className="transition-all duration-200 hover:bg-[#74C69D] hover:text-white"
+                                                            className="border-primary/50 text-primary transition-all duration-200 hover:bg-primary hover:text-primary-foreground"
                                                         >
                                                             <Eye className="h-4 w-4" />
                                                         </Button>
@@ -218,12 +172,7 @@ export default function Index({ sprays }: Props) {
                                                         <Button
                                                             size="sm"
                                                             variant="outline"
-                                                            style={{
-                                                                borderColor:
-                                                                    '#2D6A4F',
-                                                                color: '#2D6A4F',
-                                                            }}
-                                                            className="transition-all duration-200 hover:bg-[#2D6A4F] hover:text-white"
+                                                            className="border-primary text-primary transition-all duration-200 hover:bg-primary hover:text-primary-foreground"
                                                         >
                                                             <Pencil className="h-4 w-4" />
                                                         </Button>
@@ -241,7 +190,7 @@ export default function Index({ sprays }: Props) {
                                                             deletingId ===
                                                             spray.id
                                                         }
-                                                        className="border-red-500 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white"
+                                                        className="border-destructive text-destructive transition-all duration-200 hover:bg-destructive hover:text-destructive-foreground"
                                                     >
                                                         {deletingId ===
                                                         spray.id ? (
@@ -263,27 +212,16 @@ export default function Index({ sprays }: Props) {
                     {sprays.length === 0 && (
                         <Card className="py-12 text-center">
                             <CardContent>
-                                <Sprout
-                                    className="mx-auto mb-4 h-16 w-16"
-                                    style={{ color: '#74C69D' }}
-                                />
-                                <h3
-                                    className="mb-2 text-xl font-semibold"
-                                    style={{ color: '#2D6A4F' }}
-                                >
+                                <Sprout className="mx-auto mb-4 h-16 w-16 text-primary/60" />
+                                <h3 className="mb-2 text-xl font-semibold text-primary">
                                     No spray records found
                                 </h3>
-                                <p className="mb-6 text-gray-600 dark:text-gray-400">
+                                <p className="mb-6 text-muted-foreground">
                                     Get started by creating your first spray
                                     record
                                 </p>
                                 <Link href="/sprays/create">
-                                    <Button
-                                        style={{
-                                            backgroundColor: '#2D6A4F',
-                                            color: 'white',
-                                        }}
-                                    >
+                                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                                         <Plus className="mr-2 h-4 w-4" />
                                         Create Spray Record
                                     </Button>

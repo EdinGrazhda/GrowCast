@@ -82,12 +82,11 @@ export default function Create({ farms, plants }: Props) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="text-3xl font-bold text-primary"
                                 >
                                     Create New Spray Record
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Add a new spray application record
                                 </p>
                             </div>
@@ -96,13 +95,11 @@ export default function Create({ farms, plants }: Props) {
 
                     {/* Form */}
                     <Card
-                        className="border-2"
-                        style={{ borderColor: '#74C69D40' }}
+                        className="border-2 border-primary/20"
                     >
-                        <CardHeader style={{ backgroundColor: '#74C69D10' }}>
+                        <CardHeader className="bg-primary/10">
                             <CardTitle
-                                className="flex items-center gap-2"
-                                style={{ color: '#2D6A4F' }}
+                                className="flex items-center gap-2 text-primary"
                             >
                                 <Sprout className="h-5 w-5" />
                                 Spray Information
@@ -114,7 +111,7 @@ export default function Create({ farms, plants }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="farm_id"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Farm *
                                     </Label>
@@ -124,7 +121,7 @@ export default function Create({ farms, plants }: Props) {
                                             setData('farm_id', value)
                                         }
                                     >
-                                        <SelectTrigger className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]">
+                                        <SelectTrigger className="focus:border-primary focus:ring-primary">
                                             <SelectValue placeholder="Select a farm" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -139,7 +136,7 @@ export default function Create({ farms, plants }: Props) {
                                         </SelectContent>
                                     </Select>
                                     {errors.farm_id && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.farm_id}
                                         </p>
                                     )}
@@ -149,7 +146,7 @@ export default function Create({ farms, plants }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="plant_id"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Plant *
                                     </Label>
@@ -159,7 +156,7 @@ export default function Create({ farms, plants }: Props) {
                                             setData('plant_id', value)
                                         }
                                     >
-                                        <SelectTrigger className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]">
+                                        <SelectTrigger className="focus:border-primary focus:ring-primary">
                                             <SelectValue placeholder="Select a plant" />
                                         </SelectTrigger>
                                         <SelectContent>
@@ -174,7 +171,7 @@ export default function Create({ farms, plants }: Props) {
                                         </SelectContent>
                                     </Select>
                                     {errors.plant_id && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.plant_id}
                                         </p>
                                     )}
@@ -184,7 +181,7 @@ export default function Create({ farms, plants }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="spray_name"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Spray Name *
                                     </Label>
@@ -198,11 +195,11 @@ export default function Create({ farms, plants }: Props) {
                                                 e.target.value,
                                             )
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter spray name"
                                     />
                                     {errors.spray_name && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.spray_name}
                                         </p>
                                     )}
@@ -212,7 +209,7 @@ export default function Create({ farms, plants }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="chemical_name"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Chemical Name *
                                     </Label>
@@ -226,11 +223,11 @@ export default function Create({ farms, plants }: Props) {
                                                 e.target.value,
                                             )
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter chemical name"
                                     />
                                     {errors.chemical_name && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.chemical_name}
                                         </p>
                                     )}
@@ -241,7 +238,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="purpose"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Purpose *
                                         </Label>
@@ -255,11 +252,11 @@ export default function Create({ farms, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., Pest Control, Disease Prevention"
                                         />
                                         {errors.purpose && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.purpose}
                                             </p>
                                         )}
@@ -269,7 +266,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="plant_pest"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Target Pest
                                         </Label>
@@ -283,11 +280,11 @@ export default function Create({ farms, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="Enter target pest"
                                         />
                                         {errors.plant_pest && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.plant_pest}
                                             </p>
                                         )}
@@ -299,7 +296,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="dosage"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Dosage *
                                         </Label>
@@ -313,11 +310,11 @@ export default function Create({ farms, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., 2ml/L"
                                         />
                                         {errors.dosage && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.dosage}
                                             </p>
                                         )}
@@ -327,7 +324,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="application_rate"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Application Rate
                                         </Label>
@@ -341,11 +338,11 @@ export default function Create({ farms, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., 100L/hectare"
                                         />
                                         {errors.application_rate && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.application_rate}
                                             </p>
                                         )}
@@ -355,7 +352,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="frequency"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Frequency
                                         </Label>
@@ -369,11 +366,11 @@ export default function Create({ farms, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., Weekly, Bi-weekly"
                                         />
                                         {errors.frequency && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.frequency}
                                             </p>
                                         )}
@@ -385,7 +382,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="application_date"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Application Date *
                                         </Label>
@@ -399,10 +396,10 @@ export default function Create({ farms, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                         />
                                         {errors.application_date && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.application_date}
                                             </p>
                                         )}
@@ -412,7 +409,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="season"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Season
                                         </Label>
@@ -426,11 +423,11 @@ export default function Create({ farms, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., Spring, Summer"
                                         />
                                         {errors.season && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.season}
                                             </p>
                                         )}
@@ -440,7 +437,7 @@ export default function Create({ farms, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="month"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Month
                                         </Label>
@@ -451,11 +448,11 @@ export default function Create({ farms, plants }: Props) {
                                             onChange={(e) =>
                                                 setData('month', e.target.value)
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., January"
                                         />
                                         {errors.month && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.month}
                                             </p>
                                         )}
@@ -466,7 +463,7 @@ export default function Create({ farms, plants }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="notes"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Notes
                                     </Label>
@@ -476,12 +473,12 @@ export default function Create({ farms, plants }: Props) {
                                         onChange={(e) =>
                                             setData('notes', e.target.value)
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter additional notes or observations"
                                         rows={4}
                                     />
                                     {errors.notes && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.notes}
                                         </p>
                                     )}
@@ -493,10 +490,7 @@ export default function Create({ farms, plants }: Props) {
                                         <Button
                                             type="button"
                                             variant="outline"
-                                            style={{
-                                                borderColor: '#74C69D',
-                                                color: '#2D6A4F',
-                                            }}
+                                            className="border-primary text-primary hover:bg-primary/10"
                                         >
                                             Cancel
                                         </Button>
@@ -504,11 +498,7 @@ export default function Create({ farms, plants }: Props) {
                                     <Button
                                         type="submit"
                                         disabled={processing}
-                                        style={{
-                                            backgroundColor: '#2D6A4F',
-                                            color: 'white',
-                                        }}
-                                        className="min-w-[120px]"
+                                        className="min-w-[120px] bg-primary text-primary-foreground hover:bg-primary/90"
                                     >
                                         {processing ? (
                                             <>

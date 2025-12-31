@@ -64,21 +64,17 @@ export default function Show({ farm }: Props) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="text-3xl font-bold text-primary"
                                 >
                                     {farm.name}
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Farm details and information
                                 </p>
                             </div>
                             <Link href={`/farms/${farm.id}/edit`}>
                                 <Button
-                                    style={{
-                                        backgroundColor: '#2D6A4F',
-                                        color: 'white',
-                                    }}
+                                    className="bg-primary text-primary-foreground hover:bg-primary/90"
                                 >
                                     Edit Farm
                                 </Button>
@@ -89,15 +85,13 @@ export default function Show({ farm }: Props) {
                     <div className="grid gap-6 md:grid-cols-2">
                         {/* Farm Information */}
                         <Card
-                            className="border-2"
-                            style={{ borderColor: '#74C69D40' }}
+                            className="border-2 border-primary/20"
                         >
                             <CardHeader
-                                style={{ backgroundColor: '#74C69D10' }}
+                                className="bg-primary/10"
                             >
                                 <CardTitle
-                                    className="flex items-center gap-2"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-2 text-primary"
                                 >
                                     <MapPin className="h-5 w-5" />
                                     Farm Information
@@ -106,12 +100,11 @@ export default function Show({ farm }: Props) {
                             <CardContent className="space-y-4 pt-6">
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Name
                                     </label>
-                                    <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                    <p className="mt-1 text-foreground">
                                         {farm.name}
                                     </p>
                                 </div>
@@ -119,12 +112,11 @@ export default function Show({ farm }: Props) {
                                 {farm.description && (
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Description
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {farm.description}
                                         </p>
                                     </div>
@@ -132,12 +124,11 @@ export default function Show({ farm }: Props) {
 
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Location
                                     </label>
-                                    <div className="mt-1 flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                    <div className="mt-1 flex items-center gap-2 text-foreground">
                                         <MapPin className="h-4 w-4" />
                                         <span>
                                             Lat:{' '}
@@ -149,8 +140,8 @@ export default function Show({ farm }: Props) {
                                 </div>
 
                                 <div className="flex items-center gap-2 pt-2">
-                                    <Calendar className="h-4 w-4 text-gray-500" />
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                                    <span className="text-sm text-muted-foreground">
                                         Created: {farm.created_at}
                                     </span>
                                 </div>
@@ -159,15 +150,13 @@ export default function Show({ farm }: Props) {
 
                         {/* Owner Information */}
                         <Card
-                            className="border-2"
-                            style={{ borderColor: '#74C69D40' }}
+                            className="border-2 border-primary/20"
                         >
                             <CardHeader
-                                style={{ backgroundColor: '#74C69D10' }}
+                                className="bg-primary/10"
                             >
                                 <CardTitle
-                                    className="flex items-center gap-2"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-2 text-primary"
                                 >
                                     <User className="h-5 w-5" />
                                     Owner Information
@@ -176,24 +165,22 @@ export default function Show({ farm }: Props) {
                             <CardContent className="space-y-4 pt-6">
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Name
                                     </label>
-                                    <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                    <p className="mt-1 text-foreground">
                                         {farm.user.name}
                                     </p>
                                 </div>
 
                                 <div>
                                     <label
-                                        className="text-sm font-medium"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-sm font-medium text-primary"
                                     >
                                         Email
                                     </label>
-                                    <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                    <p className="mt-1 text-foreground">
                                         {farm.user.email}
                                     </p>
                                 </div>
@@ -202,15 +189,13 @@ export default function Show({ farm }: Props) {
 
                         {/* Plant Information */}
                         <Card
-                            className="border-2 md:col-span-2"
-                            style={{ borderColor: '#74C69D40' }}
+                            className="border-2 md:col-span-2 border-primary/20"
                         >
                             <CardHeader
-                                style={{ backgroundColor: '#74C69D10' }}
+                                className="bg-primary/10"
                             >
                                 <CardTitle
-                                    className="flex items-center gap-2"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-2 text-primary"
                                 >
                                     <Sprout className="h-5 w-5" />
                                     Plant Information
@@ -220,19 +205,13 @@ export default function Show({ farm }: Props) {
                                 <div className="grid gap-4 md:grid-cols-3">
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Plant Name
                                         </label>
                                         <p className="mt-1">
                                             <span
-                                                className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
-                                                style={{
-                                                    backgroundColor:
-                                                        '#74C69D30',
-                                                    color: '#2D6A4F',
-                                                }}
+                                                className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-primary/20 text-primary"
                                             >
                                                 {farm.plant.name}
                                             </span>
@@ -241,24 +220,22 @@ export default function Show({ farm }: Props) {
 
                                     <div>
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Stock
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {farm.plant.stock} units
                                         </p>
                                     </div>
 
                                     <div className="md:col-span-3">
                                         <label
-                                            className="text-sm font-medium"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-sm font-medium text-primary"
                                         >
                                             Information
                                         </label>
-                                        <p className="mt-1 text-gray-700 dark:text-gray-300">
+                                        <p className="mt-1 text-foreground">
                                             {farm.plant.info ||
                                                 'No information available'}
                                         </p>
@@ -269,15 +246,13 @@ export default function Show({ farm }: Props) {
 
                         {/* Map View */}
                         <Card
-                            className="border-2 md:col-span-2"
-                            style={{ borderColor: '#74C69D40' }}
+                            className="border-2 md:col-span-2 border-primary/20"
                         >
                             <CardHeader
-                                style={{ backgroundColor: '#74C69D10' }}
+                                className="bg-primary/10"
                             >
                                 <CardTitle
-                                    className="flex items-center gap-2"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-2 text-primary"
                                 >
                                     <MapPin className="h-5 w-5" />
                                     Farm Location
@@ -299,10 +274,7 @@ export default function Show({ farm }: Props) {
                         <Link href="/farms">
                             <Button
                                 variant="outline"
-                                style={{
-                                    borderColor: '#74C69D',
-                                    color: '#2D6A4F',
-                                }}
+                                className="border-primary text-primary hover:bg-primary/10"
                             >
                                 Back to Farms
                             </Button>

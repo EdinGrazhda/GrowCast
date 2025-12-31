@@ -47,8 +47,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         <Link href="/weather">
                             <Button
                                 variant="ghost"
-                                className="mb-4 -ml-2 gap-2"
-                                style={{ color: '#2D6A4F' }}
+                                className="mb-4 -ml-2 gap-2 text-primary"
                             >
                                 <ArrowLeft className="h-4 w-4" />
                                 Back to Weather Forecasts
@@ -57,12 +56,11 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         <div className="flex items-start justify-between">
                             <div>
                                 <h2
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="text-3xl font-bold text-primary"
                                 >
                                     {weather.farm.name}
                                 </h2>
-                                <p className="mt-1 text-gray-600">
+                                <p className="mt-1 text-muted-foreground">
                                     Weather Forecast Details
                                 </p>
                             </div>
@@ -81,17 +79,16 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         {/* Farm and Plant Information */}
                         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                             {/* Farm Details */}
-                            <div className="rounded-lg bg-white p-6 shadow-md">
+                            <div className="rounded-lg bg-card p-6 shadow-md">
                                 <h3
-                                    className="mb-4 flex items-center gap-2 text-lg font-semibold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
                                 >
                                     <MapPin className="h-5 w-5" />
                                     Farm Information
                                 </h3>
                                 <div className="space-y-3">
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-muted-foreground">
                                             Farm Name
                                         </p>
                                         <p className="font-semibold">
@@ -100,16 +97,16 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                     </div>
                                     {weather.farm.description && (
                                         <div>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-muted-foreground">
                                                 Description
                                             </p>
-                                            <p className="text-gray-700">
+                                            <p className="text-foreground">
                                                 {weather.farm.description}
                                             </p>
                                         </div>
                                     )}
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-muted-foreground">
                                             Location
                                         </p>
                                         <p className="font-mono text-sm">
@@ -124,7 +121,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                     </div>
                                     {weather.farm.user && (
                                         <div>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-muted-foreground">
                                                 Owner
                                             </p>
                                             <p className="font-semibold">
@@ -147,17 +144,16 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                             </div>
 
                             {/* Plant Details */}
-                            <div className="rounded-lg bg-white p-6 shadow-md">
+                            <div className="rounded-lg bg-card p-6 shadow-md">
                                 <h3
-                                    className="mb-4 flex items-center gap-2 text-lg font-semibold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
                                 >
                                     <Sprout className="h-5 w-5" />
                                     Plant Information
                                 </h3>
                                 <div className="space-y-3">
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-muted-foreground">
                                             Plant Name
                                         </p>
                                         <p className="font-semibold">
@@ -165,7 +161,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                         </p>
                                     </div>
                                     <div>
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-sm text-muted-foreground">
                                             Stock Available
                                         </p>
                                         <p className="font-semibold">
@@ -174,10 +170,10 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                     </div>
                                     {weather.plant.info && (
                                         <div>
-                                            <p className="text-sm text-gray-500">
+                                            <p className="text-sm text-muted-foreground">
                                                 Plant Information
                                             </p>
-                                            <p className="text-gray-700">
+                                            <p className="text-foreground">
                                                 {weather.plant.info}
                                             </p>
                                         </div>
@@ -188,10 +184,9 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
 
                         {/* Best Planting Day */}
                         {weather.best_planting_day && (
-                            <div className="rounded-lg bg-white p-6 shadow-md">
+                            <div className="rounded-lg bg-card p-6 shadow-md">
                                 <h3
-                                    className="mb-4 flex items-center gap-2 text-lg font-semibold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
                                 >
                                     <Calendar className="h-5 w-5" />
                                     Recommended Planting Date
@@ -202,7 +197,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                         backgroundColor: statusColors.light,
                                     }}
                                 >
-                                    <p className="mb-1 text-sm text-gray-600">
+                                    <p className="mb-1 text-sm text-muted-foreground">
                                         Best day to plant
                                     </p>
                                     <p
@@ -216,19 +211,18 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         )}
 
                         {/* Weather Metrics */}
-                        <div className="rounded-lg bg-white p-6 shadow-md">
+                        <div className="rounded-lg bg-card p-6 shadow-md">
                             <h3
-                                className="mb-4 flex items-center gap-2 text-lg font-semibold"
-                                style={{ color: '#2D6A4F' }}
+                                className="mb-4 flex items-center gap-2 text-lg font-semibold text-primary"
                             >
                                 <CloudRain className="h-5 w-5" />
                                 Weather Conditions
                             </h3>
                             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                                <div className="flex items-center gap-3 rounded-md bg-gray-50 p-4">
+                                <div className="flex items-center gap-3 rounded-md bg-muted p-4">
                                     <Thermometer className="h-8 w-8 text-red-500" />
                                     <div>
-                                        <p className="text-xs text-gray-500">
+                                        <p className="text-xs text-muted-foreground">
                                             Temperature
                                         </p>
                                         <p className="text-xl font-bold">
@@ -236,10 +230,10 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 rounded-md bg-gray-50 p-4">
+                                <div className="flex items-center gap-3 rounded-md bg-muted p-4">
                                     <Droplets className="h-8 w-8 text-blue-500" />
                                     <div>
-                                        <p className="text-xs text-gray-500">
+                                        <p className="text-xs text-muted-foreground">
                                             Humidity
                                         </p>
                                         <p className="text-xl font-bold">
@@ -247,10 +241,10 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 rounded-md bg-gray-50 p-4">
+                                <div className="flex items-center gap-3 rounded-md bg-muted p-4">
                                     <Gauge className="h-8 w-8 text-purple-500" />
                                     <div>
-                                        <p className="text-xs text-gray-500">
+                                        <p className="text-xs text-muted-foreground">
                                             Air Pressure
                                         </p>
                                         <p className="text-xl font-bold">
@@ -258,10 +252,10 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 rounded-md bg-gray-50 p-4">
-                                    <Wind className="h-8 w-8 text-gray-500" />
+                                <div className="flex items-center gap-3 rounded-md bg-muted p-4">
+                                    <Wind className="h-8 w-8 text-muted-foreground" />
                                     <div>
-                                        <p className="text-xs text-gray-500">
+                                        <p className="text-xs text-muted-foreground">
                                             Wind Speed
                                         </p>
                                         <p className="text-xl font-bold">
@@ -274,10 +268,9 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
 
                         {/* AI Recommendation */}
                         {weather.recommendation && (
-                            <div className="rounded-lg bg-white p-6 shadow-md">
+                            <div className="rounded-lg bg-card p-6 shadow-md">
                                 <h3
-                                    className="mb-4 text-lg font-semibold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="mb-4 text-lg font-semibold text-primary"
                                 >
                                     AI Recommendation
                                 </h3>
@@ -287,7 +280,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                         backgroundColor: statusColors.light,
                                     }}
                                 >
-                                    <p className="leading-relaxed whitespace-pre-line text-gray-800">
+                                    <p className="leading-relaxed whitespace-pre-line text-foreground">
                                         {weather.recommendation}
                                     </p>
                                 </div>
@@ -295,16 +288,15 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                         )}
 
                         {/* Metadata */}
-                        <div className="rounded-lg bg-white p-6 shadow-md">
+                        <div className="rounded-lg bg-card p-6 shadow-md">
                             <h3
-                                className="mb-4 text-lg font-semibold"
-                                style={{ color: '#2D6A4F' }}
+                                className="mb-4 text-lg font-semibold text-primary"
                             >
                                 Record Information
                             </h3>
                             <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
                                 <div>
-                                    <p className="text-gray-500">Created At</p>
+                                    <p className="text-muted-foreground">Created At</p>
                                     <p className="font-medium">
                                         {new Date(
                                             weather.created_at,
@@ -312,7 +304,7 @@ export default function Show({ weather }: { weather: WeatherWithRelations }) {
                                     </p>
                                 </div>
                                 <div>
-                                    <p className="text-gray-500">
+                                    <p className="text-muted-foreground">
                                         Last Updated
                                     </p>
                                     <p className="font-medium">

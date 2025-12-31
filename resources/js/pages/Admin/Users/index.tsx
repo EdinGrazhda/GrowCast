@@ -39,21 +39,15 @@ export default function Index({ users }: { users: UserWithRoles[] }) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <div>
-                            <h2
-                                className="text-3xl font-bold"
-                                style={{ color: '#2D6A4F' }}
-                            >
+                            <h2 className="text-3xl font-bold text-primary">
                                 Users
                             </h2>
-                            <p className="mt-1 text-gray-600">
+                            <p className="mt-1 text-muted-foreground">
                                 Manage system users and their roles
                             </p>
                         </div>
                         <Link href="/users/create">
-                            <Button
-                                className="gap-2"
-                                style={{ backgroundColor: '#2D6A4F' }}
-                            >
+                            <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                                 <Plus className="h-4 w-4" />
                                 Add User
                             </Button>
@@ -61,68 +55,63 @@ export default function Index({ users }: { users: UserWithRoles[] }) {
                     </div>
 
                     {users.length === 0 ? (
-                        <div className="rounded-lg bg-white p-12 text-center shadow-md">
-                            <UserCog className="mx-auto mb-4 h-16 w-16 text-gray-400" />
-                            <h3 className="mb-2 text-xl font-semibold text-gray-700">
+                        <div className="rounded-lg bg-card p-12 text-center shadow-md">
+                            <UserCog className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+                            <h3 className="mb-2 text-xl font-semibold text-foreground">
                                 No users yet
                             </h3>
-                            <p className="mb-6 text-gray-500">
+                            <p className="mb-6 text-muted-foreground">
                                 Get started by creating your first user
                             </p>
                             <Link href="/users/create">
-                                <Button style={{ backgroundColor: '#2D6A4F' }}>
+                                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                                     <Plus className="mr-2 h-4 w-4" />
                                     Create First User
                                 </Button>
                             </Link>
                         </div>
                     ) : (
-                        <div className="overflow-hidden rounded-lg bg-white shadow-md">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
+                        <div className="overflow-hidden rounded-lg bg-card shadow-md">
+                            <table className="min-w-full divide-y divide-border">
+                                <thead className="bg-muted/50">
                                     <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-muted-foreground uppercase">
                                             Name
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-muted-foreground uppercase">
                                             Email
                                         </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-muted-foreground uppercase">
                                             Roles
                                         </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
+                                        <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-muted-foreground uppercase">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-gray-200 bg-white">
+                                <tbody className="divide-y divide-border bg-card">
                                     {users.map((user) => (
                                         <tr
                                             key={user.id}
-                                            className="transition-colors hover:bg-gray-50"
+                                            className="transition-colors hover:bg-muted/50"
                                         >
                                             <td className="px-6 py-4 whitespace-nowrap">
                                                 <div className="flex items-center">
-                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-100">
-                                                        <span
-                                                            className="text-sm font-semibold"
-                                                            style={{
-                                                                color: '#2D6A4F',
-                                                            }}
-                                                        >
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
+                                                        <span className="text-sm font-semibold text-primary">
                                                             {user.name
                                                                 .charAt(0)
                                                                 .toUpperCase()}
                                                         </span>
                                                     </div>
                                                     <div className="ml-4">
-                                                        <div className="font-medium text-gray-900">
+                                                        <div className="font-medium text-foreground">
                                                             {user.name}
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td className="px-6 py-4 text-sm whitespace-nowrap text-gray-500">
+                                            <td className="px-6 py-4 text-sm whitespace-nowrap text-muted-foreground">
                                                 {user.email}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
@@ -142,7 +131,7 @@ export default function Index({ users }: { users: UserWithRoles[] }) {
                                                             ),
                                                         )
                                                     ) : (
-                                                        <span className="text-xs text-gray-400">
+                                                        <span className="text-xs text-muted-foreground">
                                                             No role assigned
                                                         </span>
                                                     )}
@@ -156,12 +145,7 @@ export default function Index({ users }: { users: UserWithRoles[] }) {
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
-                                                            className="gap-1"
-                                                            style={{
-                                                                borderColor:
-                                                                    '#2D6A4F',
-                                                                color: '#2D6A4F',
-                                                            }}
+                                                            className="gap-1 border-primary/20 text-primary hover:bg-primary/10"
                                                         >
                                                             <Eye className="h-3 w-3" />
                                                             View
@@ -173,12 +157,7 @@ export default function Index({ users }: { users: UserWithRoles[] }) {
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
-                                                            className="gap-1"
-                                                            style={{
-                                                                borderColor:
-                                                                    '#2D6A4F',
-                                                                color: '#2D6A4F',
-                                                            }}
+                                                            className="gap-1 border-primary/20 text-primary hover:bg-primary/10"
                                                         >
                                                             <Shield className="h-3 w-3" />
                                                             Roles
@@ -190,11 +169,7 @@ export default function Index({ users }: { users: UserWithRoles[] }) {
                                                         <Button
                                                             variant="outline"
                                                             size="sm"
-                                                            style={{
-                                                                borderColor:
-                                                                    '#2D6A4F',
-                                                                color: '#2D6A4F',
-                                                            }}
+                                                            className="border-primary/20 text-primary hover:bg-primary/10"
                                                         >
                                                             Edit
                                                         </Button>
@@ -202,7 +177,7 @@ export default function Index({ users }: { users: UserWithRoles[] }) {
                                                     <Button
                                                         variant="outline"
                                                         size="sm"
-                                                        className="border-red-500 text-red-500 hover:bg-red-50"
+                                                        className="border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground"
                                                         onClick={() =>
                                                             handleDelete(
                                                                 user.id,
