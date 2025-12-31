@@ -17,6 +17,7 @@ import { Link } from '@inertiajs/react';
 import {
     Activity,
     BookOpen,
+    Brain,
     CloudRain,
     Folder,
     LayoutGrid,
@@ -51,6 +52,12 @@ const allNavItems: NavItem[] = [
         title: 'Sprays',
         href: '/sprays',
         icon: SprayCan,
+        permissions: ['spray_View'], // accessible by anyone with spray_View permission
+    },
+    {
+        title: 'Spray Timing AI',
+        href: '/sprays/recommendation',
+        icon: Brain,
         permissions: ['spray_View'], // accessible by anyone with spray_View permission
     },
     {

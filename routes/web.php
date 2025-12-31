@@ -22,6 +22,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard - accessible by all authenticated users
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Spray recommendation routes (must come before resource routes)
+    Route::get('sprays/recommendation/{id?}', [SprayController::class, 'recommendationPage'])->name('sprays.recommendation');
+    Route::post('sprays/get-recommendation', [SprayController::class, 'getRecommendation'])->name('sprays.get-recommendation');
+    Route::post('sprays/by-plant', [SprayController::class, 'getSpraysByPlant'])->name('sprays.by-plant');
+
     // Resource routes - authorization handled by policies
     Route::resource('farms', FarmController::class);
     Route::resource('plants', PlantController::class);
