@@ -41,6 +41,10 @@ return new class extends Migration
             'permission_Create',
             'permission_Edit',
             'permission_Delete',
+            'diagnose_View',
+            'diagnose_Create',
+            'diagnose_Edit',
+            'diagnose_Delete',
         ];
 
         foreach ($permissions as $permission) {

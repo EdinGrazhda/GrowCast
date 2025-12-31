@@ -68,7 +68,7 @@ const allNavItems: NavItem[] = [
         title: 'Disease Detection',
         href: '/plant-disease',
         icon: Activity,
-        permissions: ['plant_View'], // accessible by anyone with plant_View permission
+        permissions: ['diagnose_View'], // accessible by anyone with diagnose_View permission
     },
     {
         title: 'Users',
@@ -87,15 +87,10 @@ const allNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
-    const { hasPermission, isAdmin } = useAuth();
+    const { hasPermission } = useAuth();
 
     // Filter nav items based on user permissions
     const mainNavItems = allNavItems.filter((item) => {
-        // Admins see everything
-        if (isAdmin()) {
-            return true;
-        }
-
         // If item has no permissions specified, show it to everyone
         if (!item.permissions || item.permissions.length === 0) {
             return true;

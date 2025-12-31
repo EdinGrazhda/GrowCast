@@ -56,11 +56,16 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRole('admin');
         });
 
+        Gate::define('isFarmer', function (User $user) {
+            return $user->hasRole('farmer');
+        });
+
         // Super admin gate - bypass all policy checks for admin users
         Gate::before(function (User $user, string $ability) {
             if ($user->hasRole('admin')) {
                 return true;
             }
         });
+
     }
 }
