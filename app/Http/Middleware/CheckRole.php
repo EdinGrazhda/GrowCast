@@ -15,7 +15,13 @@ class CheckRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        if (!$request->user()) {
+        if (! $request->user()) {
+            if ($request->expectsJson() || $request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Unauthenticated. Please login to access this resource.',
+                ], 401);
+            }
             abort(403, 'Unauthorized action.');
         }
 
@@ -23,6 +29,15 @@ class CheckRole
             if ($request->user()->hasRole($role)) {
                 return $next($request);
             }
+        }
+
+        // Return JSON for API requests
+        if ($request->expectsJson() || $request->is('api/*')) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Access denied. You must have one of the following roles: '.implode(', ', $roles),
+                'required_roles' => $roles,
+            ], 403);
         }
 
         abort(403, 'Unauthorized action. You do not have the required role.');
