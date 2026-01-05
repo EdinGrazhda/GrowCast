@@ -116,22 +116,24 @@ export default function SprayRecommendation({
         useState<SprayRecommendation | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    // Fetch sprays when plant changes
-    const handlePlantChange = async (plantId: string) => {
-        setSelectedPlantId(plantId);
-        setSelectedSprayId('');
-        setSelectedSpray(null);
-        setAvailableSprays([]);
-        setRecommendation(null);
-        setLoadingSprays(true);
-
+    const getLocalSprays = (plantId: string, farmId?: string) => {
         if (!plantId) {
-            setLoadingSprays(false);
-            return;
+            return [];
         }
 
+        return allSprays.filter(
+            (spray) =>
+                spray.plant_id.toString() === plantId &&
+                (!farmId || spray.farm_id.toString() === farmId),
+        );
+    };
+
+    const loadSpraysForSelection = async (plantId: string, farmId?: string) => {
+        setLoadingSprays(true);
+        const fallbackSprays = getLocalSprays(plantId, farmId);
+        setAvailableSprays(fallbackSprays);
+
         try {
-            console.log('Fetching sprays for plant_id:', plantId);
             const response = await fetch('/sprays/by-plant', {
                 method: 'POST',
                 headers: {
@@ -141,27 +143,56 @@ export default function SprayRecommendation({
                         document
                             .querySelector('meta[name="csrf-token"]')
                             ?.getAttribute('content') || '',
+                    'X-Requested-With': 'XMLHttpRequest',
                 },
-                body: JSON.stringify({ plant_id: plantId }),
+                credentials: 'same-origin',
+                body: JSON.stringify({
+                    plant_id: plantId,
+                    farm_id: farmId || null,
+                }),
             });
 
-            console.log('Response status:', response.status);
-            const data = await response.json();
-            console.log('Response data:', data);
-            console.log('Sprays count:', data.sprays?.length);
+            const data = await response.json().catch(() => null);
 
-            if (response.ok && data.success) {
-                console.log('Setting available sprays:', data.sprays);
+            if (response.ok && data?.success) {
                 setAvailableSprays(data.sprays || []);
-            } else {
-                console.error('Response not OK or no success flag', data);
+            } else if (!fallbackSprays.length) {
                 setAvailableSprays([]);
             }
         } catch (err) {
             console.error('Error fetching sprays:', err);
-            setAvailableSprays([]);
+            if (!fallbackSprays.length) {
+                setAvailableSprays([]);
+            }
         } finally {
             setLoadingSprays(false);
+        }
+    };
+
+    // Fetch sprays when plant changes
+    const handlePlantChange = (plantId: string) => {
+        setSelectedPlantId(plantId);
+        setSelectedSprayId('');
+        setSelectedSpray(null);
+        setAvailableSprays([]);
+        setRecommendation(null);
+        setError(null);
+
+        if (!plantId) {
+            setLoadingSprays(false);
+            return;
+        }
+        loadSpraysForSelection(plantId, selectedFarmId);
+    };
+
+    const handleFarmChange = (farmId: string) => {
+        setSelectedFarmId(farmId);
+        setSelectedSprayId('');
+        setSelectedSpray(null);
+        setRecommendation(null);
+
+        if (selectedPlantId) {
+            loadSpraysForSelection(selectedPlantId, farmId);
         }
     };
 
@@ -288,7 +319,7 @@ export default function SprayRecommendation({
                                 <Label htmlFor="farm">Farm</Label>
                                 <Select
                                     value={selectedFarmId}
-                                    onValueChange={setSelectedFarmId}
+                                    onValueChange={handleFarmChange}
                                 >
                                     <SelectTrigger id="farm">
                                         <SelectValue placeholder="Select a farm" />

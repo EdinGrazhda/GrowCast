@@ -347,6 +347,7 @@ class SprayController extends Controller
 
         $validated = $request->validate([
             'plant_id' => 'required|exists:plant,id',
+            'farm_id' => 'nullable|exists:farm,id',
         ]);
 
         $user = Auth::user();
@@ -356,8 +357,12 @@ class SprayController extends Controller
         $query = Spray::with(['farm', 'plant'])
             ->where('plant_id', $validated['plant_id']);
 
+        if (! empty($validated['farm_id'])) {
+            $query->where('farm_id', $validated['farm_id']);
+        }
+
         // Only filter by user if not admin
-        if (!$user->hasRole('admin')) {
+        if (! $user->hasRole('admin')) {
             $query->whereHas('farm', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             });
@@ -370,6 +375,7 @@ class SprayController extends Controller
         // Log for debugging
         Log::info('Fetching sprays for plant', [
             'plant_id' => $validated['plant_id'],
+            'farm_id' => $validated['farm_id'] ?? null,
             'user_id' => $user->id,
             'is_admin' => $user->hasRole('admin'),
             'sprays_count' => $sprays->count(),
