@@ -9,7 +9,6 @@ export default function Navbar() {
         { label: "Search Plants", target: "search" },
         { label: "3D Farm", target: "farm" },
         { label: "Admin Panel", target: "admin" },
-        { label: "Success Stories", target: "stories" },
         { label: "Contact", target: "footer" },
     ];
 

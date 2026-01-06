@@ -58,6 +58,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('roles/{id}/revoke-permission', [RoleController::class, 'revokePermission'])->name('roles.revoke-permission');
     Route::post('roles/{id}/assign-permissions', [RoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
     Route::post('roles/{id}/sync-permissions', [RoleController::class, 'syncPermissions'])->name('roles.sync-permissions');
+
+ Route::get('/plant-diagnosis', function () {
+    return Inertia::render('PlantDiagnosis');
+});
 });
 
 require __DIR__.'/settings.php';

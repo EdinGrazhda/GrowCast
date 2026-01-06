@@ -10,7 +10,9 @@ const PlantSearchSection = lazy(
 );
 const FarmShowcase = lazy(() => import('../components/FarmShowcase'));
 const AdminShowcase = lazy(() => import('../components/AdminShowcase'));
-const FarmerStories = lazy(() => import('../components/FarmerStories'));
+const ContactSection = lazy(
+    () => import('../components/ContactSection'),
+);
 const Footer = lazy(() => import('@/components/Footer'));
 
 // Simple loading fallback
@@ -35,7 +37,6 @@ export default function Welcome() {
             <div className="flex min-h-screen flex-col bg-[#D8F3DC]">
                 <Navbar />
 
-                {/* Main content */}
                 <main className="flex-1">
                     <Hero />
 
@@ -52,7 +53,7 @@ export default function Welcome() {
                     </Suspense>
 
                     <Suspense fallback={<SectionLoader />}>
-                        <FarmerStories />
+                        <ContactSection />
                     </Suspense>
                 </main>
 
