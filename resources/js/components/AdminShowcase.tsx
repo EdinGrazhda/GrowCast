@@ -2,7 +2,14 @@
 
 import { useState, useEffect } from "react";
 
-const slides = ["/admin1.png", "/admin2.png", "/admin3.png"];
+const slides = [
+  "/image/growcastimages/farms.png",
+  "/image/growcastimages/plants.png",
+  "/image/growcastimages/spray.png",
+  "/image/growcastimages/AI-spra.png",
+  "/image/growcastimages/disease.png",
+  "/image/growcastimages/wetherforecastpng.png",
+];
 
 export default function AdminShowcase() {
   const [index, setIndex] = useState(0);

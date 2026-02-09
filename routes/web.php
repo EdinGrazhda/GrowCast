@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DemoPlantDiseaseController;
 use App\Http\Controllers\FarmController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PlantDiseaseController;
@@ -17,6 +18,10 @@ Route::get('/', function () {
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
+
+// Demo plant disease detection (public, no auth required)
+Route::get('demo/plant-disease', [DemoPlantDiseaseController::class, 'index'])->name('demo.plant-disease.index');
+Route::post('demo/plant-disease/detect', [DemoPlantDiseaseController::class, 'detect'])->name('demo.plant-disease.detect');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard - accessible by all authenticated users

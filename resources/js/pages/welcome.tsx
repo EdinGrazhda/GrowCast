@@ -5,8 +5,8 @@ import { Head } from '@inertiajs/react';
 import { lazy, Suspense } from 'react';
 
 // Lazy load components below the fold
-const PlantSearchSection = lazy(
-    () => import('../components/PlantSearchSection'),
+const DiseaseDetectionBanner = lazy(
+    () => import('../components/DiseaseDetectionBanner'),
 );
 const FarmShowcase = lazy(() => import('../components/FarmShowcase'));
 const AdminShowcase = lazy(() => import('../components/AdminShowcase'));
@@ -40,7 +40,7 @@ export default function Welcome() {
                     <Hero />
 
                     <Suspense fallback={<SectionLoader />}>
-                        <PlantSearchSection />
+                        <DiseaseDetectionBanner />
                     </Suspense>
 
                     <Suspense fallback={<SectionLoader />}>
