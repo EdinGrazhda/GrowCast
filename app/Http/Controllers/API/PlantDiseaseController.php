@@ -37,11 +37,24 @@ class PlantDiseaseController extends Controller
             // Clean up temporary file
             Storage::disk('public')->delete($imagePath);
 
+            // Check if diagnosis indicates an error (low confidence with error notes)
             if ($diagnosis === null) {
                 return response()->json([
                     'success' => false,
                     'message' => 'Failed to analyze the image. Please try again.',
                 ], 500);
+            }
+            
+            // Check if diagnosis indicates a service error (confidence 0.0 with error notes)
+            if (isset($diagnosis['confidence']) && $diagnosis['confidence'] == 0.0 && 
+                isset($diagnosis['notes']) && 
+                (stripos($diagnosis['notes'], 'failed') !== false || 
+                 stripos($diagnosis['notes'], 'error') !== false ||
+                 stripos($diagnosis['notes'], 'unavailable') !== false)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $diagnosis['notes'] ?? 'Failed to analyze the image. Please try again.',
+                ], 503); // 503 Service Unavailable instead of 500
             }
 
             return response()->json([

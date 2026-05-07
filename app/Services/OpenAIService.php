@@ -173,40 +173,105 @@ class OpenAIService
             $imageInfo = @getimagesize($imagePath);
             $mimeType = $imageInfo['mime'] ?? 'image/jpeg';
             
-            // Build the prompt for disease detection
+            // Build the prompt for disease detection (v2.6 - Enhanced Target Spot detection with stronger prioritization and clearer distinctions)
             $systemPrompt = 'You are an expert plant pathologist with decades of experience in agricultural diagnostics. '.
                            'You specialize in identifying plant diseases, pest damage, nutrient deficiencies, and physiological disorders. '.
                            'You have extensive knowledge of common plant pathogens (fungal, bacterial, viral), pest damage patterns, '.
-                           'and can distinguish between diseases and environmental stress. You provide accurate, actionable diagnoses.';
+                           'and can distinguish between diseases and environmental stress. You provide accurate, actionable diagnoses based on established plant pathology knowledge. '.
+                           'You understand that different plant species have specific disease susceptibilities and can identify plant-specific diseases accurately. '.
+                           'Your knowledge is based on established plant pathology references including: '.
+                           'USDA Agricultural Research Service, Extension services (e.g., Cornell, UC Davis), '.
+                           'Plant Pathology textbooks (Agrios, Compendium of Plant Diseases), '.
+                           'and peer-reviewed research on plant disease identification and management.';
             
             $userPrompt = "Perform a comprehensive visual analysis of this plant image to identify any health issues.\n\n";
             
             if ($plantName) {
                 $userPrompt .= "PLANT SPECIES: {$plantName}\n\n";
+                $userPrompt .= "CRITICAL: Consider plant-specific diseases for {$plantName}. For example:\n";
+                $userPrompt .= "- Apple/Cedar: Apple Scab, Cedar Apple Rust (NOT the same - distinguish carefully)\n";
+                if (stripos($plantName, 'tomato') !== false) {
+                    $userPrompt .= "- Tomato: CRITICAL - Target Spot (Corynespora cassiicola) is a COMMON tomato disease. If you see LARGE spots (5-15mm) on tomato leaves, FIRST consider Target Spot - it has DISTINCT TARGET-LIKE concentric rings (alternating dark/light bands creating a bull's-eye pattern). Other diseases: Early Blight (large spots with less defined rings, NOT target-like), Late Blight, Leaf Mold (fuzzy gray mold underneath), Septoria Leaf Spot (SMALL circular spots 1-3mm with pycnidia - MUCH smaller than Target Spot), Bacterial Spot (angular lesions, NO rings), Spider Mites (STIPPLING - tiny yellow/white dots, fine webbing - PEST, NOT disease spots), Tomato Mosaic Virus (mosaic patterns, NOT spots)\n";
+                } else {
+                    $userPrompt .= "- Tomato: Target Spot (COMMON - large spots with target-like rings), Early Blight, Late Blight, Leaf Mold, Septoria Leaf Spot, Bacterial Spot, Spider Mites, Tomato Mosaic Virus\n";
+                }
+                $userPrompt .= "- Grape: Esca (Black Measles), Powdery Mildew, Black Rot, Leaf Blight (Isariopsis Leaf Spot), Anthracnose\n";
+                $userPrompt .= "- Corn: Northern Leaf Blight (long cigar-shaped lesions), Common Rust (small circular orange-brown pustules), Cercospora Leaf Spot (Gray Leaf Spot - rectangular grayish-brown lesions bounded by veins)\n";
+                $userPrompt .= "- Corn: Northern Leaf Blight, Common Rust, Cercospora Leaf Spot\n";
+                if (stripos($plantName, 'citrus') !== false || stripos($plantName, 'orange') !== false || stripos($plantName, 'lemon') !== false) {
+                    $userPrompt .= "- Citrus: Haunglongbing (Citrus Greening), Citrus Canker (distinct diseases - Greening shows mottling; Canker shows raised lesions)\n";
+                } else {
+                    $userPrompt .= "- Citrus: Haunglongbing (Citrus Greening), Citrus Canker\n";
+                }
+                $userPrompt .= "- Soybean: Bacterial Spot, Septoria Leaf Spot, Spider Mites\n\n";
             }
             
             $userPrompt .= "ANALYSIS INSTRUCTIONS:\n".
                           "1. Examine the entire image systematically:\n".
                           "   - Look for discoloration (yellowing, browning, blackening, chlorosis)\n".
                           "   - Check for spots, lesions, or necrotic areas\n".
-                          "   - Identify patterns (circular spots, irregular patches, vein patterns)\n".
+                          "   - Identify patterns (circular spots, irregular patches, vein patterns, concentric rings)\n".
                           "   - Look for wilting, curling, or deformation\n".
                           "   - Check for powdery or fuzzy growth (fungal signs)\n".
                           "   - Look for holes, chewed edges, or pest damage\n".
-                          "   - Assess overall plant vigor and growth patterns\n\n".
+                          "   - Assess overall plant vigor and growth patterns\n".
+                          "   - Check for subtle symptoms (slight discoloration, early-stage lesions)\n\n".
                           "2. Consider common plant health issues:\n".
-                          "   - Fungal diseases (powdery mildew, leaf spot, rust, blight)\n".
+                          "   - Fungal diseases (powdery mildew, leaf spot, rust, blight, leaf mold, target spot)\n".
                           "   - Bacterial diseases (bacterial spot, canker, wilt)\n".
-                          "   - Viral diseases (mosaic patterns, stunting)\n".
+                          "   - Viral diseases (mosaic patterns, stunting, leaf curl)\n".
                           "   - Pest damage (aphids, mites, caterpillars, beetles)\n".
                           "   - Nutrient deficiencies (yellowing, interveinal chlorosis)\n".
                           "   - Environmental stress (sunburn, water stress, frost damage)\n".
-                          "   - Physiological disorders (edema, tip burn)\n\n".
-                          "3. Assess severity based on:\n".
+                          "   - Physiological disorders (edema, tip burn, leaf scorch)\n\n".
+                          "3. DIFFERENTIAL DIAGNOSIS - Distinguish between similar diseases:\n".
+                          "   (Based on established plant pathology references: USDA ARS, Extension services, Agrios Plant Pathology)\n\n".
+                          "   APPLE DISEASES:\n".
+                          "   - Cedar Apple Rust vs Apple Scab: These are completely different diseases with distinct visual characteristics. Cedar Apple Rust (Gymnosporangium juniperi-virginianae) produces BRIGHT ORANGE, YELLOW, or RED circular spots on the upper leaf surface, often with raised, cup-like structures (aecial cups) on the underside. The spots are highly visible and colorful - if you see any orange, yellow, or red coloration on apple leaves, it is Cedar Apple Rust. Apple Scab (Venturia inaequalis) produces DARK olive-green to black, velvety, irregular spots with NO orange, yellow, or red coloration whatsoever. Apple Scab spots are always dark-colored (olive-green, brown, or black). The primary distinguishing feature is COLOR: orange/yellow/red = Cedar Apple Rust; dark (olive-green/black) = Apple Scab. Reference: USDA ARS and Extension services emphasize color as the primary diagnostic feature.\n".
+                          "   - Black Rot vs Apple Scab: Black Rot has larger, sunken lesions with pycnidia; Apple Scab has velvety, olive-colored spots\n\n".
+                          "   TOMATO DISEASES:\n".
+                          "   - Early Blight vs Bacterial Spot: Early Blight (Alternaria solani) produces LARGE brown spots with CONCENTRIC RINGS (bull's eye pattern) - the rings are clearly visible. Bacterial Spot (Xanthomonas campestris pv. vesicatoria) produces SMALL, ANGULAR lesions that are WATER-SOAKED in appearance, bounded by leaf veins (creating angular/rectangular shapes), and has NO concentric rings. Key distinction: concentric rings = Early Blight; angular water-soaked lesions = Bacterial Spot. Reference: Research published in Crop Protection (2019) and documented by University of Wisconsin-Madison Plant Disease Diagnostics Clinic distinguish these symptom patterns.\n".
+                          "   - Bacterial Spot vs Septoria Leaf Spot: These are COMPLETELY DIFFERENT diseases with distinct causal agents and visual characteristics. Bacterial Spot (Xanthomonas campestris pv. vesicatoria) produces ANGULAR or RECTANGULAR lesions that are bounded by leaf veins, creating angular/rectangular shapes. The lesions are WATER-SOAKED in appearance, often with a greasy appearance, and follow the vein pattern. Septoria Leaf Spot (Septoria lycopersici) produces SMALL CIRCULAR spots (1-3mm in diameter) that are perfectly round or nearly round, with tan-to-gray centers and dark borders, often with tiny black pycnidia (fruiting bodies) visible in the center. The key distinction is SHAPE: angular/rectangular lesions that follow veins = Bacterial Spot; small perfectly circular spots with pycnidia = Septoria. CRITICAL: If lesions are angular or rectangular (bounded by veins), it is ALWAYS Bacterial Spot, NOT Septoria. If lesions are circular with tan-gray centers and pycnidia dots, it is Septoria. Reference: Research published in Crop Protection (2019) evaluating organic disease control on tomato foliar diseases, and documented by University of Wisconsin-Madison Plant Disease Diagnostics Clinic, Michigan State University Plant & Pest Diagnostics, and Oklahoma State University Extension clearly distinguish bacterial angular lesions (Xanthomonas) from fungal circular spots with pycnidia (Septoria lycopersici).\n".
+                          "   - Early Blight vs Septoria Leaf Spot: Early Blight (Alternaria solani) has LARGE brown spots (10-15mm) with CONCENTRIC RINGS. Septoria Leaf Spot (Septoria lycopersici) has SMALL circular spots (1-3mm) with tan-to-gray centers and dark borders, often with tiny black pycnidia dots. Key distinction: large spots with rings = Early Blight; small circular spots (1-3mm) with pycnidia = Septoria.\n".
+                          "   - Early Blight vs Target Spot: Early Blight has irregular brown spots with less defined concentric rings. Target Spot has DISTINCT TARGET-LIKE concentric rings with alternating dark/light bands. Key distinction: less defined rings = Early Blight; clear target pattern with alternating bands = Target Spot.\n".
+                          "   - Target Spot vs Early Blight: Target Spot (Corynespora cassiicola) has DISTINCT TARGET-LIKE concentric rings with alternating dark and light bands creating a bull's-eye or target pattern. The rings are clearly visible and form a circular target appearance. Early Blight (Alternaria solani) has irregular brown spots with concentric rings but the rings are less defined and do NOT form a clear target pattern. Key distinction: clear target-like pattern with alternating bands = Target Spot; irregular spots with less defined rings = Early Blight. Reference: Research on tomato foliar diseases distinguishes target-like patterns from general concentric ring patterns.\n".
+                          "   - Target Spot vs Septoria Leaf Spot: These are COMPLETELY DIFFERENT diseases with COMPLETELY DIFFERENT visual characteristics. Target Spot (Corynespora cassiicola) produces LARGE spots (5-15mm in diameter) with DISTINCT TARGET-LIKE concentric rings - the rings are ALTERNATING DARK AND LIGHT BANDS creating a clear BULL'S-EYE or TARGET pattern that looks like a shooting target. The spots are LARGE (much larger than Septoria) and the TARGET PATTERN (alternating bands) is the PRIMARY diagnostic feature. Septoria Leaf Spot (Septoria lycopersici) produces SMALL CIRCULAR spots (1-3mm in diameter - MUCH SMALLER than Target Spot) with tan-to-gray centers and dark borders, often with tiny black pycnidia (fruiting bodies) visible in the center. Septoria spots are SMALL, CIRCULAR, and have pycnidia dots - they do NOT have target-like alternating bands. The key distinctions are: (1) SIZE: Target Spot = LARGE (5-15mm); Septoria = SMALL (1-3mm). (2) PATTERN: Target Spot = TARGET-LIKE alternating dark/light bands (bull's-eye); Septoria = small circular spots with pycnidia (NO target pattern). (3) APPEARANCE: Target Spot looks like a shooting target with rings; Septoria looks like small dots with dark centers. CRITICAL DECISION RULE: For tomato leaves with spots, FIRST check SIZE - if spots are LARGE (5-15mm), it is likely Target Spot (check for target-like rings). If spots are SMALL (1-3mm), it is likely Septoria. If you see LARGE spots (5-15mm) with TARGET-LIKE concentric rings (alternating dark/light bands creating a bull's-eye pattern), it is ALWAYS Target Spot, NOT Septoria. If you see SMALL circular spots (1-3mm) with tan-gray centers and pycnidia dots, it is Septoria, NOT Target Spot. Reference: Research published in Crop Protection (2019) and Extension services (University of Florida IFAS, North Carolina State Extension) clearly document that Target Spot is characterized by large lesions with distinct target-like concentric rings, while Septoria produces small circular spots with pycnidia.\n".
+                          "   - Target Spot vs Leaf Mold: These are COMPLETELY DIFFERENT diseases. Target Spot (Corynespora cassiicola) produces LARGE spots with DISTINCT TARGET-LIKE concentric rings (alternating dark/light bands) on the UPPER leaf surface. The spots are visible from above and show a clear target pattern. Leaf Mold (Passalora fulva, formerly Cladosporium fulvum) produces YELLOW areas on the UPPER surface with FUZZY GRAY MOLD on the LOWER/UNDERSIDE of the leaf. The key distinction is LOCATION and PATTERN: target-like rings on upper surface = Target Spot; yellow upper with fuzzy gray mold underneath = Leaf Mold. CRITICAL: If you see target-like rings on the upper leaf surface, it is Target Spot, NOT Leaf Mold. If you see yellow upper surface with fuzzy gray mold underneath, it is Leaf Mold, NOT Target Spot. Reference: Compendium of Tomato Diseases distinguishes target-like patterns from leaf mold's characteristic underside growth.\n".
+                          "   - Leaf Mold vs Early Blight: Leaf Mold (Passalora fulva) has YELLOW upper surface with FUZZY GRAY MOLD underneath (flip leaf to see the mold). Early Blight (Alternaria solani) has brown spots with concentric rings on upper surface, NO fuzzy mold underneath. The key distinction: fuzzy gray mold underneath = Leaf Mold; brown spots with rings, no mold underneath = Early Blight. CRITICAL: If you see fuzzy gray mold on the underside of leaves, it is Leaf Mold, NOT Early Blight. Reference: Research on tomato diseases emphasizes the underside mold growth as diagnostic for Leaf Mold.\n".
+                          "   - Target Spot vs Spider Mites: These are COMPLETELY DIFFERENT issues - one is a DISEASE, the other is a PEST. Target Spot (Corynespora cassiicola) is a FUNGAL DISEASE that produces LARGE, DEFINED SPOTS (5-15mm in diameter) with DISTINCT TARGET-LIKE concentric rings (alternating dark/light bands creating a bull's-eye pattern) on tomato leaves. These are CLEAR, LARGE, CIRCULAR LESIONS with visible rings. Spider Mites (Tetranychus urticae) are PESTS that show STIPPLING (tiny yellow/white dots scattered across the leaf surface from feeding damage - these are NOT large defined spots), fine webbing between leaves/stems, and leaf curling. Spider Mites create a STIPPLING PATTERN (many tiny dots scattered across the leaf), NOT large defined circular lesions with rings. CRITICAL DECISION RULE: If you see LARGE, DEFINED SPOTS (5-15mm) with TARGET-LIKE RINGS (alternating dark/light bands), it is Target Spot (FUNGAL DISEASE), NOT Spider Mites (PEST). If you see TINY DOTS/STIPPLING scattered across the leaf (no large defined spots, no rings) with webbing, it is Spider Mites (PEST), NOT Target Spot. The key distinction: LARGE defined spots with rings = Target Spot (disease); tiny scattered dots/stippling = Spider Mites (pest). Reference: Extension services (UC IPM, Cornell) clearly distinguish fungal lesions (large defined spots) from pest stippling damage (tiny scattered dots).\n".
+                          "   - Target Spot vs Powdery Mildew: Target Spot has LARGE spots with target-like rings; Powdery Mildew has WHITE POWDERY COATING on leaf surface, NO target-like spots. CRITICAL: If you see large spots with target-like rings, it is Target Spot, NOT Powdery Mildew. If you see white powdery coating, it is Powdery Mildew, NOT Target Spot.\n\n".
+                          "   GRAPE DISEASES:\n".
+                          "   - Black Rot vs Leaf Blight (Isariopsis Leaf Spot): Black Rot (Guignardia bidwellii) produces circular or round dark brown/black spots with pycnidia (tiny black dots in the center of lesions). Leaf Blight (Isariopsis griseola, also called Angular Leaf Spot) produces angular or irregular brown spots that follow leaf vein patterns, creating angular or rectangular shapes, and has no pycnidia. The key distinction: circular/round spots = Black Rot; angular/irregular spots following veins = Leaf Blight. Reference: Grape disease identification guides (UC IPM, Extension services) emphasize shape and pycnidia presence.\n".
+                          "   - Esca (Black Measles) vs Anthracnose: Esca has BLACK SPOTS/STREAKS on grape leaves and stems (measles-like pattern); Anthracnose has SUNKEN, circular lesions with dark margins\n".
+                          "   - Esca (Black Measles) vs Black Rot: These are COMPLETELY DIFFERENT diseases with distinct causal agents and symptoms. Esca (Black Measles, caused by Phaeomoniella chlamydospora and other fungi) produces BLACK SPOTS, STREAKS, or VEIN DISCOLORATION on grape leaves and stems, creating a measles-like pattern. The spots are irregular and often follow leaf veins, creating streaks or irregular black patches. Black Rot (Guignardia bidwellii) produces CIRCULAR or ROUND dark brown/black spots with pycnidia (tiny black dots in the center of lesions). The key distinction is PATTERN: irregular black spots/streaks/vein discoloration (measles-like) = Esca (Black Measles); circular/round spots with pycnidia = Black Rot. CRITICAL: If you see irregular black spots, streaks, or vein discoloration (measles-like pattern), it is Esca (Black Measles), NOT Black Rot. If you see circular/round spots with pycnidia, it is Black Rot, NOT Esca. Reference: Research on Esca complex (Phaeomoniella chlamydospora) published in Phytopathology and Plant Disease journals documents the irregular streak/vein discoloration pattern, while studies on Guignardia bidwellii (Black Rot) document circular lesions with pycnidia as key diagnostic features.\n".
+                          "   - Esca (Black Measles) vs Leaf Blight (Isariopsis Leaf Spot): These are COMPLETELY DIFFERENT diseases. Esca (Black Measles) produces BLACK SPOTS, STREAKS, or VEIN DISCOLORATION creating a measles-like pattern with irregular black patches. Leaf Blight (Isariopsis griseola) produces ANGULAR or IRREGULAR brown spots that follow leaf vein patterns, creating angular/rectangular shapes, but the spots are BROWN, NOT black, and do NOT create a measles-like pattern. The key distinction is COLOR and PATTERN: black spots/streaks/vein discoloration (measles-like) = Esca; angular brown spots following veins (NOT black, NOT measles-like) = Leaf Blight. CRITICAL: If you see black spots, streaks, or vein discoloration (measles-like), it is Esca, NOT Leaf Blight. If you see angular brown spots following veins, it is Leaf Blight, NOT Esca. Reference: Research on Esca documents black measles-like patterns, while Leaf Blight research documents angular brown lesions.\n\n".
+                          "   CORN DISEASES:\n".
+                          "   - Cercospora Leaf Spot (Gray Leaf Spot) vs Northern Leaf Blight: These are COMPLETELY DIFFERENT diseases with distinct visual characteristics. Cercospora Leaf Spot (Cercospora zeae-maydis, also called Gray Leaf Spot) produces RECTANGULAR or SQUARE lesions that are bounded by leaf veins, creating angular/rectangular shapes. The lesions are GRAYISH-BROWN in color and have a distinct rectangular appearance. Northern Leaf Blight (Exserohilum turcicum) produces LONG, ELONGATED, CIGAR-SHAPED lesions that are NOT rectangular - they are long and narrow, often several centimeters in length, with a tan to brown color. The key distinction is SHAPE: rectangular/square lesions bounded by veins = Cercospora (Gray Leaf Spot); long elongated cigar-shaped lesions = Northern Leaf Blight. CRITICAL: If lesions are rectangular or square and bounded by veins, it is Cercospora (Gray Leaf Spot), NOT Northern Leaf Blight. If lesions are long and cigar-shaped, it is Northern Leaf Blight, NOT Cercospora. Reference: Research on Cercospora zeae-maydis published in Plant Disease and Phytopathology journals documents the rectangular, vein-bounded lesion morphology as a key diagnostic feature, distinguishing it from the elongated cigar-shaped lesions of Exserohilum turcicum.\n".
+                          "   - Cercospora Leaf Spot (Gray Leaf Spot) vs Common Rust: These are COMPLETELY DIFFERENT diseases with different causal agents. Cercospora Leaf Spot (Gray Leaf Spot, Cercospora zeae-maydis) produces RECTANGULAR or SQUARE lesions that are bounded by leaf veins, creating angular/rectangular shapes. The lesions are GRAYISH-BROWN in color and have a distinct rectangular appearance. Common Rust (Puccinia sorghi) produces SMALL, CIRCULAR to OVAL PUSTULES (raised bumps) that are ORANGE to BROWN-RED in color, scattered on both leaf surfaces. The pustules are raised and powdery when mature. The key distinction is SHAPE and COLOR: rectangular/square grayish-brown lesions bounded by veins = Cercospora (Gray Leaf Spot); small circular/oval orange-brown pustules = Common Rust. CRITICAL: If lesions are rectangular or square and grayish-brown, it is Cercospora (Gray Leaf Spot), NOT Common Rust. If you see small circular/oval orange-brown pustules, it is Common Rust, NOT Cercospora. Reference: Studies on Cercospora zeae-maydis morphology published in Plant Disease journals document the rectangular lesion pattern, while research on Puccinia sorghi (Common Rust) documents circular/oval pustules as diagnostic features.\n\n".
+                          "   PEST vs DISEASE:\n".
+                          "   - Spider Mites vs Powdery Mildew: Spider Mites show STIPPLING (tiny yellow/white dots from feeding), fine webbing between leaves/stems, leaf curling. Powdery Mildew shows WHITE POWDERY COATING on leaf surface, NO stippling or webbing. Reference: Extension services distinguish mites by stippling/webbing vs fungal coating.\n".
+                          "   - Spider Mites vs Bacterial Spot: These are COMPLETELY DIFFERENT issues. Spider Mites (pest) show STIPPLING (tiny yellow/white dots from feeding damage), fine webbing between leaves/stems, and overall leaf yellowing/curling. Bacterial Spot (disease) shows ANGULAR WATER-SOAKED lesions that are bounded by leaf veins, creating angular/rectangular shapes, with a greasy/oily appearance. CRITICAL: If you see angular/rectangular lesions bounded by veins, it is Bacterial Spot (disease), NOT Spider Mites (pest). If you see tiny dots/stippling and webbing, it is Spider Mites, NOT Bacterial Spot. Reference: Bacterial diseases create distinct angular lesions; mites create stippling patterns without defined lesion boundaries.\n".
+                          "   - Spider Mites vs Early Blight: Spider Mites (pest) show STIPPLING (tiny yellow/white dots from feeding), fine webbing, and leaf curling - they do NOT produce fungal lesions. Early Blight (disease) shows LARGE brown spots with CONCENTRIC RINGS (fungal lesions). CRITICAL: If you see tiny dots/stippling and webbing, it is Spider Mites (pest), NOT Early Blight (disease). If you see large spots with concentric rings, it is Early Blight, NOT Spider Mites. Reference: Extension services distinguish pest stippling from fungal lesions.\n".
+                          "   - Tomato Mosaic Virus vs Spider Mites: These are COMPLETELY DIFFERENT issues. Tomato Mosaic Virus (disease) shows MOSAIC PATTERNS (light/dark green mottling creating a patchwork or mosaic appearance), leaf distortion, and sometimes leaf curling. The mottling is a color pattern (light green and dark green patches), NOT tiny dots. Spider Mites (pest) show STIPPLING (tiny yellow/white dots from feeding damage scattered across the leaf), fine webbing between leaves/stems, and leaf curling. The key distinction: mosaic color pattern (light/dark green patches) = Tomato Mosaic Virus; tiny dots/stippling with webbing = Spider Mites. CRITICAL: If you see tiny dots/stippling and webbing, it is Spider Mites (pest), NOT Tomato Mosaic Virus (disease). If you see mosaic color patterns (light/dark green mottling), it is Tomato Mosaic Virus, NOT Spider Mites. Reference: Research on tomato diseases distinguishes viral mosaic patterns from pest stippling damage.\n\n".
+                          "   CITRUS DISEASES:\n".
+                          "   - Haunglongbing (Citrus Greening) vs Citrus Canker: These are completely different diseases. Haunglongbing (HLB, Candidatus Liberibacter) is a bacterial disease that causes ASYMMETRIC MOTTLING (one side of leaf yellow, other side green), leaf vein yellowing, misshapen/small fruit, and overall tree decline. Citrus Canker (Xanthomonas citri) is a bacterial disease that causes RAISED, CRUSTY, SCAB-LIKE lesions on leaves, fruit, and stems - these are physical raised bumps/sores, NOT mottling. Greening shows mottling and yellowing; Canker shows raised lesions/bumps. Reference: USDA APHIS and Florida Extension services provide detailed diagnostic guides for these diseases.\n".
+                          "   - Haunglongbing (Citrus Greening) vs Iron Deficiency: Greening shows ASYMMETRIC MOTTLING (one side yellow, one side green), leaf vein yellowing, misshapen fruit; Iron Deficiency shows INTERVEINAL CHLOROSIS (yellow between veins), veins stay green, NO mottling pattern, NO fruit deformation\n\n".
+                          "   PHYSIOLOGICAL vs DISEASE:\n".
+                          "   - Leaf Scorch vs Leaf Spot: Leaf Scorch shows BROWNING AT LEAF MARGINS/EDGES (starts from edges inward), uniform pattern along leaf edges, often with crispy/dry appearance. Leaf Spot shows DISCRETE CIRCULAR/ANGULAR SPOTS scattered on leaf surface, NOT starting from margins. Reference: Physiological disorders (scorch) affect margins; diseases create discrete spots.\n".
+                          "   - Leaf Scorch vs Bacterial Spot: These are COMPLETELY DIFFERENT issues. Leaf Scorch (physiological disorder) shows BROWNING AT LEAF MARGINS/EDGES that starts from the outer edges and moves inward, creating a uniform browning pattern along leaf edges, often with crispy/dry appearance. Bacterial Spot (disease) shows ANGULAR WATER-SOAKED lesions that are bounded by leaf veins, creating angular/rectangular shapes scattered across the leaf surface (NOT starting from margins), with a greasy/oily appearance. CRITICAL: If browning starts from leaf margins/edges and moves inward uniformly, it is Leaf Scorch (physiological), NOT Bacterial Spot (disease). If you see angular lesions scattered on the leaf (not starting from margins), it is Bacterial Spot. Reference: Physiological disorders affect margins uniformly; bacterial diseases create discrete angular lesions.\n\n".
+                          "   HEALTHY vs DISEASE:\n".
+                          "   - If leaves are uniformly green with NO spots, lesions, discoloration, or abnormalities, the plant is HEALTHY\n".
+                          "   - Do NOT confuse natural leaf texture, minor blemishes, or normal aging with disease\n".
+                          "   - Powdery Mildew requires visible WHITE POWDERY COATING on leaf surface - this is a distinct fungal growth that looks like flour or powder. Do NOT diagnose Powdery Mildew on healthy green leaves without visible white powdery coating. Natural leaf texture, light reflection, or minor surface variations are NOT Powdery Mildew. CRITICAL: Only diagnose Powdery Mildew if you can clearly see a white powdery/fungal coating on the leaf surface - if leaves are uniformly green with no visible white coating, the plant is HEALTHY, NOT Powdery Mildew.\n".
+                          "   - Spider Mites (Two-Spotted Spider Mite, Tetranychus urticae) are COMMON tomato pests. Look for STIPPLING (tiny yellow/white dots scattered across the leaf surface from feeding damage), fine webbing between leaves/stems, leaf yellowing, and leaf curling. Spider Mites are PESTS, NOT diseases - they create stippling patterns, NOT fungal lesions or spots. CRITICAL: If you see tiny dots/stippling on tomato leaves (especially with webbing), it is likely Spider Mites. Do NOT confuse stippling (tiny dots) with mosaic patterns (light/dark green patches) or fungal spots. Reference: Extension services (UC IPM, Cornell) document stippling and webbing as key diagnostic features for spider mite damage.\n".
+                          "   - For angular or rectangular lesions on tomato/pepper leaves, consider Bacterial Spot\n".
+                          "   - CRITICAL DISTINCTION: Bacterial Spot has ANGULAR lesions bounded by veins - if you see angular/rectangular shapes, it is Bacterial Spot, NOT Spider Mites (stippling) or Leaf Scorch (margin browning)\n".
+                          "   - IMPORTANT: Balance accuracy with detection. While you should be careful not to diagnose diseases on healthy plants, you should also actively look for and detect diseases when symptoms are present. If you see clear symptoms (spots, lesions, discoloration, powdery coating, stippling, webbing, etc.), diagnose the disease. Do NOT default to 'healthy' or 'None' when clear disease symptoms are visible. Only classify as HEALTHY if the plant appears uniformly healthy with no visible symptoms. If symptoms are present but subtle, diagnose with lower confidence rather than saying 'None'.\n\n".
+                          "4. Assess severity based on:\n".
                           "   - Percentage of affected tissue (mild: <25%, moderate: 25-50%, severe: >50%)\n".
                           "   - Impact on plant function (mild: cosmetic, moderate: growth affected, severe: life-threatening)\n".
                           "   - Spread potential (mild: localized, severe: systemic)\n\n".
-                          "4. Provide specific, actionable recommendations:\n".
+                          "5. Provide specific, actionable recommendations:\n".
                           "   - Cultural practices (watering, pruning, spacing)\n".
                           "   - Organic treatments (neem oil, baking soda, copper fungicides)\n".
                           "   - Chemical treatments (if severe, specify active ingredients)\n".
@@ -227,9 +292,24 @@ class OpenAIService
                           "}\n\n".
                           "CRITICAL RULES:\n".
                           "- If the plant appears completely healthy with no visible issues, set hasDisease to false\n".
-                          "- Be specific with disease names (use scientific/common names like 'Early Blight' not just 'disease')\n".
+                          "- Be conservative with healthy plants - natural leaf texture, minor blemishes, or normal aging are not diseases\n".
+                          "- Be specific with disease names (use exact names like 'Early Blight', 'Target Spot', 'Cedar Apple Rust' - not generic terms)\n".
+                          "- Consider plant-specific diseases - if plant is Apple, consider both Apple Scab and Cedar Apple Rust. Cedar Apple Rust has orange/yellow/red spots; Apple Scab has dark olive-green to black spots. If you see orange or yellow coloration, it is Cedar Apple Rust\n".
                           "- Only diagnose what you can clearly see - if uncertain, lower confidence and note it\n".
-                          "- Distinguish between diseases, pests, and environmental stress\n".
+                          "- For angular or rectangular lesions on tomato/pepper leaves, consider Bacterial Spot - these are NOT circular spots\n".
+                          "- For small circular spots (1-3mm) on tomato leaves, consider Septoria - these are NOT angular\n".
+                          "- Distinguish between diseases, pests, and environmental stress:\n".
+                          "  * Diseases: Fungal spots, bacterial lesions, viral patterns\n".
+                          "  * Pests: Stippling, webbing, holes, chewed edges\n".
+                          "  * Deficiencies: Interveinal chlorosis, uniform yellowing\n".
+                          "  * Viruses: Mosaic patterns, leaf distortion, stunting\n".
+                          "- Pay attention to subtle symptoms - early-stage diseases may show only slight discoloration\n".
+                          "- Use differential diagnosis to distinguish between similar-looking diseases - refer to the detailed comparisons above\n".
+                          "- IMPORTANT: Actively detect diseases when symptoms are present. Do NOT default to 'None' or 'healthy' when clear disease symptoms are visible. If you see spots, lesions, discoloration, powdery coating, stippling, webbing, or other symptoms, diagnose the disease. Only classify as HEALTHY if the plant appears uniformly healthy with no visible symptoms. For subtle symptoms, diagnose with lower confidence rather than missing the disease entirely. Powdery Mildew requires visible WHITE POWDERY COATING - do NOT confuse natural leaf texture with Powdery Mildew, but DO diagnose it when the coating is clearly visible.\n".
+                          "- For Apple diseases: Cedar Apple Rust has orange/yellow/red spots; Apple Scab has dark spots. Orange or yellow coloration indicates Cedar Apple Rust\n".
+                          "- For Tomato diseases: Target Spot (Corynespora cassiicola) is a COMMON tomato disease. DECISION TREE: (1) If you see LARGE spots (5-15mm) on tomato leaves, FIRST consider Target Spot - check for TARGET-LIKE concentric rings (alternating dark/light bands creating a bull's-eye pattern). If rings are clearly visible and target-like, it is Target Spot. (2) If spots are LARGE but rings are less defined (not clearly target-like), consider Early Blight. (3) If spots are SMALL (1-3mm) with pycnidia, it is Septoria (NOT Target Spot). (4) If lesions are angular/rectangular, it is Bacterial Spot (NOT Target Spot). (5) If you see tiny dots/stippling scattered (no large defined spots), it is Spider Mites (NOT Target Spot). CRITICAL: For large spots on tomato leaves, Target Spot should be considered FIRST - look for the target-like rings (alternating bands). If rings are present and clearly visible, it is Target Spot.\n".
+                          "- For Grape diseases: Black Rot has circular spots with pycnidia; Leaf Blight has angular spots following veins\n".
+                          "- For Corn diseases: Cercospora has rectangular lesions; Northern Leaf Blight has elongated cigar-shaped lesions\n".
                           "- Provide practical, implementable recommendations\n".
                           "- Return ONLY the JSON object, no markdown, no code blocks, no explanations";
             
@@ -255,17 +335,59 @@ class OpenAIService
                 ],
             ];
             
-            $response = Http::withHeaders([
-                'Authorization' => 'Bearer '.$this->apiKey,
-                'Content-Type' => 'application/json',
-            ])->timeout(60)->post('https://api.openai.com/v1/chat/completions', [
-                'model' => 'gpt-4o', // Using GPT-4o for vision capabilities
-                'messages' => $messages,
-                'temperature' => 0.3, // Lower temperature for more consistent diagnosis
-                'max_tokens' => 1000,
-            ]);
+            // Retry logic for API calls (increased retries and delays for better reliability)
+            $maxRetries = 5; // Increased from 3 to 5
+            $baseRetryDelay = 3; // Increased from 2 to 3 seconds
+            $response = null;
             
-            if ($response->successful()) {
+            for ($attempt = 1; $attempt <= $maxRetries; $attempt++) {
+                try {
+                    $response = Http::withHeaders([
+                        'Authorization' => 'Bearer '.$this->apiKey,
+                        'Content-Type' => 'application/json',
+                    ])->timeout(120)->post('https://api.openai.com/v1/chat/completions', [ // Increased timeout from 90 to 120
+                        'model' => 'gpt-4o', // Using GPT-4o for vision capabilities
+                        'messages' => $messages,
+                        'temperature' => 0.3, // Lower temperature for more consistent diagnosis
+                        'max_tokens' => 1000,
+                    ]);
+                    
+                    if ($response->successful()) {
+                        break; // Success, exit retry loop
+                    }
+                    
+                    // If rate limited or server error, retry
+                    if ($response->status() === 429 || ($response->status() >= 500 && $response->status() < 600)) {
+                        if ($attempt < $maxRetries) {
+                            $delay = $baseRetryDelay * pow(2, $attempt - 1); // Exponential backoff: 3s, 6s, 12s, 24s, 48s
+                            Log::warning('OpenAI API retry', [
+                                'attempt' => $attempt,
+                                'status' => $response->status(),
+                                'delay' => $delay,
+                            ]);
+                            sleep($delay);
+                            continue;
+                        }
+                    } else {
+                        // Non-retryable error, break immediately
+                        break;
+                    }
+                } catch (\Exception $e) {
+                    if ($attempt < $maxRetries) {
+                        $delay = $baseRetryDelay * pow(2, $attempt - 1); // Exponential backoff
+                        Log::warning('OpenAI API exception, retrying', [
+                            'attempt' => $attempt,
+                            'error' => $e->getMessage(),
+                            'delay' => $delay,
+                        ]);
+                        sleep($delay);
+                        continue;
+                    }
+                    throw $e; // Re-throw on final attempt
+                }
+            }
+            
+            if ($response && $response->successful()) {
                 $data = $response->json();
                 $content = $data['choices'][0]['message']['content'] ?? null;
                 
@@ -278,14 +400,18 @@ class OpenAIService
                     // Try to parse as JSON directly first
                     $diagnosis = json_decode($cleanedContent, true);
                     if (json_last_error() === JSON_ERROR_NONE && is_array($diagnosis)) {
-                        return $this->normalizeDiagnosis($diagnosis);
+                        $normalized = $this->normalizeDiagnosis($diagnosis);
+                        $normalized['prompt_version'] = 'v2.6'; // Track prompt version (enhanced Target Spot detection with stronger prioritization)
+                        return $normalized;
                     }
                     
                     // Try to extract JSON object from content
                     if (preg_match('/\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}/s', $cleanedContent, $jsonMatch)) {
                         $diagnosis = json_decode($jsonMatch[0], true);
                         if (json_last_error() === JSON_ERROR_NONE && is_array($diagnosis)) {
-                            return $this->normalizeDiagnosis($diagnosis);
+                            $normalized = $this->normalizeDiagnosis($diagnosis);
+                            $normalized['prompt_version'] = 'v2.6'; // Track prompt version (enhanced Target Spot detection with stronger prioritization)
+                            return $normalized;
                         }
                     }
                     
@@ -307,23 +433,55 @@ class OpenAIService
                         'recommendations' => [],
                         'notes' => $content,
                         'detectedRegions' => null,
+                        'prompt_version' => 'v2.6', // Track prompt version (enhanced Target Spot detection with stronger prioritization)
                     ];
                 }
             }
             
-            Log::error('OpenAI Disease Detection API Error', [
-                'response' => $response->body(),
-                'status' => $response->status(),
-            ]);
+            // If we have a response, log it
+            if ($response) {
+                Log::error('OpenAI Disease Detection API Error', [
+                    'response' => $response->body(),
+                    'status' => $response->status(),
+                ]);
+            } else {
+                Log::error('OpenAI Disease Detection API Error - No response after retries');
+            }
             
-            return null;
+            // Return a fallback response instead of null to prevent 500 errors
+            return [
+                'hasDisease' => false,
+                'diseaseName' => null,
+                'severity' => null,
+                'confidence' => 0.0,
+                'symptoms' => [],
+                'affectedAreas' => [],
+                'recommendations' => ['Please try again. The analysis service is temporarily unavailable.'],
+                'notes' => 'API request failed after retries. Please retry the analysis.',
+                'detectedRegions' => null,
+                'prompt_version' => 'v2.6',
+            ];
         } catch (\Exception $e) {
             Log::error('OpenAI Disease Detection Exception', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
+                'file' => $imagePath ?? 'unknown',
             ]);
             
-            return null;
+            // Return a fallback response instead of null to prevent 500 errors
+            // This allows the API to return a structured error response instead of crashing
+            return [
+                'hasDisease' => false,
+                'diseaseName' => null,
+                'severity' => null,
+                'confidence' => 0.0,
+                'symptoms' => [],
+                'affectedAreas' => [],
+                'recommendations' => ['Please try again. An error occurred during analysis.'],
+                'notes' => 'Analysis failed: ' . (config('app.debug') ? $e->getMessage() : 'Internal error'),
+                'detectedRegions' => null,
+                'prompt_version' => 'v2.6',
+            ];
         }
     }
 
