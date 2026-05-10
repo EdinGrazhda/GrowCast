@@ -57,12 +57,11 @@ export default function Edit({ plant }: Props) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="text-3xl font-bold text-primary"
                                 >
                                     Edit Plant
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Update plant information
                                 </p>
                             </div>
@@ -71,13 +70,11 @@ export default function Edit({ plant }: Props) {
 
                     {/* Form */}
                     <Card
-                        className="border-2"
-                        style={{ borderColor: '#74C69D40' }}
+                        className="border-2 border-primary/20"
                     >
-                        <CardHeader style={{ backgroundColor: '#74C69D10' }}>
+                        <CardHeader className="bg-primary/10">
                             <CardTitle
-                                className="flex items-center gap-2"
-                                style={{ color: '#2D6A4F' }}
+                                className="flex items-center gap-2 text-primary"
                             >
                                 <Sprout className="h-5 w-5" />
                                 Plant Information
@@ -89,7 +86,7 @@ export default function Edit({ plant }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="name"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Plant Name *
                                     </Label>
@@ -100,11 +97,11 @@ export default function Edit({ plant }: Props) {
                                         onChange={(e) =>
                                             setData('name', e.target.value)
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter plant name"
                                     />
                                     {errors.name && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.name}
                                         </p>
                                     )}
@@ -114,7 +111,7 @@ export default function Edit({ plant }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="stock"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Stock *
                                     </Label>
@@ -126,11 +123,11 @@ export default function Edit({ plant }: Props) {
                                         onChange={(e) =>
                                             setData('stock', e.target.value)
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter stock quantity"
                                     />
                                     {errors.stock && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.stock}
                                         </p>
                                     )}
@@ -140,7 +137,7 @@ export default function Edit({ plant }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="info"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Information
                                     </Label>
@@ -150,12 +147,12 @@ export default function Edit({ plant }: Props) {
                                         onChange={(e) =>
                                             setData('info', e.target.value)
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter plant information"
                                         rows={4}
                                     />
                                     {errors.info && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.info}
                                         </p>
                                     )}
@@ -167,10 +164,7 @@ export default function Edit({ plant }: Props) {
                                         <Button
                                             type="button"
                                             variant="outline"
-                                            style={{
-                                                borderColor: '#74C69D',
-                                                color: '#2D6A4F',
-                                            }}
+                                            className="border-primary text-primary hover:bg-primary/10"
                                         >
                                             Cancel
                                         </Button>
@@ -178,11 +172,7 @@ export default function Edit({ plant }: Props) {
                                     <Button
                                         type="submit"
                                         disabled={processing}
-                                        style={{
-                                            backgroundColor: '#2D6A4F',
-                                            color: 'white',
-                                        }}
-                                        className="min-w-[120px]"
+                                        className="min-w-[120px] bg-primary text-primary-foreground hover:bg-primary/90"
                                     >
                                         {processing ? (
                                             <>

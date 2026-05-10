@@ -20,15 +20,40 @@ class RolesAndPermissionsSeeder extends Seeder
         $oldPermissions = ['manage users', 'manage roles', 'manage farms', 'manage plants', 'manage weather', 'view dashboard'];
         Permission::whereIn('name', $oldPermissions)->delete();
 
-        // Permissions are already created by migration (plant_View, plant_Create, etc.)
-        // Just create roles without assigning any permissions by default
-        
-        // Create Admin role (permissions will be assigned manually via UI)
+        // Create Admin role - admins get all permissions automatically via Gate::before
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
 
-        // Create Farmer role (permissions will be assigned manually via UI)
+        // Create Farmer role and assign farming-related permissions
         $farmerRole = Role::firstOrCreate(['name' => 'farmer']);
+        
+        // Assign farmer permissions
+        $farmerPermissions = [
+            'dashboard_View',
+            'plant_View',
+            'plant_Create',
+            'plant_Edit',
+            'plant_Delete',
+            'farm_View',
+            'farm_Create',
+            'farm_Edit',
+            'farm_Delete',
+            'weather_View',
+            'weather_Create',
+            'weather_Edit',
+            'weather_Delete',
+            'spray_View',
+            'spray_Create',
+            'spray_Edit',
+            'spray_Delete',
+        ];
 
-        $this->command->info('Roles created successfully! Assign permissions via the UI.');
+        foreach ($farmerPermissions as $permission) {
+            $perm = Permission::where('name', $permission)->first();
+            if ($perm && !$farmerRole->hasPermissionTo($permission)) {
+                $farmerRole->givePermissionTo($perm);
+            }
+        }
+
+        $this->command->info('Roles and permissions assigned successfully!');
     }
 }

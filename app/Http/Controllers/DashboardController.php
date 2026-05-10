@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Farm;
 use App\Models\Plant;
+use App\Models\Spray;
+use App\Models\User;
 use App\Models\Weather;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
@@ -71,12 +73,24 @@ class DashboardController extends Controller
             ? Plant::orderBy('stock', 'desc')->take(5)->get(['name', 'stock'])
             : Plant::where('user_id', $user->id)->orderBy('stock', 'desc')->take(5)->get(['name', 'stock']);
 
+        // Spray statistics
+        $totalSprays = $isAdmin
+            ? Spray::count()
+            : Spray::whereHas('farm', function($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })->count();
+
+        // User statistics (admin only)
+        $totalUsers = $isAdmin ? User::count() : 0;
+
         return Inertia::render('dashboard', [
             'stats' => [
                 'totalFarms' => $totalFarms,
                 'totalPlants' => $totalPlants,
                 'totalWeatherForecasts' => $totalWeatherForecasts,
                 'optimalDays' => $optimalDays,
+                'totalSprays' => $totalSprays,
+                'totalUsers' => $totalUsers,
                 'recentForecasts' => $recentForecasts,
                 'plantsByStock' => $plantsByStock,
             ],

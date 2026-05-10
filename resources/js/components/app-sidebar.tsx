@@ -16,12 +16,12 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import {
     Activity,
-    BookOpen,
+    Brain,
     CloudRain,
-    Folder,
     LayoutGrid,
     MapPin,
     ShieldCheck,
+    SprayCan,
     Sprout,
     Users,
 } from 'lucide-react';
@@ -47,6 +47,18 @@ const allNavItems: NavItem[] = [
         permissions: ['plant_View'], // accessible by anyone with plant_View permission
     },
     {
+        title: 'Sprays',
+        href: '/sprays',
+        icon: SprayCan,
+        permissions: ['spray_View'], // accessible by anyone with spray_View permission
+    },
+    {
+        title: 'Spray Timing AI',
+        href: '/sprays/recommendation',
+        icon: Brain,
+        permissions: ['spray_View'], // accessible by anyone with spray_View permission
+    },
+    {
         title: 'Weather',
         href: '/weather',
         icon: CloudRain,
@@ -56,7 +68,7 @@ const allNavItems: NavItem[] = [
         title: 'Disease Detection',
         href: '/plant-disease',
         icon: Activity,
-        permissions: ['plant_View'], // accessible by anyone with plant_View permission
+        permissions: ['diagnose_View'], // accessible by anyone with diagnose_View permission
     },
     {
         title: 'Users',
@@ -72,29 +84,13 @@ const allNavItems: NavItem[] = [
     },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
-    const { hasPermission, isAdmin } = useAuth();
+    const { hasPermission } = useAuth();
 
     // Filter nav items based on user permissions
     const mainNavItems = allNavItems.filter((item) => {
-        // Admins see everything
-        if (isAdmin()) {
-            return true;
-        }
-
         // If item has no permissions specified, show it to everyone
         if (!item.permissions || item.permissions.length === 0) {
             return true;

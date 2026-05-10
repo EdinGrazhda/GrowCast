@@ -1,34 +1,33 @@
-import { Link } from "@inertiajs/react";
-import { useState } from "react";
+import { Link } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Navbar() {
     const [open, setOpen] = useState(false);
 
     const menuItems = [
-        { label: "Home", target: "hero" },
-        { label: "Search Plants", target: "search" },
-        { label: "3D Farm", target: "farm" },
-        { label: "Admin Panel", target: "admin" },
-        { label: "Success Stories", target: "stories" },
-        { label: "Contact", target: "footer" },
+        { label: 'Home', target: 'hero' },
+        { label: 'Disease Detector', target: 'disease-demo' },
+        { label: '3D Farm', target: 'farm' },
+        { label: 'Admin Panel', target: 'admin' },
+        { label: 'Success Stories', target: 'stories' },
+        { label: 'Contact', target: 'footer' },
     ];
 
     const scrollToSection = (id: string) => {
         const el = document.getElementById(id);
         if (el) {
-            el.scrollIntoView({ behavior: "smooth" });
+            el.scrollIntoView({ behavior: 'smooth' });
         }
         setOpen(false); // close mobile menu
     };
 
     return (
-        <header className="w-full bg-[#e9f8f1]/90 backdrop-blur-md border-b border-[#b7e4c7] shadow-sm sticky top-0 z-50">
+        <header className="sticky top-0 z-50 w-full border-b border-[#b7e4c7] bg-[#e9f8f1]/90 shadow-sm backdrop-blur-md">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
-
                 {/* LOGO (click → Home) */}
-                <div 
-                    className="flex items-center gap-2 cursor-pointer"
-                    onClick={() => scrollToSection("hero")}
+                <div
+                    className="flex cursor-pointer items-center gap-2"
+                    onClick={() => scrollToSection('hero')}
                 >
                     <img
                         src="/Smile.png"
@@ -41,7 +40,7 @@ export default function Navbar() {
                 </div>
 
                 {/* DESKTOP NAVIGATION */}
-                <nav className="hidden md:flex items-center gap-8 text-sm text-[#1B4332]/80">
+                <nav className="hidden items-center gap-8 text-sm text-[#1B4332]/80 md:flex">
                     {menuItems.map((item) => (
                         <button
                             key={item.target}
@@ -55,16 +54,16 @@ export default function Navbar() {
                 </nav>
 
                 {/* AUTH BUTTONS */}
-                <div className="hidden md:flex gap-2 text-sm">
+                <div className="hidden gap-2 text-sm md:flex">
                     <Link
                         href="/login"
-                        className="rounded-lg px-4 py-1.5 text-[#1B4332] transition hover:bg-[#d8f3dc] hover:scale-[1.05]"
+                        className="rounded-lg px-4 py-1.5 text-[#1B4332] transition hover:scale-[1.05] hover:bg-[#d8f3dc]"
                     >
                         Login
                     </Link>
                     <Link
                         href="/register"
-                        className="rounded-lg bg-[#2D6A4F] px-4 py-1.5 text-white shadow-sm transition hover:bg-[#1B4332] hover:scale-[1.05]"
+                        className="rounded-lg bg-[#2D6A4F] px-4 py-1.5 text-white shadow-sm transition hover:scale-[1.05] hover:bg-[#1B4332]"
                     >
                         Register
                     </Link>
@@ -81,7 +80,7 @@ export default function Navbar() {
 
             {/* MOBILE DROPDOWN MENU */}
             {open && (
-                <div className="md:hidden animate-fade-up bg-[#e9f8f1] px-4 py-3 border-t border-[#b7e4c7] text-sm text-[#1B4332]/80 space-y-3">
+                <div className="animate-fade-up space-y-3 border-t border-[#b7e4c7] bg-[#e9f8f1] px-4 py-3 text-sm text-[#1B4332]/80 md:hidden">
                     {menuItems.map((item) => (
                         <button
                             key={item.target}

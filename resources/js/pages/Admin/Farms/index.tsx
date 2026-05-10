@@ -70,24 +70,15 @@ export default function Index({ farms }: Props) {
                     <div className="mb-8">
                         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                             <div>
-                                <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
-                                >
+                                <h1 className="text-3xl font-bold text-primary">
                                     Farms Management
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Manage farms and their locations
                                 </p>
                             </div>
                             <Link href="/farms/create">
-                                <Button
-                                    className="shadow-lg transition-all duration-200 hover:shadow-xl"
-                                    style={{
-                                        backgroundColor: '#2D6A4F',
-                                        color: 'white',
-                                    }}
-                                >
+                                <Button className="bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg transition-all duration-200 hover:shadow-xl">
                                     <Plus className="mr-2 h-4 w-4" />
                                     Create Farm
                                 </Button>
@@ -100,8 +91,7 @@ export default function Index({ farms }: Props) {
                         {farms.map((farm) => (
                             <Card
                                 key={farm.id}
-                                className="overflow-hidden border-2 transition-all duration-200 hover:shadow-lg"
-                                style={{ borderColor: '#74C69D40' }}
+                                className="overflow-hidden border-2 border-primary/20 transition-all duration-200 hover:shadow-lg"
                             >
                                 {/* Map Preview */}
                                 <div className="relative h-48">
@@ -118,19 +108,13 @@ export default function Index({ farms }: Props) {
                                     {/* Farm Name */}
                                     <div className="mb-4">
                                         <div className="mb-2 flex items-center gap-2">
-                                            <MapPin
-                                                className="h-5 w-5"
-                                                style={{ color: '#2D6A4F' }}
-                                            />
-                                            <h3
-                                                className="text-lg font-semibold"
-                                                style={{ color: '#2D6A4F' }}
-                                            >
+                                            <MapPin className="h-5 w-5 text-primary" />
+                                            <h3 className="text-lg font-semibold text-primary">
                                                 {farm.name}
                                             </h3>
                                         </div>
                                         {farm.description && (
-                                            <p className="line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
+                                            <p className="line-clamp-2 text-sm text-muted-foreground">
                                                 {farm.description}
                                             </p>
                                         )}
@@ -138,12 +122,12 @@ export default function Index({ farms }: Props) {
 
                                     {/* Owner Info */}
                                     <div className="mb-3 flex items-center gap-2 text-sm">
-                                        <User className="h-4 w-4 text-gray-500" />
+                                        <User className="h-4 w-4 text-muted-foreground" />
                                         <div>
-                                            <span className="font-medium text-gray-700 dark:text-gray-300">
+                                            <span className="font-medium text-foreground">
                                                 {farm.user.name}
                                             </span>
-                                            <span className="block text-xs text-gray-500 dark:text-gray-400">
+                                            <span className="block text-xs text-muted-foreground">
                                                 {farm.user.email}
                                             </span>
                                         </div>
@@ -151,19 +135,13 @@ export default function Index({ farms }: Props) {
 
                                     {/* Plant Badge */}
                                     <div className="mb-4">
-                                        <span
-                                            className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium"
-                                            style={{
-                                                backgroundColor: '#74C69D30',
-                                                color: '#2D6A4F',
-                                            }}
-                                        >
+                                        <span className="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium bg-primary/20 text-primary">
                                             {farm.plant.name}
                                         </span>
                                     </div>
 
                                     {/* Location */}
-                                    <div className="mb-4 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
+                                    <div className="mb-4 flex items-center gap-1 text-xs text-muted-foreground">
                                         <MapPin className="h-3 w-3" />
                                         <span>
                                             {Number(farm.latitude).toFixed(4)},{' '}
@@ -172,7 +150,7 @@ export default function Index({ farms }: Props) {
                                     </div>
 
                                     {/* Actions */}
-                                    <div className="flex items-center gap-2 border-t border-gray-200 pt-4 dark:border-gray-700">
+                                    <div className="flex items-center gap-2 border-t border-border pt-4">
                                         <Link
                                             href={`/farms/${farm.id}`}
                                             className="flex-1"
@@ -180,11 +158,7 @@ export default function Index({ farms }: Props) {
                                             <Button
                                                 size="sm"
                                                 variant="outline"
-                                                className="w-full transition-all duration-200 hover:bg-[#74C69D] hover:text-white"
-                                                style={{
-                                                    borderColor: '#74C69D',
-                                                    color: '#2D6A4F',
-                                                }}
+                                                className="w-full border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-200"
                                             >
                                                 <Eye className="mr-2 h-4 w-4" />
                                                 View
@@ -197,11 +171,7 @@ export default function Index({ farms }: Props) {
                                             <Button
                                                 size="sm"
                                                 variant="outline"
-                                                className="w-full transition-all duration-200 hover:bg-[#2D6A4F] hover:text-white"
-                                                style={{
-                                                    borderColor: '#2D6A4F',
-                                                    color: '#2D6A4F',
-                                                }}
+                                                className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-all duration-200"
                                             >
                                                 <Pencil className="mr-2 h-4 w-4" />
                                                 Edit
@@ -214,7 +184,7 @@ export default function Index({ farms }: Props) {
                                                 handleDelete(farm.id, farm.name)
                                             }
                                             disabled={deletingId === farm.id}
-                                            className="border-red-500 text-red-500 transition-all duration-200 hover:bg-red-500 hover:text-white"
+                                            className="border-destructive text-destructive transition-all duration-200 hover:bg-destructive hover:text-destructive-foreground"
                                         >
                                             {deletingId === farm.id ? (
                                                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -232,26 +202,15 @@ export default function Index({ farms }: Props) {
                     {farms.length === 0 && (
                         <Card className="py-12 text-center">
                             <CardContent>
-                                <MapPin
-                                    className="mx-auto mb-4 h-16 w-16"
-                                    style={{ color: '#74C69D' }}
-                                />
-                                <h3
-                                    className="mb-2 text-xl font-semibold"
-                                    style={{ color: '#2D6A4F' }}
-                                >
+                                <MapPin className="mx-auto mb-4 h-16 w-16 text-primary/50" />
+                                <h3 className="mb-2 text-xl font-semibold text-primary">
                                     No farms found
                                 </h3>
-                                <p className="mb-6 text-gray-600 dark:text-gray-400">
+                                <p className="mb-6 text-muted-foreground">
                                     Get started by creating your first farm
                                 </p>
                                 <Link href="/farms/create">
-                                    <Button
-                                        style={{
-                                            backgroundColor: '#2D6A4F',
-                                            color: 'white',
-                                        }}
-                                    >
+                                    <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                                         <Plus className="mr-2 h-4 w-4" />
                                         Create Farm
                                     </Button>

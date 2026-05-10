@@ -63,21 +63,15 @@ export default function Index({
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="mb-6 flex items-center justify-between">
                         <div>
-                            <h2
-                                className="text-3xl font-bold"
-                                style={{ color: '#2D6A4F' }}
-                            >
+                            <h2 className="text-3xl font-bold text-primary">
                                 Weather Forecasts
                             </h2>
-                            <p className="mt-1 text-gray-600">
+                            <p className="mt-1 text-muted-foreground">
                                 AI-powered planting recommendations
                             </p>
                         </div>
                         <Link href="/weather/create">
-                            <Button
-                                className="gap-2"
-                                style={{ backgroundColor: '#2D6A4F' }}
-                            >
+                            <Button className="gap-2 bg-primary text-primary-foreground hover:bg-primary/90">
                                 <Plus className="h-4 w-4" />
                                 New Forecast
                             </Button>
@@ -85,17 +79,17 @@ export default function Index({
                     </div>
 
                     {weathers.length === 0 ? (
-                        <div className="rounded-lg bg-white p-12 text-center shadow-md">
-                            <CloudRain className="mx-auto mb-4 h-16 w-16 text-gray-400" />
-                            <h3 className="mb-2 text-xl font-semibold text-gray-700">
+                        <div className="rounded-lg bg-card p-12 text-center shadow-md">
+                            <CloudRain className="mx-auto mb-4 h-16 w-16 text-muted-foreground" />
+                            <h3 className="mb-2 text-xl font-semibold text-foreground">
                                 No weather forecasts yet
                             </h3>
-                            <p className="mb-6 text-gray-500">
+                            <p className="mb-6 text-muted-foreground">
                                 Get started by creating your first weather
                                 forecast
                             </p>
                             <Link href="/weather/create">
-                                <Button style={{ backgroundColor: '#2D6A4F' }}>
+                                <Button className="bg-primary text-primary-foreground hover:bg-primary/90">
                                     <Plus className="mr-2 h-4 w-4" />
                                     Create First Forecast
                                 </Button>
@@ -106,22 +100,16 @@ export default function Index({
                             {weathers.map((weather) => (
                                 <div
                                     key={weather.id}
-                                    className="overflow-hidden rounded-lg bg-white shadow-md transition-shadow hover:shadow-lg"
+                                    className="overflow-hidden rounded-lg bg-card shadow-md transition-shadow hover:shadow-lg"
                                 >
                                     {/* Header with Status Badge */}
-                                    <div
-                                        className="border-b p-4"
-                                        style={{ backgroundColor: '#f8f9fa' }}
-                                    >
+                                    <div className="border-b border-border bg-muted p-4">
                                         <div className="mb-2 flex items-start justify-between">
                                             <div className="flex-1">
-                                                <h3
-                                                    className="text-lg font-bold"
-                                                    style={{ color: '#2D6A4F' }}
-                                                >
+                                                <h3 className="text-lg font-bold text-primary">
                                                     {weather.farm.name}
                                                 </h3>
-                                                <p className="mt-1 flex items-center gap-1 text-sm text-gray-600">
+                                                <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
                                                     <CloudRain className="h-3 w-3" />
                                                     {weather.plant.name}
                                                 </p>
@@ -151,10 +139,10 @@ export default function Index({
                                         <div className="flex items-center gap-2">
                                             <Thermometer className="h-4 w-4 text-red-500" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Temperature
                                                 </p>
-                                                <p className="font-semibold">
+                                                <p className="font-semibold text-foreground">
                                                     {weather.temperature}°C
                                                 </p>
                                             </div>
@@ -162,10 +150,10 @@ export default function Index({
                                         <div className="flex items-center gap-2">
                                             <Droplets className="h-4 w-4 text-blue-500" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Humidity
                                                 </p>
-                                                <p className="font-semibold">
+                                                <p className="font-semibold text-foreground">
                                                     {weather.humidity}%
                                                 </p>
                                             </div>
@@ -173,21 +161,21 @@ export default function Index({
                                         <div className="flex items-center gap-2">
                                             <Gauge className="h-4 w-4 text-purple-500" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Pressure
                                                 </p>
-                                                <p className="font-semibold">
+                                                <p className="font-semibold text-foreground">
                                                     {weather.air_pressure} hPa
                                                 </p>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Wind className="h-4 w-4 text-gray-500" />
+                                            <Wind className="h-4 w-4 text-muted-foreground" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Wind
                                                 </p>
-                                                <p className="font-semibold">
+                                                <p className="font-semibold text-foreground">
                                                     {weather.wind_speed} m/s
                                                 </p>
                                             </div>
@@ -197,23 +185,11 @@ export default function Index({
                                     {/* Best Planting Day */}
                                     {weather.best_planting_day && (
                                         <div className="px-4 pb-4">
-                                            <div
-                                                className="rounded-md p-3"
-                                                style={{
-                                                    backgroundColor:
-                                                        '#74C69D20',
-                                                }}
-                                            >
-                                                <p
-                                                    className="text-xs font-medium"
-                                                    style={{ color: '#2D6A4F' }}
-                                                >
+                                            <div className="rounded-md bg-primary/20 p-3">
+                                                <p className="text-xs font-medium text-primary">
                                                     Best Planting Day
                                                 </p>
-                                                <p
-                                                    className="mt-1 text-sm font-bold"
-                                                    style={{ color: '#2D6A4F' }}
-                                                >
+                                                <p className="mt-1 text-sm font-bold text-primary">
                                                     {weather.best_planting_day}
                                                 </p>
                                             </div>
@@ -223,10 +199,10 @@ export default function Index({
                                     {/* Recommendation Excerpt */}
                                     {weather.recommendation && (
                                         <div className="px-4 pb-4">
-                                            <p className="mb-1 text-xs text-gray-500">
+                                            <p className="mb-1 text-xs text-muted-foreground">
                                                 AI Recommendation:
                                             </p>
-                                            <p className="line-clamp-2 text-sm text-gray-700">
+                                            <p className="line-clamp-2 text-sm text-foreground">
                                                 {weather.recommendation}
                                             </p>
                                         </div>
@@ -240,11 +216,7 @@ export default function Index({
                                         >
                                             <Button
                                                 variant="outline"
-                                                className="w-full gap-2"
-                                                style={{
-                                                    borderColor: '#2D6A4F',
-                                                    color: '#2D6A4F',
-                                                }}
+                                                className="w-full gap-2 border-primary text-primary hover:bg-primary/10"
                                             >
                                                 <Eye className="h-4 w-4" />
                                                 View Details
@@ -252,7 +224,7 @@ export default function Index({
                                         </Link>
                                         <Button
                                             variant="outline"
-                                            className="border-red-500 text-red-500 hover:bg-red-50"
+                                            className="border-destructive text-destructive hover:bg-destructive/10"
                                             onClick={() =>
                                                 handleDelete(weather.id)
                                             }

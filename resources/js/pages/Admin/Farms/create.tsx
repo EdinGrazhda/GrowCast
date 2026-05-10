@@ -78,12 +78,11 @@ export default function Create({ users, plants }: Props) {
                         <div className="flex items-center justify-between">
                             <div>
                                 <h1
-                                    className="text-3xl font-bold"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="text-3xl font-bold text-primary"
                                 >
                                     Create New Farm
                                 </h1>
-                                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                                <p className="mt-2 text-muted-foreground">
                                     Add a new farm to the system
                                 </p>
                             </div>
@@ -92,13 +91,11 @@ export default function Create({ users, plants }: Props) {
 
                     {/* Form */}
                     <Card
-                        className="border-2"
-                        style={{ borderColor: '#74C69D40' }}
+                        className="border-2 border-primary/20"
                     >
-                        <CardHeader style={{ backgroundColor: '#74C69D10' }}>
+                        <CardHeader className="bg-primary/10">
                             <CardTitle
-                                className="flex items-center gap-2"
-                                style={{ color: '#2D6A4F' }}
+                                className="flex items-center gap-2 text-primary"
                             >
                                 <MapPin className="h-5 w-5" />
                                 Farm Information
@@ -110,7 +107,7 @@ export default function Create({ users, plants }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="name"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Farm Name *
                                     </Label>
@@ -121,11 +118,11 @@ export default function Create({ users, plants }: Props) {
                                         onChange={(e) =>
                                             setData('name', e.target.value)
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter farm name"
                                     />
                                     {errors.name && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.name}
                                         </p>
                                     )}
@@ -135,7 +132,7 @@ export default function Create({ users, plants }: Props) {
                                 <div className="space-y-2">
                                     <Label
                                         htmlFor="description"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-primary"
                                     >
                                         Description
                                     </Label>
@@ -148,12 +145,12 @@ export default function Create({ users, plants }: Props) {
                                                 e.target.value,
                                             )
                                         }
-                                        className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                        className="focus:border-primary focus:ring-primary"
                                         placeholder="Enter farm description"
                                         rows={4}
                                     />
                                     {errors.description && (
-                                        <p className="text-sm text-red-500">
+                                        <p className="text-sm text-destructive">
                                             {errors.description}
                                         </p>
                                     )}
@@ -168,7 +165,7 @@ export default function Create({ users, plants }: Props) {
                                         <div className="space-y-2">
                                             <Label
                                                 htmlFor="user_id"
-                                                style={{ color: '#2D6A4F' }}
+                                                className="text-primary"
                                             >
                                                 Owner *
                                             </Label>
@@ -181,7 +178,7 @@ export default function Create({ users, plants }: Props) {
                                                         e.target.value,
                                                     )
                                                 }
-                                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:border-[#2D6A4F] focus:ring-[#2D6A4F] focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
+                                                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus:border-primary focus:ring-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none"
                                             >
                                                 <option value="">
                                                     Select owner
@@ -197,7 +194,7 @@ export default function Create({ users, plants }: Props) {
                                                 ))}
                                             </select>
                                             {errors.user_id && (
-                                                <p className="text-sm text-red-500">
+                                                <p className="text-sm text-destructive">
                                                     {errors.user_id}
                                                 </p>
                                             )}
@@ -273,7 +270,7 @@ export default function Create({ users, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="latitude"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Latitude *
                                         </Label>
@@ -288,11 +285,11 @@ export default function Create({ users, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., 42.1234"
                                         />
                                         {errors.latitude && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.latitude}
                                             </p>
                                         )}
@@ -302,7 +299,7 @@ export default function Create({ users, plants }: Props) {
                                     <div className="space-y-2">
                                         <Label
                                             htmlFor="longitute"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="text-primary"
                                         >
                                             Longitude *
                                         </Label>
@@ -317,11 +314,11 @@ export default function Create({ users, plants }: Props) {
                                                     e.target.value,
                                                 )
                                             }
-                                            className="focus:border-[#2D6A4F] focus:ring-[#2D6A4F]"
+                                            className="focus:border-primary focus:ring-primary"
                                             placeholder="e.g., 19.5678"
                                         />
                                         {errors.longitute && (
-                                            <p className="text-sm text-red-500">
+                                            <p className="text-sm text-destructive">
                                                 {errors.longitute}
                                             </p>
                                         )}
@@ -334,10 +331,7 @@ export default function Create({ users, plants }: Props) {
                                         <Button
                                             type="button"
                                             variant="outline"
-                                            style={{
-                                                borderColor: '#74C69D',
-                                                color: '#2D6A4F',
-                                            }}
+                                            className="border-primary text-primary hover:bg-primary/10"
                                         >
                                             Cancel
                                         </Button>
@@ -345,11 +339,7 @@ export default function Create({ users, plants }: Props) {
                                     <Button
                                         type="submit"
                                         disabled={processing}
-                                        style={{
-                                            backgroundColor: '#2D6A4F',
-                                            color: 'white',
-                                        }}
-                                        className="min-w-[120px]"
+                                        className="min-w-[120px] bg-primary text-primary-foreground hover:bg-primary/90"
                                     >
                                         {processing ? (
                                             <>

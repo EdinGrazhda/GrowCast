@@ -142,12 +142,11 @@ export default function Create({ farms }: { farms: Farm[] }) {
                 <div className="mx-auto max-w-5xl sm:px-6 lg:px-8">
                     <div className="mb-6">
                         <h2
-                            className="text-3xl font-bold"
-                            style={{ color: '#2D6A4F' }}
+                            className="text-3xl font-bold text-primary"
                         >
                             New Weather Forecast
                         </h2>
-                        <p className="mt-1 text-gray-600">
+                        <p className="mt-1 text-muted-foreground">
                             Get AI-powered planting recommendations based on
                             weather conditions
                         </p>
@@ -155,13 +154,12 @@ export default function Create({ farms }: { farms: Farm[] }) {
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         {/* Farm Selection */}
-                        <div className="rounded-lg bg-white p-6 shadow-md">
+                        <div className="rounded-lg bg-card p-6 shadow-md">
                             <div className="space-y-4">
                                 <div>
                                     <Label
                                         htmlFor="farm"
-                                        className="text-base font-semibold"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="text-base font-semibold text-primary"
                                     >
                                         Select Farm *
                                     </Label>
@@ -180,16 +178,13 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                 >
                                                     <div className="flex items-center gap-2">
                                                         <MapPin
-                                                            className="h-4 w-4"
-                                                            style={{
-                                                                color: '#2D6A4F',
-                                                            }}
+                                                            className="h-4 w-4 text-primary"
                                                         />
                                                         <span className="font-medium">
                                                             {farm.name}
                                                         </span>
                                                         {farm.plant && (
-                                                            <span className="text-xs text-gray-500">
+                                                            <span className="text-xs text-muted-foreground">
                                                                 (
                                                                 {
                                                                     farm.plant
@@ -205,32 +200,25 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                     </Select>
                                     {selectedFarmData && (
                                         <div
-                                            className="mt-3 rounded-md p-3"
-                                            style={{
-                                                backgroundColor: '#74C69D20',
-                                            }}
+                                            className="mt-3 rounded-md p-3 bg-primary/10"
                                         >
                                             <div className="flex items-start gap-3">
                                                 <Sprout
-                                                    className="mt-0.5 h-5 w-5"
-                                                    style={{ color: '#2D6A4F' }}
+                                                    className="mt-0.5 h-5 w-5 text-primary"
                                                 />
                                                 <div className="flex-1">
                                                     <p
-                                                        className="text-sm font-medium"
-                                                        style={{
-                                                            color: '#2D6A4F',
-                                                        }}
+                                                        className="text-sm font-medium text-primary"
                                                     >
                                                         {selectedFarmData.plant
                                                             ?.name ||
                                                             'Unknown Plant'}
                                                     </p>
-                                                    <p className="mt-1 text-xs text-gray-600">
+                                                    <p className="mt-1 text-xs text-muted-foreground">
                                                         {selectedFarmData.description ||
                                                             'No description'}
                                                     </p>
-                                                    <p className="mt-1 text-xs text-gray-500">
+                                                    <p className="mt-1 text-xs text-muted-foreground">
                                                         Location:{' '}
                                                         {Number(
                                                             selectedFarmData.latitude,
@@ -250,13 +238,12 @@ export default function Create({ farms }: { farms: Farm[] }) {
 
                         {/* Loading State */}
                         {loading && (
-                            <div className="rounded-lg bg-white p-12 shadow-md">
+                            <div className="rounded-lg bg-card p-12 shadow-md">
                                 <div className="flex flex-col items-center gap-4">
                                     <Loader2
-                                        className="h-12 w-12 animate-spin"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="h-12 w-12 animate-spin text-primary"
                                     />
-                                    <p className="font-medium text-gray-600">
+                                    <p className="font-medium text-muted-foreground">
                                         Fetching weather forecast and generating
                                         AI recommendations...
                                     </p>
@@ -266,8 +253,8 @@ export default function Create({ farms }: { farms: Farm[] }) {
 
                         {/* Error State */}
                         {error && (
-                            <div className="rounded-lg border border-red-200 bg-red-50 p-4">
-                                <p className="font-medium text-red-700">
+                            <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-4">
+                                <p className="font-medium text-destructive">
                                     {error}
                                 </p>
                             </div>
@@ -308,19 +295,18 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                 </div>
 
                                 {/* Average Weather Conditions */}
-                                <div className="rounded-lg bg-white p-6 shadow-md">
+                                <div className="rounded-lg bg-card p-6 shadow-md">
                                     <h3
-                                        className="mb-4 text-lg font-semibold"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="mb-4 text-lg font-semibold text-primary"
                                     >
                                         Average Weather Conditions (5-Day
                                         Forecast)
                                     </h3>
                                     <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                                        <div className="flex items-center gap-3 rounded-md bg-gray-50 p-3">
+                                        <div className="flex items-center gap-3 rounded-md bg-muted p-3">
                                             <Thermometer className="h-6 w-6 text-red-500" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Temperature
                                                 </p>
                                                 <p className="text-lg font-bold">
@@ -333,10 +319,10 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3 rounded-md bg-gray-50 p-3">
+                                        <div className="flex items-center gap-3 rounded-md bg-muted p-3">
                                             <Droplets className="h-6 w-6 text-blue-500" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Humidity
                                                 </p>
                                                 <p className="text-lg font-bold">
@@ -349,10 +335,10 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3 rounded-md bg-gray-50 p-3">
+                                        <div className="flex items-center gap-3 rounded-md bg-muted p-3">
                                             <Gauge className="h-6 w-6 text-purple-500" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Pressure
                                                 </p>
                                                 <p className="text-lg font-bold">
@@ -365,10 +351,10 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3 rounded-md bg-gray-50 p-3">
-                                            <Wind className="h-6 w-6 text-gray-500" />
+                                        <div className="flex items-center gap-3 rounded-md bg-muted p-3">
+                                            <Wind className="h-6 w-6 text-muted-foreground" />
                                             <div>
-                                                <p className="text-xs text-gray-500">
+                                                <p className="text-xs text-muted-foreground">
                                                     Wind Speed
                                                 </p>
                                                 <p className="text-lg font-bold">
@@ -385,15 +371,14 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                 </div>
 
                                 {/* AI Recommendation */}
-                                <div className="rounded-lg bg-white p-6 shadow-md">
+                                <div className="rounded-lg bg-card p-6 shadow-md">
                                     <h3
-                                        className="mb-4 text-lg font-semibold"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="mb-4 text-lg font-semibold text-primary"
                                     >
                                         AI Recommendation
                                     </h3>
                                     <div className="prose max-w-none">
-                                        <p className="leading-relaxed whitespace-pre-line text-gray-700">
+                                        <p className="leading-relaxed whitespace-pre-line text-foreground">
                                             {forecastData.recommendation}
                                         </p>
                                     </div>
@@ -401,15 +386,14 @@ export default function Create({ farms }: { farms: Farm[] }) {
 
                                 {/* Best Days Section */}
                                 {forecastData.best_days.length > 0 && (
-                                    <div className="rounded-lg bg-white p-6 shadow-md">
+                                    <div className="rounded-lg bg-card p-6 shadow-md">
                                         <div className="mb-4 flex items-center justify-between">
                                             <h3
-                                                className="text-lg font-semibold"
-                                                style={{ color: '#2D6A4F' }}
+                                                className="text-lg font-semibold text-primary"
                                             >
                                                 🌟 Best Planting Days
                                             </h3>
-                                            <span className="text-sm text-gray-500">
+                                            <span className="text-sm text-muted-foreground">
                                                 {forecastData.best_days.length}{' '}
                                                 recommended days
                                             </span>
@@ -526,10 +510,9 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                 )}
 
                                 {/* 40-Day Detailed Forecast */}
-                                <div className="rounded-lg bg-white p-6 shadow-md">
+                                <div className="rounded-lg bg-card p-6 shadow-md">
                                     <h3
-                                        className="mb-4 text-lg font-semibold"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="mb-4 text-lg font-semibold text-primary"
                                     >
                                         40-Day Weather Forecast
                                     </h3>
@@ -654,7 +637,7 @@ export default function Create({ farms }: { farms: Farm[] }) {
                                     </Button>
                                     <Button
                                         type="submit"
-                                        style={{ backgroundColor: '#2D6A4F' }}
+                                        className="bg-primary text-primary-foreground hover:bg-primary/90"
                                     >
                                         Save Forecast
                                     </Button>

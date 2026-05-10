@@ -64,7 +64,7 @@ export default function PlantDiseaseResult({
             case 'severe':
                 return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
             default:
-                return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
+                return 'bg-muted text-muted-foreground';
         }
     };
 
@@ -100,11 +100,11 @@ export default function PlantDiseaseResult({
                                             <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
                                         )}
                                     </div>
-                                    <h1 className="text-4xl font-bold" style={{ color: '#2D6A4F' }}>
+                                    <h1 className="text-4xl font-bold text-primary">
                                         Disease Detection Results
                                     </h1>
                                 </div>
-                                <p className="text-lg text-gray-600 dark:text-gray-400 ml-15">
+                                <p className="text-lg text-muted-foreground ml-15">
                                     {diagnosis.hasDisease 
                                         ? 'Health issues detected in your plant'
                                         : 'Your plant appears to be healthy'}
@@ -113,11 +113,7 @@ export default function PlantDiseaseResult({
                             <Link href="/plant-disease">
                                 <Button
                                     variant="outline"
-                                    className="shadow-md hover:shadow-lg transition-shadow"
-                                    style={{
-                                        borderColor: '#74C69D',
-                                        color: '#2D6A4F',
-                                    }}
+                                    className="shadow-md hover:shadow-lg transition-shadow border-primary text-primary"
                                 >
                                     <ArrowLeft className="mr-2 h-4 w-4" />
                                     Analyze Another
@@ -128,45 +124,44 @@ export default function PlantDiseaseResult({
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Image Section */}
-                        <Card className="border-2 shadow-lg" style={{ borderColor: '#74C69D40' }}>
-                            <CardHeader className="pb-4" style={{ backgroundColor: '#74C69D10' }}>
+                        <Card className="border-2 shadow-lg border-primary/20">
+                            <CardHeader className="pb-4 bg-primary/10">
                                 <CardTitle
-                                    className="flex items-center gap-3 text-xl"
-                                    style={{ color: '#2D6A4F' }}
+                                    className="flex items-center gap-3 text-xl text-primary"
                                 >
-                                    <div className="p-2 rounded-lg" style={{ backgroundColor: '#74C69D30' }}>
+                                    <div className="p-2 rounded-lg bg-primary/20">
                                         <Leaf className="h-5 w-5" />
                                     </div>
                                     Uploaded Image
                                 </CardTitle>
                             </CardHeader>
                             <CardContent className="pt-6">
-                                <div className="relative rounded-xl overflow-hidden bg-gray-50 dark:bg-gray-900">
+                                <div className="relative rounded-xl overflow-hidden bg-muted">
                                     {normalizedImageUrl ? (
                                         <img
                                             src={normalizedImageUrl}
                                             alt="Analyzed plant"
-                                            className="w-full max-h-96 object-contain rounded-xl border-2 shadow-inner border-gray-200 dark:border-gray-700"
+                                            className="w-full max-h-96 object-contain rounded-xl border-2 shadow-inner border-border"
                                             onError={(e) => {
                                                 const target = e.target as HTMLImageElement;
                                                 console.error('Failed to load image:', normalizedImageUrl);
                                                 target.style.display = 'none';
                                                 const errorDiv = document.createElement('div');
-                                                errorDiv.className = 'w-full h-64 flex flex-col items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700';
-                                                errorDiv.innerHTML = '<p class="text-gray-500 mb-2">Image not available</p><p class="text-xs text-gray-400">Path: ' + normalizedImageUrl + '</p>';
+                                                errorDiv.className = 'w-full h-64 flex flex-col items-center justify-center bg-muted rounded-xl border-2 border-border';
+                                                errorDiv.innerHTML = '<p class="text-muted-foreground mb-2">Image not available</p><p class="text-xs text-muted-foreground">Path: ' + normalizedImageUrl + '</p>';
                                                 target.parentElement?.appendChild(errorDiv);
                                             }}
                                         />
                                     ) : (
-                                        <div className="w-full h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl border-2 border-gray-200 dark:border-gray-700">
-                                            <p className="text-gray-500">Image not available</p>
+                                        <div className="w-full h-64 flex items-center justify-center bg-muted rounded-xl border-2 border-border">
+                                            <p className="text-muted-foreground">Image not available</p>
                                         </div>
                                     )}
                                 </div>
                                 {plantName && (
-                                    <div className="mt-4 p-3 rounded-lg" style={{ backgroundColor: '#74C69D10' }}>
-                                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            <span className="font-semibold" style={{ color: '#2D6A4F' }}>Plant:</span> {plantName}
+                                    <div className="mt-4 p-3 rounded-lg bg-primary/10">
+                                        <p className="text-sm font-medium text-foreground">
+                                            <span className="font-semibold text-primary">Plant:</span> {plantName}
                                         </p>
                                     </div>
                                 )}
@@ -176,16 +171,10 @@ export default function PlantDiseaseResult({
                         {/* Diagnosis Section */}
                         <div className="space-y-6">
                             {/* Status Card */}
-                            <Card className="border-2 shadow-lg" style={{ 
-                                borderColor: diagnosis.hasDisease ? '#ef444440' : '#74C69D40',
-                                backgroundColor: diagnosis.hasDisease ? '#FEF2F2' : '#F0FDF4'
-                            }}>
-                                <CardHeader className="pb-4" style={{ 
-                                    backgroundColor: diagnosis.hasDisease ? '#FEE2E215' : '#74C69D15' 
-                                }}>
+                            <Card className={`border-2 shadow-lg ${diagnosis.hasDisease ? 'border-destructive/20 bg-destructive/5' : 'border-primary/20 bg-primary/5'}`}>
+                                <CardHeader className={`pb-4 ${diagnosis.hasDisease ? 'bg-destructive/10' : 'bg-primary/10'}`}>
                                     <CardTitle
-                                        className="flex items-center gap-3 text-xl"
-                                        style={{ color: '#2D6A4F' }}
+                                        className="flex items-center gap-3 text-xl text-primary"
                                     >
                                         <div className={`p-2 rounded-lg ${
                                             diagnosis.hasDisease 
@@ -251,13 +240,12 @@ export default function PlantDiseaseResult({
 
                             {/* Symptoms */}
                             {diagnosis.symptoms && diagnosis.symptoms.length > 0 && (
-                                <Card className="border-2 shadow-md" style={{ borderColor: '#74C69D40' }}>
-                                    <CardHeader className="pb-4" style={{ backgroundColor: '#74C69D10' }}>
+                                <Card className="border-2 shadow-md border-primary/20">
+                                    <CardHeader className="pb-4 bg-primary/10">
                                         <CardTitle
-                                            className="flex items-center gap-3 text-lg"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="flex items-center gap-3 text-lg text-primary"
                                         >
-                                            <div className="p-2 rounded-lg" style={{ backgroundColor: '#74C69D30' }}>
+                                            <div className="p-2 rounded-lg bg-primary/20">
                                                 <Info className="h-5 w-5" />
                                             </div>
                                             Symptoms
@@ -268,12 +256,12 @@ export default function PlantDiseaseResult({
                                             {diagnosis.symptoms.map((symptom, index) => (
                                                 <li
                                                     key={index}
-                                                    className="flex items-start gap-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                                                    className="flex items-start gap-3 p-2 rounded-lg hover:bg-muted/50 transition-colors"
                                                 >
-                                                    <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold mt-0.5" style={{ backgroundColor: '#74C69D20', color: '#2D6A4F' }}>
+                                                    <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold mt-0.5 bg-primary/20 text-primary">
                                                         {index + 1}
                                                     </span>
-                                                    <span className="text-sm text-gray-700 dark:text-gray-300">{symptom}</span>
+                                                    <span className="text-sm text-foreground">{symptom}</span>
                                                 </li>
                                             ))}
                                         </ul>
@@ -284,13 +272,12 @@ export default function PlantDiseaseResult({
                             {/* Affected Areas */}
                             {diagnosis.affectedAreas &&
                                 diagnosis.affectedAreas.length > 0 && (
-                                    <Card className="border-2 shadow-md" style={{ borderColor: '#74C69D40' }}>
-                                        <CardHeader className="pb-4" style={{ backgroundColor: '#74C69D10' }}>
+                                    <Card className="border-2 shadow-md border-primary/20">
+                                        <CardHeader className="pb-4 bg-primary/10">
                                             <CardTitle
-                                                className="flex items-center gap-3 text-lg"
-                                                style={{ color: '#2D6A4F' }}
+                                                className="flex items-center gap-3 text-lg text-primary"
                                             >
-                                                <div className="p-2 rounded-lg" style={{ backgroundColor: '#74C69D30' }}>
+                                                <div className="p-2 rounded-lg bg-primary/20">
                                                     <MapPin className="h-5 w-5" />
                                                 </div>
                                                 Affected Areas
@@ -302,12 +289,7 @@ export default function PlantDiseaseResult({
                                                     <Badge
                                                         key={index}
                                                         variant="outline"
-                                                        className="px-3 py-1.5 text-sm font-medium shadow-sm"
-                                                        style={{
-                                                            borderColor: '#74C69D',
-                                                            color: '#2D6A4F',
-                                                            backgroundColor: '#74C69D10',
-                                                        }}
+                                                        className="px-3 py-1.5 text-sm font-medium shadow-sm border-primary text-primary bg-primary/10"
                                                     >
                                                         {area}
                                                     </Badge>
@@ -320,11 +302,10 @@ export default function PlantDiseaseResult({
                             {/* Recommendations */}
                             {diagnosis.recommendations &&
                                 diagnosis.recommendations.length > 0 && (
-                                    <Card className="border-2 shadow-md" style={{ borderColor: '#74C69D40', backgroundColor: '#FFFBEB' }}>
-                                        <CardHeader className="pb-4" style={{ backgroundColor: '#FEF3C715' }}>
+                                    <Card className="border-2 shadow-md border-primary/20 bg-amber-50 dark:bg-amber-950/20">
+                                        <CardHeader className="pb-4 bg-amber-100/50 dark:bg-amber-900/20">
                                             <CardTitle
-                                                className="flex items-center gap-3 text-lg"
-                                                style={{ color: '#2D6A4F' }}
+                                                className="flex items-center gap-3 text-lg text-primary"
                                             >
                                                 <div className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900/30">
                                                     <Lightbulb className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
@@ -338,12 +319,12 @@ export default function PlantDiseaseResult({
                                                     (recommendation, index) => (
                                                         <li
                                                             key={index}
-                                                            className="flex items-start gap-3 p-3 rounded-lg bg-white/60 dark:bg-gray-800/30 hover:bg-white dark:hover:bg-gray-800/50 transition-colors"
+                                                            className="flex items-start gap-3 p-3 rounded-lg bg-card/60 hover:bg-card transition-colors"
                                                         >
                                                             <span className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold mt-0.5 bg-yellow-200 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200">
                                                                 {index + 1}
                                                             </span>
-                                                            <span className="text-sm text-gray-700 dark:text-gray-300 flex-1">{recommendation}</span>
+                                                            <span className="text-sm text-foreground flex-1">{recommendation}</span>
                                                         </li>
                                                     ),
                                                 )}
@@ -354,21 +335,20 @@ export default function PlantDiseaseResult({
 
                             {/* Notes */}
                             {diagnosis.notes && (
-                                <Card className="border-2 shadow-md" style={{ borderColor: '#74C69D40' }}>
-                                    <CardHeader className="pb-4" style={{ backgroundColor: '#74C69D10' }}>
+                                <Card className="border-2 shadow-md border-primary/20">
+                                    <CardHeader className="pb-4 bg-primary/10">
                                         <CardTitle
-                                            className="flex items-center gap-3 text-lg"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="flex items-center gap-3 text-lg text-primary"
                                         >
-                                            <div className="p-2 rounded-lg" style={{ backgroundColor: '#74C69D30' }}>
+                                            <div className="p-2 rounded-lg bg-primary/20">
                                                 <Info className="h-5 w-5" />
                                             </div>
                                             Additional Notes
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="pt-6">
-                                        <div className="p-4 rounded-lg bg-gray-50 dark:bg-gray-800/50">
-                                            <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap leading-relaxed">
+                                        <div className="p-4 rounded-lg bg-muted">
+                                            <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
                                                 {diagnosis.notes}
                                             </p>
                                         </div>
@@ -379,20 +359,18 @@ export default function PlantDiseaseResult({
                             {/* Detected Regions */}
                             {diagnosis.detectedRegions && (
                                 <Card
-                                    className="border-2"
-                                    style={{ borderColor: '#74C69D40' }}
+                                    className="border-2 border-primary/20"
                                 >
-                                    <CardHeader style={{ backgroundColor: '#74C69D10' }}>
+                                    <CardHeader className="bg-primary/10">
                                         <CardTitle
-                                            className="flex items-center gap-2"
-                                            style={{ color: '#2D6A4F' }}
+                                            className="flex items-center gap-2 text-primary"
                                         >
                                             <MapPin className="h-5 w-5" />
                                             Detected Regions
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="pt-6">
-                                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                                        <p className="text-sm text-muted-foreground">
                                             {diagnosis.detectedRegions}
                                         </p>
                                     </CardContent>

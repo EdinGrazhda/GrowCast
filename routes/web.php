@@ -1,10 +1,12 @@
 <?php
 
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DemoPlantDiseaseController;
 use App\Http\Controllers\FarmController;
 use App\Http\Controllers\PlantController;
 use App\Http\Controllers\PlantDiseaseController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SprayController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeatherController;
 use Illuminate\Support\Facades\Route;
@@ -17,13 +19,25 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+// Demo plant disease detection (public, no auth required)
+Route::get('demo/plant-disease', [DemoPlantDiseaseController::class, 'index'])->name('demo.plant-disease.index');
+Route::post('demo/plant-disease/detect', [DemoPlantDiseaseController::class, 'detect'])->name('demo.plant-disease.detect');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     // Dashboard - accessible by all authenticated users
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // Spray recommendation routes - protected by admin/farmer role
+    Route::middleware(['role:admin,farmer'])->group(function () {
+        Route::get('sprays/recommendation/{id?}', [SprayController::class, 'recommendationPage'])->name('sprays.recommendation');
+        Route::post('sprays/get-recommendation', [SprayController::class, 'getRecommendation'])->name('sprays.get-recommendation');
+        Route::post('sprays/by-plant', [SprayController::class, 'getSpraysByPlant'])->name('sprays.by-plant');
+    });
+
     // Resource routes - authorization handled by policies
     Route::resource('farms', FarmController::class);
     Route::resource('plants', PlantController::class);
+    Route::resource('sprays', SprayController::class);
     Route::resource('weather', WeatherController::class);
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);

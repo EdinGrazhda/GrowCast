@@ -40,20 +40,17 @@ export default function Edit({
             <div className="py-12">
                 <div className="mx-auto max-w-2xl sm:px-6 lg:px-8">
                     <div className="mb-6">
-                        <h2
-                            className="text-3xl font-bold"
-                            style={{ color: '#2D6A4F' }}
-                        >
+                        <h2 className="text-3xl font-bold text-primary">
                             Edit User
                         </h2>
-                        <p className="mt-1 text-gray-600">
+                        <p className="mt-1 text-muted-foreground">
                             Update user information
                         </p>
                     </div>
 
                     <form
                         onSubmit={handleSubmit}
-                        className="space-y-6 rounded-lg bg-white p-6 shadow-md"
+                        className="space-y-6 rounded-lg bg-card p-6 shadow-md"
                     >
                         <div>
                             <Label htmlFor="name">Name *</Label>
@@ -68,7 +65,7 @@ export default function Edit({
                                 required
                             />
                             {errors.name && (
-                                <p className="mt-1 text-sm text-red-500">
+                                <p className="mt-1 text-sm text-destructive">
                                     {errors.name}
                                 </p>
                             )}
@@ -87,23 +84,17 @@ export default function Edit({
                                 required
                             />
                             {errors.email && (
-                                <p className="mt-1 text-sm text-red-500">
+                                <p className="mt-1 text-sm text-destructive">
                                     {errors.email}
                                 </p>
                             )}
                         </div>
 
-                        <div
-                            className="rounded-md border p-4"
-                            style={{ borderColor: '#74C69D' }}
-                        >
-                            <p
-                                className="mb-3 text-sm font-semibold"
-                                style={{ color: '#2D6A4F' }}
-                            >
+                        <div className="rounded-md border border-primary/30 p-4">
+                            <p className="mb-3 text-sm font-semibold text-primary">
                                 Change Password (Optional)
                             </p>
-                            <p className="mb-4 text-xs text-gray-500">
+                            <p className="mb-4 text-xs text-muted-foreground">
                                 Leave blank to keep current password
                             </p>
 
@@ -122,7 +113,7 @@ export default function Edit({
                                         className="mt-1"
                                     />
                                     {errors.password && (
-                                        <p className="mt-1 text-sm text-red-500">
+                                        <p className="mt-1 text-sm text-destructive">
                                             {errors.password}
                                         </p>
                                     )}
@@ -145,7 +136,7 @@ export default function Edit({
                                         className="mt-1"
                                     />
                                     {errors.password_confirmation && (
-                                        <p className="mt-1 text-sm text-red-500">
+                                        <p className="mt-1 text-sm text-destructive">
                                             {errors.password_confirmation}
                                         </p>
                                     )}
@@ -164,7 +155,7 @@ export default function Edit({
                             <Button
                                 type="submit"
                                 disabled={processing}
-                                style={{ backgroundColor: '#2D6A4F' }}
+                                className="bg-primary text-primary-foreground hover:bg-primary/90"
                             >
                                 Update User
                             </Button>
