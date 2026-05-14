@@ -119,25 +119,26 @@ growcast-anomaly capture --device 0 --interval 2 --json --heatmap-dir /tmp/gc
 Tested target: Hiwonder JetAuto (Jetson Nano, ARM aarch64, ~4 GB RAM, Ubuntu
 18.04 + ROS Melodic, Python 3.8 in zsh, Orbbec Astra RGB camera).
 
-The PyPI `onnxruntime` aarch64 wheel is **not** built against JetPack 4.x —
-install NVIDIA's prebuilt wheel from the Jetson Zoo first, then `pip install`
-the rest of the package.
+Inference is CPU-only, so the plain PyPI `onnxruntime` aarch64 wheel works —
+no Jetson Zoo / CUDA wheel hunting needed. The version is pinned to 1.13.x in
+[pyproject.toml](pyproject.toml) because that's the last release with a
+`manylinux_2_17_aarch64` wheel, which is compatible with JetPack 4.x's
+glibc 2.27.
 
 ```bash
-# 1. Python 3.8 venv (the device has 3.8 already; do not use the system 3.6)
 cd python-anomaly
 python3.8 -m venv .venv
 source .venv/bin/activate
 pip install --upgrade pip wheel
-
-# 2. onnxruntime: pick the JetPack-matched aarch64 wheel from
-#    https://elinux.org/Jetson_Zoo#ONNX_Runtime
-#    Choose one in the 1.13–1.16 range for JetPack 4.x + Python 3.8, e.g.:
-pip install <jetson-zoo-onnxruntime-wheel-url>
-
-# 3. Everything else (numpy, pillow, rich, opencv-python-headless) from PyPI:
 pip install -e .
 ```
+
+That's it — one command, no manual wheel URL.
+
+**Fallback if the PyPI wheel fails to load at runtime** (`Illegal instruction`,
+GLIBC errors, etc.): install NVIDIA's JetPack-matched wheel from
+https://elinux.org/Jetson_Zoo#ONNX_Runtime first, then `pip install -e . --no-deps`
+to add the rest without touching onnxruntime.
 
 Smoke test (validates ONNX load + memory bank load + one inference):
 
