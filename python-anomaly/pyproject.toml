@@ -5,14 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "growcast-anomaly"
 version = "0.1.0"
-description = "GrowCast plant disease anomaly detector — Conv-Autoencoder, runs on Raspberry Pi via ONNX, integrates with a robot presenter."
+description = "GrowCast plant disease anomaly detector — PatchCore-lite (k-NN on frozen WideResNet50 features), runs on Raspberry Pi or Jetson Nano via ONNX, integrates with a robot presenter."
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.8"
 authors = [{ name = "GrowCast Hackathon Team" }]
 license = { text = "MIT" }
 dependencies = [
-    "onnxruntime>=1.16",
-    "numpy>=1.24",
+    "onnxruntime>=1.13,<1.17",
+    "numpy>=1.24,<2",
     "pillow>=10.0",
     "rich>=13.0",
     "opencv-python-headless>=4.8",

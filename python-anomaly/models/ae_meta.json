@@ -15,7 +15,7 @@
   ],
   "onnx_opset": 17,
   "intra_op_threads": 2,
-  "feature_layer_cut": "MobileNetV2.features[7,14] concat",
+  "feature_layer_cut": "WideResNet50.layer2(avgpool2x2) + layer3 concat",
   "output_format": "embeddings",
   "embed_dim": 1536,
   "n_positions": 196,

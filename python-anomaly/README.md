@@ -1,17 +1,16 @@
 # growcast-anomaly
 
 Plant disease anomaly detector for the **GrowCast** robot presenter. Runs as a
-Python CLI in an LX terminal on a Raspberry Pi, using a small **Convolutional
-Autoencoder** trained on healthy leaves. Disease shows up as elevated
-reconstruction error; the CLI emits a verdict, confidence, and a heatmap PNG
-the robot can display.
+Python CLI in an LX terminal on a Raspberry Pi or NVIDIA Jetson Nano, using
+**PatchCore-lite** — a frozen ImageNet WideResNet50 emits per-position
+embeddings, and disease shows up as a position whose nearest neighbours in a
+healthy memory bank are far away. The CLI emits a verdict, confidence, and a
+heatmap PNG the robot can display.
 
-> Algorithm choice (from the GrowCast literature review):
-> Convolutional Autoencoder, per Bergmann et al. (MVTec AD, CVPR 2019) — the
-> reference the review explicitly transfers to *"plant diseases deviate from a
-> learned model of healthy plant tissue"*, and the only one of the four
-> reviewed algorithms that natively handles images and produces a spatial
-> heatmap.
+> Algorithm choice (from the GrowCast literature review): k-nearest-neighbour
+> density on deep CNN features (LOF-family), applied per-position. See
+> *Algorithm choice rationale* below for the iteration history from a pixel
+> Conv-AE to the shipped v4 model.
 
 ## Layout
 
@@ -47,7 +46,7 @@ Adds `torch`, `torchvision`, `tqdm`.
 ## Build the model (laptop, one-time)
 
 PatchCore-lite has no training step — the feature extractor is a frozen
-ImageNet-pretrained MobileNetV2. The "model" is a precomputed memory bank
+ImageNet-pretrained WideResNet50. The "model" is a precomputed memory bank
 of healthy embeddings, plus a calibrated threshold.
 
 1. Drop healthy leaf images into `data/healthy/` (subdirectories are walked
@@ -58,7 +57,7 @@ of healthy embeddings, plus a calibrated threshold.
 2. Drop a held-out healthy/diseased mix into `data/diseased_calib/` for
    threshold calibration.
 
-3. Export the feature extractor to ONNX (downloads MobileNetV2 weights once):
+3. Export the feature extractor to ONNX (downloads WideResNet50 weights once):
 
    ```bash
    python -m train.export_onnx --out models/healthy_ae.onnx
@@ -70,12 +69,13 @@ of healthy embeddings, plus a calibrated threshold.
    python -m train.build_bank \
        --data data/healthy \
        --extractor-onnx models/healthy_ae.onnx \
-       --out models/bank.npy \
-       --subsample-frac 0.01
+       --out models/bank.npy
    ```
 
-   ~20 s for 2,400 images on a laptop CPU. Writes `models/bank.npy` and
-   stamps `models/ae_meta.json` with bank metadata.
+   Uses `--subsample-frac 0.02 --coreset greedy` by default — that's what
+   produced the shipped 9,220-vector bank. ~20 s for 2,400 images on a laptop
+   CPU. Writes `models/bank.npy` and stamps `models/ae_meta.json` with bank
+   metadata.
 
 5. Calibrate the threshold:
 
@@ -114,6 +114,62 @@ Live webcam loop (the demo):
 growcast-anomaly capture --device 0 --interval 2 --json --heatmap-dir /tmp/gc
 ```
 
+## Run on the JetAuto (NVIDIA Jetson Nano, JetPack 4.x)
+
+Tested target: Hiwonder JetAuto (Jetson Nano, ARM aarch64, ~4 GB RAM, Ubuntu
+18.04 + ROS Melodic, Python 3.8 in zsh, Orbbec Astra RGB camera).
+
+The PyPI `onnxruntime` aarch64 wheel is **not** built against JetPack 4.x —
+install NVIDIA's prebuilt wheel from the Jetson Zoo first, then `pip install`
+the rest of the package.
+
+```bash
+# 1. Python 3.8 venv (the device has 3.8 already; do not use the system 3.6)
+cd python-anomaly
+python3.8 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip wheel
+
+# 2. onnxruntime: pick the JetPack-matched aarch64 wheel from
+#    https://elinux.org/Jetson_Zoo#ONNX_Runtime
+#    Choose one in the 1.13–1.16 range for JetPack 4.x + Python 3.8, e.g.:
+pip install <jetson-zoo-onnxruntime-wheel-url>
+
+# 3. Everything else (numpy, pillow, rich, opencv-python-headless) from PyPI:
+pip install -e .
+```
+
+Smoke test (validates ONNX load + memory bank load + one inference):
+
+```bash
+growcast-anomaly detect tests/fixtures/leaf.jpg --json
+# expected: one JSON line ending with "verdict":"normal", exit code 0
+
+growcast-anomaly detect data/diseased_holdout/<any>.jpg --json
+# expected: "verdict":"anomaly", exit code 2
+```
+
+Expect **~3–6 s per inference** on the Nano CPU — that's WideResNet50 on a
+quad-core A57, not a regression. If wall-clock is much worse or the process
+is OOM-killed (the Nano has only ~4 GB shared with the GPU), close `roscore`
+and other heavy nodes before running, or drop `intra_op_threads` to 1 in a
+custom `ae_meta.json` passed via `--meta`.
+
+### Feeding the Astra camera into `growcast-anomaly`
+
+The Astra publishes through the Orbbec ROS driver, so `cv2.VideoCapture(0)`
+(used by `growcast-anomaly capture`) will not see it. The simplest path,
+matching how the existing `folder_yolo.py` demo already gets frames, is to
+dump JPGs from the ROS topic and run `detect` on each:
+
+```bash
+# Terminal 1 — dump one JPG every 5 s into the cwd
+rosrun image_view extract_images image:=/astra/rgb/image_raw _sec_per_frame:=5.0
+
+# Terminal 2 — score the most recent frame
+growcast-anomaly detect frame0001.jpg --json --heatmap-dir /tmp/gc
+```
+
 ## Robot IPC contract
 
 ```json
@@ -121,14 +177,14 @@ growcast-anomaly capture --device 0 --interval 2 --json --heatmap-dir /tmp/gc
   "schema": "growcast.anomaly.v1",
   "image": "frame_00007.jpg",
   "verdict": "anomaly",
-  "score": 0.0214,
-  "threshold": 0.0091,
-  "confidence": 0.87,
+  "score": 0.31,
+  "threshold": 0.2558,
+  "confidence": 0.21,
   "heatmap_path": "/tmp/gc/frame_00007.heatmap.png",
-  "latency_ms": 712,
-  "algorithm": "conv-autoencoder",
-  "model_version": "healthy_ae.v1",
-  "timestamp": "2026-05-06T12:34:56Z"
+  "latency_ms": 186,
+  "algorithm": "patchcore-lite",
+  "model_version": "healthy_patchcore_wrn50.v4",
+  "timestamp": "2026-05-14T09:08:38Z"
 }
 ```
 
