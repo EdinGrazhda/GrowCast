@@ -70,6 +70,19 @@ def cmd_capture(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_watch(args: argparse.Namespace) -> int:
+    from .folder_watch import watch_paths
+
+    detector = AnomalyDetector(args.model, args.meta, threshold_override=args.threshold)
+    try:
+        for frame_path in watch_paths(args.directory, pattern=args.pattern, interval_s=args.interval):
+            _scan_one(detector, frame_path, args)
+    except KeyboardInterrupt:
+        if not args.json:
+            print("\nstopped.", file=sys.stderr)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
         prog="growcast-anomaly",
@@ -94,6 +107,20 @@ def build_parser() -> argparse.ArgumentParser:
     pc.add_argument("--heatmap-dir", type=Path, default=None, help="Directory for frames+heatmaps.")
     _add_common_model_args(pc)
     pc.set_defaults(func=cmd_capture)
+
+    pw = sub.add_parser(
+        "watch",
+        help="Watch a directory for new JPGs and score the newest one each interval "
+             "(for non-v4l2 cameras like the Orbbec Astra on the JetAuto).",
+    )
+    pw.add_argument("directory", type=Path, help="Directory to poll for new images.")
+    pw.add_argument("--pattern", default="*.jpg", help="Glob pattern (default *.jpg).")
+    pw.add_argument("--interval", type=float, default=2.0, help="Seconds between polls.")
+    pw.add_argument("--json", action="store_true", help="Emit JSON lines on stdout.")
+    pw.add_argument("--heatmap", action="store_true", help="Always save heatmaps.")
+    pw.add_argument("--heatmap-dir", type=Path, default=None, help="Directory for heatmaps.")
+    _add_common_model_args(pw)
+    pw.set_defaults(func=cmd_watch)
 
     return p
 

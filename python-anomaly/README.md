@@ -159,16 +159,32 @@ custom `ae_meta.json` passed via `--meta`.
 ### Feeding the Astra camera into `growcast-anomaly`
 
 The Astra publishes through the Orbbec ROS driver, so `cv2.VideoCapture(0)`
-(used by `growcast-anomaly capture`) will not see it. The simplest path,
-matching how the existing `folder_yolo.py` demo already gets frames, is to
-dump JPGs from the ROS topic and run `detect` on each:
+(used by `growcast-anomaly capture`) will not see it. Use the bundled launcher
+— it dumps JPGs from the ROS topic into a temp dir and runs `growcast-anomaly
+watch` against that dir. One Ctrl-C cleans up both:
 
 ```bash
-# Terminal 1 — dump one JPG every 5 s into the cwd
-rosrun image_view extract_images image:=/astra/rgb/image_raw _sec_per_frame:=5.0
+source /opt/ros/melodic/setup.bash   # if not already sourced
+source .venv/bin/activate
+./scripts/run_astra.sh
+```
 
-# Terminal 2 — score the most recent frame
-growcast-anomaly detect frame0001.jpg --json --heatmap-dir /tmp/gc
+Override defaults via env vars: `ASTRA_TOPIC` (default `/astra/rgb/image_raw`),
+`INTERVAL` (default `2.0` s, controls both the ROS dump rate and the poll
+interval), `HEATMAP_DIR` (default `/tmp/gc`). Extra flags pass through to
+`watch`:
+
+```bash
+INTERVAL=5.0 ./scripts/run_astra.sh --threshold 0.28
+```
+
+`watch` always scores the *newest* frame in the dir — stale frames are skipped
+if inference is slower than the dump rate, and a JPG is only read after its
+size has been stable for one poll so we never grab a half-written file. The
+same subcommand works with any JPG-dropping producer, not just the ROS pump:
+
+```bash
+growcast-anomaly watch /path/to/jpg/drop --interval 2 --json --heatmap-dir /tmp/gc
 ```
 
 ## Robot IPC contract
